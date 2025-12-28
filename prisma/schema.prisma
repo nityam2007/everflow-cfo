@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER MANAGEMENT
+// ============================================
+
+enum UserRole {
+  ADMIN
+  STAFF
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         UserRole @default(STAFF)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  assignedLeads Lead[]     @relation("AssignedStaff")
+  leadNotes     LeadNote[]
+  auditLogs     AuditLog[] @relation("PerformedBy")
+
+  @@map("users")
+}
+
+// ============================================
+// LEAD MANAGEMENT
+// ============================================
+
+enum LeadStatus {
+  NEW
+  ASSIGNED
+  IN_PROGRESS
+  CLOSED
+  LOST
+}
+
+enum EligibilitySignal {
+  LOW
+  MODERATE
+  STRONG
+}
+
+model Lead {
+  id            String            @id @default(cuid())
+  companyName   String            @map("company_name")
+  contactName   String            @map("contact_name")
+  email         String
+  phone         String?
+  industry      String?
+  
+  // Estimator inputs stored as JSON
+  inputsJson    Json              @map("inputs_json")
+  
+  // Estimation results
+  estimatedMin  Int               @map("estimated_min")
+  estimatedMax  Int               @map("estimated_max")
+  creditFlags   String[]          @map("credit_flags") // ERC, TIP, WOTC
+  eligibility   EligibilitySignal @default(MODERATE)
+  
+  // Lead management
+  status        LeadStatus        @default(NEW)
+  source        String?           // Campaign/source tracking
+  
+  // Assignment
+  assignedStaffId String?         @map("assigned_staff_id")
+  assignedStaff   User?           @relation("AssignedStaff", fields: [assignedStaffId], references: [id])
+  assignedAt      DateTime?       @map("assigned_at")
+  
+  // Timestamps
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  
+  // Relations
+  notes         LeadNote[]
+  auditLogs     AuditLog[]
+
+  @@index([status])
+  @@index([assignedStaffId])
+  @@index([createdAt])
+  @@index([email])
+  @@map("leads")
+}
+
+// ============================================
+// LEAD NOTES
+// ============================================
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  
+  // Relations
+  leadId    String   @map("lead_id")
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([leadId])
+  @@map("lead_notes")
+}
+
+// ============================================
+// AUDIT LOGGING
+// ============================================
+
+enum AuditAction {
+  LEAD_CREATED
+  LEAD_ASSIGNED
+  LEAD_STATUS_CHANGED
+  LEAD_UPDATED
+  NOTE_ADDED
+  USER_CREATED
+  USER_UPDATED
+  USER_LOGIN
+}
+
+model AuditLog {
+  id           String      @id @default(cuid())
+  action       AuditAction
+  entityType   String      @map("entity_type") // lead, user, etc.
+  entityId     String      @map("entity_id")
+  details      Json?       // Additional context
+  
+  // Who performed the action
+  performedById String?    @map("performed_by_id")
+  performedBy   User?      @relation("PerformedBy", fields: [performedById], references: [id])
+  
+  // For lead-specific audits
+  leadId       String?     @map("lead_id")
+  lead         Lead?       @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  @@index([entityType, entityId])
+  @@index([leadId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+/* ============================================
+   EVERFLOWCFO - INSTITUTIONAL DARK THEME
+   Private Equity / Bank-Grade Design System
+   ============================================ */
+
+/* CSS Custom Properties - Dark Institutional Palette */
+@theme {
+  /* Base Colors */
+  --color-background: #0a0a0b;
+  --color-foreground: #fafafa;
+  --color-card: #111113;
+  --color-card-foreground: #fafafa;
+  --color-popover: #111113;
+  --color-popover-foreground: #fafafa;
+
+  /* Primary - Gold/Brass institutional accent */
+  --color-primary: #c9a227;
+  --color-primary-foreground: #0a0a0b;
+
+  /* Secondary */
+  --color-secondary: #1c1c1f;
+  --color-secondary-foreground: #fafafa;
+
+  /* Muted */
+  --color-muted: #18181b;
+  --color-muted-foreground: #71717a;
+
+  /* Accent */
+  --color-accent: #1c1c1f;
+  --color-accent-foreground: #fafafa;
+
+  /* Destructive */
+  --color-destructive: #7f1d1d;
+  --color-destructive-foreground: #fafafa;
+
+  /* Border & Input */
+  --color-border: #27272a;
+  --color-input: #27272a;
+  --color-ring: #c9a227;
+
+  /* Gold Scale */
+  --color-gold-50: #fbf7e8;
+  --color-gold-100: #f5ecc6;
+  --color-gold-200: #e8d78a;
+  --color-gold-300: #dbc14e;
+  --color-gold-400: #c9a227;
+  --color-gold-500: #a6851f;
+  --color-gold-600: #836817;
+  --color-gold-700: #604c10;
+  --color-gold-800: #3d3009;
+  --color-gold-900: #1a1404;
+
+  /* Status Colors */
+  --color-success: #15803d;
+  --color-warning: #a16207;
+  --color-info: #1d4ed8;
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+  /* Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+}
+
+/* Base Styles */
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted-foreground);
+}
+
+/* Custom utility classes */
+@utility text-gradient {
+  background: linear-gradient(to right, var(--color-gold-300), var(--color-gold-500));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@utility glass {
+  background: rgba(17, 17, 19, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+}
+
+@utility animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@utility animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
