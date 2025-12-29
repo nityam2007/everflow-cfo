@@ -40,8 +40,9 @@ model User {
 }
 
 // ============================================
-// PARTNER MANAGEMENT (External Backend Processors)
-// Partners are granted conditional, revocable access
+// CLIENT/PARTNER MANAGEMENT
+// Clients who submit the estimator form get auto-created accounts
+// They can log in via OTP to view their application status
 // ============================================
 
 model Partner {
@@ -60,8 +61,9 @@ model Partner {
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
   
-  // Relations
-  assignments     PartnerAssignment[]
+  // Relations - Client's own leads (form submissions)
+  leads           Lead[]   @relation("ClientLeads")
+  assignments     PartnerAssignment[] // Legacy: for external processor assignments
   auditLogs       AuditLog[] @relation("PartnerAudit")
   
   @@map("partners")
@@ -109,6 +111,10 @@ model Lead {
   // Lead management
   status        LeadStatus        @default(NEW)
   source        String?           // Campaign/source tracking
+  
+  // Client who submitted this lead (auto-created on form submission)
+  partnerId       String?         @map("partner_id")
+  partner         Partner?        @relation("ClientLeads", fields: [partnerId], references: [id])
   
   // Internal staff assignment
   assignedStaffId String?         @map("assigned_staff_id")

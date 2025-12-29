@@ -61,6 +61,8 @@ export default function LoginPage() {
         redirect: false,
       });
 
+      let isPartner = false;
+
       // If user login fails, try partner credentials
       if (result?.error) {
         result = await signIn('partner-credentials', {
@@ -68,14 +70,17 @@ export default function LoginPage() {
           password,
           redirect: false,
         });
+        if (!result?.error) {
+          isPartner = true;
+        }
       }
 
       if (result?.error) {
         setError('Invalid email or password');
       } else {
         router.refresh();
-        // Router will handle redirect based on userType in layout
-        router.push('/dashboard');
+        // Redirect based on user type
+        router.push(isPartner ? '/partner' : '/dashboard');
       }
     } catch {
       setError('Something went wrong');
@@ -124,7 +129,9 @@ export default function LoginPage() {
       if (result?.error) {
         setError('Invalid or expired code');
       } else {
-        router.push('/dashboard');
+        // Refresh to get updated session, then redirect
+        // The useEffect will handle redirect based on session.user.userType
+        router.refresh();
       }
     } catch {
       setError('Something went wrong');

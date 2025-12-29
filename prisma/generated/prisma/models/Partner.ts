@@ -222,6 +222,7 @@ export type PartnerWhereInput = {
   notes?: Prisma.StringNullableFilter<"Partner"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
+  leads?: Prisma.LeadListRelationFilter
   assignments?: Prisma.PartnerAssignmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
 }
@@ -237,6 +238,7 @@ export type PartnerOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  leads?: Prisma.LeadOrderByRelationAggregateInput
   assignments?: Prisma.PartnerAssignmentOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
@@ -255,6 +257,7 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Partner"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
+  leads?: Prisma.LeadListRelationFilter
   assignments?: Prisma.PartnerAssignmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
 }, "id" | "email">
@@ -302,6 +305,7 @@ export type PartnerCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  leads?: Prisma.LeadCreateNestedManyWithoutPartnerInput
   assignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutPartnerInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPartnerInput
 }
@@ -317,6 +321,7 @@ export type PartnerUncheckedCreateInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutPartnerInput
   assignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutPartnerInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPartnerInput
 }
@@ -332,6 +337,7 @@ export type PartnerUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leads?: Prisma.LeadUpdateManyWithoutPartnerNestedInput
   assignments?: Prisma.PartnerAssignmentUpdateManyWithoutPartnerNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPartnerNestedInput
 }
@@ -347,6 +353,7 @@ export type PartnerUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutPartnerNestedInput
   assignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutPartnerNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPartnerNestedInput
 }
@@ -429,18 +436,34 @@ export type PartnerMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type PartnerScalarRelationFilter = {
-  is?: Prisma.PartnerWhereInput
-  isNot?: Prisma.PartnerWhereInput
-}
-
 export type PartnerNullableScalarRelationFilter = {
   is?: Prisma.PartnerWhereInput | null
   isNot?: Prisma.PartnerWhereInput | null
 }
 
+export type PartnerScalarRelationFilter = {
+  is?: Prisma.PartnerWhereInput
+  isNot?: Prisma.PartnerWhereInput
+}
+
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type PartnerCreateNestedOneWithoutLeadsInput = {
+  create?: Prisma.XOR<Prisma.PartnerCreateWithoutLeadsInput, Prisma.PartnerUncheckedCreateWithoutLeadsInput>
+  connectOrCreate?: Prisma.PartnerCreateOrConnectWithoutLeadsInput
+  connect?: Prisma.PartnerWhereUniqueInput
+}
+
+export type PartnerUpdateOneWithoutLeadsNestedInput = {
+  create?: Prisma.XOR<Prisma.PartnerCreateWithoutLeadsInput, Prisma.PartnerUncheckedCreateWithoutLeadsInput>
+  connectOrCreate?: Prisma.PartnerCreateOrConnectWithoutLeadsInput
+  upsert?: Prisma.PartnerUpsertWithoutLeadsInput
+  disconnect?: Prisma.PartnerWhereInput | boolean
+  delete?: Prisma.PartnerWhereInput | boolean
+  connect?: Prisma.PartnerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PartnerUpdateToOneWithWhereWithoutLeadsInput, Prisma.PartnerUpdateWithoutLeadsInput>, Prisma.PartnerUncheckedUpdateWithoutLeadsInput>
 }
 
 export type PartnerCreateNestedOneWithoutAssignmentsInput = {
@@ -473,6 +496,82 @@ export type PartnerUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PartnerUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.PartnerUpdateWithoutAuditLogsInput>, Prisma.PartnerUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type PartnerCreateWithoutLeadsInput = {
+  id?: string
+  name: string
+  companyName: string
+  email: string
+  phone?: string | null
+  password?: string | null
+  isActive?: boolean
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutPartnerInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPartnerInput
+}
+
+export type PartnerUncheckedCreateWithoutLeadsInput = {
+  id?: string
+  name: string
+  companyName: string
+  email: string
+  phone?: string | null
+  password?: string | null
+  isActive?: boolean
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutPartnerInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPartnerInput
+}
+
+export type PartnerCreateOrConnectWithoutLeadsInput = {
+  where: Prisma.PartnerWhereUniqueInput
+  create: Prisma.XOR<Prisma.PartnerCreateWithoutLeadsInput, Prisma.PartnerUncheckedCreateWithoutLeadsInput>
+}
+
+export type PartnerUpsertWithoutLeadsInput = {
+  update: Prisma.XOR<Prisma.PartnerUpdateWithoutLeadsInput, Prisma.PartnerUncheckedUpdateWithoutLeadsInput>
+  create: Prisma.XOR<Prisma.PartnerCreateWithoutLeadsInput, Prisma.PartnerUncheckedCreateWithoutLeadsInput>
+  where?: Prisma.PartnerWhereInput
+}
+
+export type PartnerUpdateToOneWithWhereWithoutLeadsInput = {
+  where?: Prisma.PartnerWhereInput
+  data: Prisma.XOR<Prisma.PartnerUpdateWithoutLeadsInput, Prisma.PartnerUncheckedUpdateWithoutLeadsInput>
+}
+
+export type PartnerUpdateWithoutLeadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.PartnerAssignmentUpdateManyWithoutPartnerNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPartnerNestedInput
+}
+
+export type PartnerUncheckedUpdateWithoutLeadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutPartnerNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPartnerNestedInput
+}
+
 export type PartnerCreateWithoutAssignmentsInput = {
   id?: string
   name: string
@@ -484,6 +583,7 @@ export type PartnerCreateWithoutAssignmentsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  leads?: Prisma.LeadCreateNestedManyWithoutPartnerInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPartnerInput
 }
 
@@ -498,6 +598,7 @@ export type PartnerUncheckedCreateWithoutAssignmentsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutPartnerInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPartnerInput
 }
 
@@ -528,6 +629,7 @@ export type PartnerUpdateWithoutAssignmentsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leads?: Prisma.LeadUpdateManyWithoutPartnerNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPartnerNestedInput
 }
 
@@ -542,6 +644,7 @@ export type PartnerUncheckedUpdateWithoutAssignmentsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutPartnerNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPartnerNestedInput
 }
 
@@ -556,6 +659,7 @@ export type PartnerCreateWithoutAuditLogsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  leads?: Prisma.LeadCreateNestedManyWithoutPartnerInput
   assignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutPartnerInput
 }
 
@@ -570,6 +674,7 @@ export type PartnerUncheckedCreateWithoutAuditLogsInput = {
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutPartnerInput
   assignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutPartnerInput
 }
 
@@ -600,6 +705,7 @@ export type PartnerUpdateWithoutAuditLogsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leads?: Prisma.LeadUpdateManyWithoutPartnerNestedInput
   assignments?: Prisma.PartnerAssignmentUpdateManyWithoutPartnerNestedInput
 }
 
@@ -614,6 +720,7 @@ export type PartnerUncheckedUpdateWithoutAuditLogsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutPartnerNestedInput
   assignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutPartnerNestedInput
 }
 
@@ -623,11 +730,13 @@ export type PartnerUncheckedUpdateWithoutAuditLogsInput = {
  */
 
 export type PartnerCountOutputType = {
+  leads: number
   assignments: number
   auditLogs: number
 }
 
 export type PartnerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  leads?: boolean | PartnerCountOutputTypeCountLeadsArgs
   assignments?: boolean | PartnerCountOutputTypeCountAssignmentsArgs
   auditLogs?: boolean | PartnerCountOutputTypeCountAuditLogsArgs
 }
@@ -640,6 +749,13 @@ export type PartnerCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
    * Select specific fields to fetch from the PartnerCountOutputType
    */
   select?: Prisma.PartnerCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PartnerCountOutputType without action
+ */
+export type PartnerCountOutputTypeCountLeadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadWhereInput
 }
 
 /**
@@ -668,6 +784,7 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   notes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  leads?: boolean | Prisma.Partner$leadsArgs<ExtArgs>
   assignments?: boolean | Prisma.Partner$assignmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Partner$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.PartnerCountOutputTypeDefaultArgs<ExtArgs>
@@ -714,6 +831,7 @@ export type PartnerSelectScalar = {
 
 export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "companyName" | "email" | "phone" | "password" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["partner"]>
 export type PartnerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  leads?: boolean | Prisma.Partner$leadsArgs<ExtArgs>
   assignments?: boolean | Prisma.Partner$assignmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Partner$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.PartnerCountOutputTypeDefaultArgs<ExtArgs>
@@ -724,6 +842,7 @@ export type PartnerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Partner"
   objects: {
+    leads: Prisma.$LeadPayload<ExtArgs>[]
     assignments: Prisma.$PartnerAssignmentPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
@@ -1132,6 +1251,7 @@ readonly fields: PartnerFieldRefs;
  */
 export interface Prisma__PartnerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  leads<T extends Prisma.Partner$leadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Partner$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignments<T extends Prisma.Partner$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Partner$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PartnerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Partner$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Partner$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1558,6 +1678,30 @@ export type PartnerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Partners to delete.
    */
   limit?: number
+}
+
+/**
+ * Partner.leads
+ */
+export type Partner$leadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Lead
+   */
+  select?: Prisma.LeadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Lead
+   */
+  omit?: Prisma.LeadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadInclude<ExtArgs> | null
+  where?: Prisma.LeadWhereInput
+  orderBy?: Prisma.LeadOrderByWithRelationInput | Prisma.LeadOrderByWithRelationInput[]
+  cursor?: Prisma.LeadWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
 }
 
 /**

@@ -56,7 +56,25 @@ export async function POST(request: NextRequest) {
     // Calculate estimate with versioned rules
     const estimation = calculateEstimate(estimator);
 
-    // Create lead with sanitized data
+    // Auto-create or find existing Partner (client) account
+    let partner = await db.partner.findUnique({
+      where: { email: sanitizedIdentity.email },
+    });
+
+    if (!partner) {
+      // Create new client account
+      partner = await db.partner.create({
+        data: {
+          name: sanitizedIdentity.contactName,
+          companyName: sanitizedIdentity.companyName,
+          email: sanitizedIdentity.email,
+          phone: sanitizedIdentity.phone,
+          isActive: true,
+        },
+      });
+    }
+
+    // Create lead linked to client account
     const lead = await db.lead.create({
       data: {
         companyName: sanitizedIdentity.companyName,
@@ -73,6 +91,7 @@ export async function POST(request: NextRequest) {
         explanations: estimation.explanations,
         source: sanitizeString(source || 'direct'),
         status: 'NEW',
+        partnerId: partner.id, // Link to client account
       },
     });
 

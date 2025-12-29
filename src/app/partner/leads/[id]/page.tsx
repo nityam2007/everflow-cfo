@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { formatCurrency, formatDate } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { LEAD_STATUS_COLORS } from '@/lib/constants';
 import Link from 'next/link';
 import { 
   ArrowLeft, 
@@ -16,18 +17,10 @@ import {
   Info,
   AlertTriangle
 } from 'lucide-react';
-import { PartnerLeadStatus } from './partner-lead-status';
-import { PartnerLeadNotes } from './partner-lead-notes';
 import { EligibilitySignal } from '@prisma/client';
 
 interface PartnerLeadDetailPageProps {
   params: Promise<{ id: string }>;
-}
-
-interface PartnerLeadNote {
-  id: string;
-  content: string;
-  createdAt: Date;
 }
 
 export default async function PartnerLeadDetailPage({ params }: PartnerLeadDetailPageProps) {
@@ -38,42 +31,33 @@ export default async function PartnerLeadDetailPage({ params }: PartnerLeadDetai
     redirect('/login');
   }
 
-  // Verify partner has access to this lead
-  const assignment = await db.partnerAssignment.findFirst({
+  // Verify partner owns this lead (client model)
+  const lead = await db.lead.findFirst({
     where: {
+      id,
       partnerId: session.user.id,
-      leadId: id,
     },
-    include: {
-      lead: {
-        select: {
-          id: true,
-          companyName: true,
-          contactName: true,
-          email: true,
-          phone: true,
-          estimatedMin: true,
-          estimatedMax: true,
-          creditFlags: true,
-          eligibility: true,
-          explanations: true,
-          industry: true,
-          rulesVersion: true,
-          createdAt: true,
-        },
-      },
-      partnerNotes: {
-        orderBy: { createdAt: 'desc' },
-      },
+    select: {
+      id: true,
+      companyName: true,
+      contactName: true,
+      email: true,
+      phone: true,
+      estimatedMin: true,
+      estimatedMax: true,
+      creditFlags: true,
+      eligibility: true,
+      explanations: true,
+      industry: true,
+      rulesVersion: true,
+      status: true,
+      createdAt: true,
     },
   });
 
-  if (!assignment) {
+  if (!lead) {
     notFound();
   }
-
-  const lead = assignment.lead;
-  const notes = assignment.partnerNotes as PartnerLeadNote[];
 
   const eligibilityConfig: Record<EligibilitySignal, { icon: typeof AlertTriangle; color: string; bg: string }> = {
     LOW: { icon: AlertTriangle, color: 'text-amber-600', bg: 'bg-amber-50' },
@@ -92,7 +76,7 @@ export default async function PartnerLeadDetailPage({ params }: PartnerLeadDetai
         className="inline-flex items-center text-sm text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)]"
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
-        Back to Assigned Leads
+        Back to My Applications
       </Link>
 
       {/* Header */}
@@ -103,16 +87,8 @@ export default async function PartnerLeadDetailPage({ params }: PartnerLeadDetai
           </h1>
           <p className="text-slate-600">{lead.contactName}</p>
         </div>
-        <Badge
-          variant={
-            assignment.status === 'COMPLETED'
-              ? 'success'
-              : assignment.status === 'IN_PROGRESS'
-              ? 'secondary'
-              : 'warning'
-          }
-        >
-          {assignment.status.replace('_', ' ')}
+        <Badge variant={LEAD_STATUS_COLORS[lead.status] || 'outline'}>
+          {lead.status.replace('_', ' ')}
         </Badge>
       </div>
 
@@ -212,21 +188,33 @@ export default async function PartnerLeadDetailPage({ params }: PartnerLeadDetai
               </div>
             </CardContent>
           </Card>
-
-          {/* Partner Notes */}
-          <PartnerLeadNotes 
-            assignmentId={assignment.id} 
-            notes={notes} 
-          />
         </div>
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Status update */}
-          <PartnerLeadStatus
-            assignmentId={assignment.id}
-            currentStatus={assignment.status}
-          />
+          {/* Application Status */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Application Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="text-center py-4">
+                <Badge 
+                  variant={LEAD_STATUS_COLORS[lead.status] || 'outline'}
+                  className="text-lg px-4 py-2"
+                >
+                  {lead.status.replace('_', ' ')}
+                </Badge>
+              </div>
+              <p className="text-sm text-[var(--color-foreground-muted)] text-center">
+                {lead.status === 'NEW' && 'Your application is awaiting review.'}
+                {lead.status === 'CONTACTED' && 'Our team has reached out to you.'}
+                {lead.status === 'IN_PROGRESS' && 'Your application is being processed.'}
+                {lead.status === 'CLOSED_WON' && 'Congratulations! Your credits have been approved.'}
+                {lead.status === 'CLOSED_LOST' && 'Unfortunately, your application was not approved.'}
+              </p>
+            </CardContent>
+          </Card>
 
           {/* Meta info */}
           <Card>
@@ -239,12 +227,8 @@ export default async function PartnerLeadDetailPage({ params }: PartnerLeadDetai
                 <p className="capitalize">{lead.industry}</p>
               </div>
               <div>
-                <p className="text-[var(--color-foreground-muted)]">Lead Created</p>
+                <p className="text-[var(--color-foreground-muted)]">Submitted</p>
                 <p>{formatDate(lead.createdAt)}</p>
-              </div>
-              <div>
-                <p className="text-[var(--color-foreground-muted)]">Assigned to You</p>
-                <p>{formatDate(assignment.assignedAt)}</p>
               </div>
             </CardContent>
           </Card>

@@ -5,27 +5,23 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PageHeader } from '@/components/page-header';
-import { ASSIGNMENT_STATUS_COLORS } from '@/lib/constants';
+import { LEAD_STATUS_COLORS } from '@/lib/constants';
 import Link from 'next/link';
-import { FileText, Building, Clock, DollarSign } from 'lucide-react';
+import { FileText, Building, Clock, DollarSign, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
-interface Assignment {
+interface ClientLead {
   id: string;
+  companyName: string;
+  contactName: string;
+  email: string;
+  phone: string | null;
+  estimatedMin: number;
+  estimatedMax: number;
+  creditFlags: string[];
+  eligibility: string;
+  industry: string | null;
   status: string;
-  assignedAt: Date;
-  lead: {
-    id: string;
-    companyName: string;
-    contactName: string;
-    email: string;
-    phone: string | null;
-    estimatedMin: number;
-    estimatedMax: number;
-    creditFlags: string[];
-    eligibility: string;
-    industry: string | null;
-    createdAt: Date;
-  };
+  createdAt: Date;
 }
 
 export default async function PartnerDashboardPage() {
@@ -35,21 +31,14 @@ export default async function PartnerDashboardPage() {
     redirect('/login');
   }
 
-  // Get partner record
+  // Get partner record with their leads
   const partner = await db.partner.findUnique({
     where: { id: session.user.id },
-    select: { id: true, companyName: true },
-  });
-
-  if (!partner) {
-    redirect('/login');
-  }
-
-  // Get assigned leads
-  const assignments = await db.partnerAssignment.findMany({
-    where: { partnerId: partner.id },
-    include: {
-      lead: {
+    select: { 
+      id: true, 
+      name: true,
+      companyName: true,
+      leads: {
         select: {
           id: true,
           companyName: true,
@@ -61,24 +50,31 @@ export default async function PartnerDashboardPage() {
           creditFlags: true,
           eligibility: true,
           industry: true,
+          status: true,
           createdAt: true,
         },
+        orderBy: { createdAt: 'desc' },
       },
     },
-    orderBy: { assignedAt: 'desc' },
-  }) as Assignment[];
+  });
 
-  // Stats
-  const totalAssigned = assignments.length;
-  const pending = assignments.filter((a: Assignment) => a.status === 'PENDING').length;
-  const inProgress = assignments.filter((a: Assignment) => a.status === 'IN_PROGRESS').length;
-  const completed = assignments.filter((a: Assignment) => a.status === 'COMPLETED').length;
+  if (!partner) {
+    redirect('/login');
+  }
+
+  const leads = partner.leads as ClientLead[];
+
+  // Stats based on lead status
+  const totalApplications = leads.length;
+  const inReview = leads.filter((l) => ['NEW', 'CONTACTED', 'IN_PROGRESS'].includes(l.status)).length;
+  const approved = leads.filter((l) => l.status === 'CLOSED_WON').length;
+  const declined = leads.filter((l) => l.status === 'CLOSED_LOST').length;
 
   return (
     <div className="space-y-8">
       <PageHeader
-        title={`Welcome, ${partner.companyName}`}
-        description="View and manage leads assigned to your organization"
+        title={`Welcome, ${partner.name || partner.companyName}`}
+        description="Track your tax credit applications"
       />
 
       {/* Stats */}
@@ -86,65 +82,70 @@ export default async function PartnerDashboardPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Assigned
+              Total Applications
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-light text-[var(--color-foreground)]">{totalAssigned}</p>
+            <p className="text-3xl font-light text-[var(--color-foreground)]">{totalApplications}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Pending
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Loader2 className="h-4 w-4 text-[var(--color-warning)]" />
+              In Review
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-light text-[var(--color-warning)]">{pending}</p>
+            <p className="text-3xl font-light text-[var(--color-warning)]">{inReview}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              In Progress
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-[var(--color-success)]" />
+              Approved
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-light text-[var(--color-wotc)]">{inProgress}</p>
+            <p className="text-3xl font-light text-[var(--color-success)]">{approved}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Completed
+            <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <XCircle className="h-4 w-4 text-[var(--color-error)]" />
+              Declined
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-light text-[var(--color-success)]">{completed}</p>
+            <p className="text-3xl font-light text-[var(--color-error)]">{declined}</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Assigned Leads Table */}
+      {/* Applications Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Assigned Leads</CardTitle>
+          <CardTitle>Your Applications</CardTitle>
           <CardDescription>
-            Leads assigned to your organization for processing
+            Track the status of your tax credit applications
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {assignments.length === 0 ? (
+          {leads.length === 0 ? (
             <div className="py-12 text-center">
               <FileText className="mx-auto h-12 w-12 text-[var(--color-foreground-subtle)]" />
               <p className="mt-4 text-[var(--color-foreground-muted)]">
-                No leads assigned yet.
+                No applications yet.
               </p>
               <p className="text-sm text-[var(--color-foreground-muted)]">
-                Check back later for new assignments.
+                <Link href="/estimator" className="text-[var(--brand-primary)] hover:underline">
+                  Start your first application
+                </Link>
               </p>
             </div>
           ) : (
@@ -153,76 +154,69 @@ export default async function PartnerDashboardPage() {
                 <thead>
                   <tr className="border-b border-[var(--color-border)] text-left text-sm text-[var(--color-foreground-muted)]">
                     <th className="pb-3 font-medium">Business</th>
-                    <th className="pb-3 font-medium">Contact</th>
-                    <th className="pb-3 font-medium">Estimated Range</th>
-                    <th className="pb-3 font-medium">Credits</th>
+                    <th className="pb-3 font-medium">Estimated Credits</th>
+                    <th className="pb-3 font-medium">Credit Types</th>
                     <th className="pb-3 font-medium">Status</th>
-                    <th className="pb-3 font-medium">Assigned</th>
+                    <th className="pb-3 font-medium">Submitted</th>
                     <th className="pb-3 font-medium"></th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[var(--color-border)]">
-                  {assignments.map((assignment: Assignment) => (
-                    <tr key={assignment.id} className="text-sm">
+                  {leads.map((lead: ClientLead) => (
+                    <tr key={lead.id} className="text-sm">
                       <td className="py-4">
                         <div className="flex items-center gap-2">
                           <Building className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                           <div>
                             <p className="font-medium text-[var(--color-foreground)]">
-                              {assignment.lead.companyName}
+                              {lead.companyName}
                             </p>
                             <p className="text-xs text-[var(--color-foreground-muted)] capitalize">
-                              {assignment.lead.industry}
+                              {lead.industry}
                             </p>
                           </div>
                         </div>
                       </td>
                       <td className="py-4">
-                        <p className="text-[var(--color-foreground)]">{assignment.lead.contactName}</p>
-                        <p className="text-xs text-[var(--color-foreground-muted)]">
-                          {assignment.lead.email}
-                        </p>
-                      </td>
-                      <td className="py-4">
                         <div className="flex items-center gap-1 text-[var(--color-foreground)]">
                           <DollarSign className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                           <span>
-                            {formatCurrency(assignment.lead.estimatedMin)} –{' '}
-                            {formatCurrency(assignment.lead.estimatedMax)}
+                            {formatCurrency(lead.estimatedMin)} –{' '}
+                            {formatCurrency(lead.estimatedMax)}
                           </span>
                         </div>
                       </td>
                       <td className="py-4">
                         <div className="flex flex-wrap gap-1">
-                          {assignment.lead.creditFlags.slice(0, 2).map((flag: string) => (
+                          {lead.creditFlags.slice(0, 2).map((flag: string) => (
                             <Badge key={flag} variant="outline" className="text-xs">
                               {flag}
                             </Badge>
                           ))}
-                          {assignment.lead.creditFlags.length > 2 && (
+                          {lead.creditFlags.length > 2 && (
                             <Badge variant="outline" className="text-xs">
-                              +{assignment.lead.creditFlags.length - 2}
+                              +{lead.creditFlags.length - 2}
                             </Badge>
                           )}
                         </div>
                       </td>
                       <td className="py-4">
-                        <Badge variant={ASSIGNMENT_STATUS_COLORS[assignment.status]}>
-                          {assignment.status.replace('_', ' ')}
+                        <Badge variant={LEAD_STATUS_COLORS[lead.status] || 'outline'}>
+                          {lead.status.replace('_', ' ')}
                         </Badge>
                       </td>
                       <td className="py-4 text-[var(--color-foreground-muted)]">
                         <div className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
-                          {formatDate(assignment.assignedAt)}
+                          {formatDate(lead.createdAt)}
                         </div>
                       </td>
                       <td className="py-4">
                         <Link
-                          href={`/partner/leads/${assignment.lead.id}`}
+                          href={`/partner/leads/${lead.id}`}
                           className="text-[var(--brand-primary)] hover:underline"
                         >
-                          View
+                          Details
                         </Link>
                       </td>
                     </tr>

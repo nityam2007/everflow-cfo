@@ -49,6 +49,7 @@ export type LeadMinAggregateOutputType = {
   rulesVersion: string | null
   status: $Enums.LeadStatus | null
   source: string | null
+  partnerId: string | null
   assignedStaffId: string | null
   assignedAt: Date | null
   createdAt: Date | null
@@ -68,6 +69,7 @@ export type LeadMaxAggregateOutputType = {
   rulesVersion: string | null
   status: $Enums.LeadStatus | null
   source: string | null
+  partnerId: string | null
   assignedStaffId: string | null
   assignedAt: Date | null
   createdAt: Date | null
@@ -90,6 +92,7 @@ export type LeadCountAggregateOutputType = {
   explanations: number
   status: number
   source: number
+  partnerId: number
   assignedStaffId: number
   assignedAt: number
   createdAt: number
@@ -121,6 +124,7 @@ export type LeadMinAggregateInputType = {
   rulesVersion?: true
   status?: true
   source?: true
+  partnerId?: true
   assignedStaffId?: true
   assignedAt?: true
   createdAt?: true
@@ -140,6 +144,7 @@ export type LeadMaxAggregateInputType = {
   rulesVersion?: true
   status?: true
   source?: true
+  partnerId?: true
   assignedStaffId?: true
   assignedAt?: true
   createdAt?: true
@@ -162,6 +167,7 @@ export type LeadCountAggregateInputType = {
   explanations?: true
   status?: true
   source?: true
+  partnerId?: true
   assignedStaffId?: true
   assignedAt?: true
   createdAt?: true
@@ -271,6 +277,7 @@ export type LeadGroupByOutputType = {
   explanations: string[]
   status: $Enums.LeadStatus
   source: string | null
+  partnerId: string | null
   assignedStaffId: string | null
   assignedAt: Date | null
   createdAt: Date
@@ -316,10 +323,12 @@ export type LeadWhereInput = {
   explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableFilter<"Lead"> | string | null
+  partnerId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
+  partner?: Prisma.XOR<Prisma.PartnerNullableScalarRelationFilter, Prisma.PartnerWhereInput> | null
   assignedStaff?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   notes?: Prisma.LeadNoteListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
@@ -342,10 +351,12 @@ export type LeadOrderByWithRelationInput = {
   explanations?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
+  partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  partner?: Prisma.PartnerOrderByWithRelationInput
   assignedStaff?: Prisma.UserOrderByWithRelationInput
   notes?: Prisma.LeadNoteOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
@@ -371,10 +382,12 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableFilter<"Lead"> | string | null
+  partnerId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
+  partner?: Prisma.XOR<Prisma.PartnerNullableScalarRelationFilter, Prisma.PartnerWhereInput> | null
   assignedStaff?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   notes?: Prisma.LeadNoteListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
@@ -397,6 +410,7 @@ export type LeadOrderByWithAggregationInput = {
   explanations?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
+  partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -427,6 +441,7 @@ export type LeadScalarWhereWithAggregatesInput = {
   explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusWithAggregatesFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
+  partnerId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Lead"> | Date | string
@@ -452,6 +467,7 @@ export type LeadCreateInput = {
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
   assignedStaff?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
   notes?: Prisma.LeadNoteCreateNestedManyWithoutLeadInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutLeadInput
@@ -474,6 +490,7 @@ export type LeadUncheckedCreateInput = {
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  partnerId?: string | null
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
@@ -502,6 +519,7 @@ export type LeadUpdateInput = {
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
   assignedStaff?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
   notes?: Prisma.LeadNoteUpdateManyWithoutLeadNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutLeadNestedInput
@@ -524,6 +542,7 @@ export type LeadUncheckedUpdateInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -549,6 +568,7 @@ export type LeadCreateManyInput = {
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  partnerId?: string | null
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
@@ -592,6 +612,7 @@ export type LeadUncheckedUpdateManyInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -632,6 +653,7 @@ export type LeadCountOrderByAggregateInput = {
   explanations?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  partnerId?: Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -656,6 +678,7 @@ export type LeadMaxOrderByAggregateInput = {
   rulesVersion?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  partnerId?: Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -675,6 +698,7 @@ export type LeadMinOrderByAggregateInput = {
   rulesVersion?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  partnerId?: Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -735,6 +759,48 @@ export type LeadUncheckedUpdateManyWithoutAssignedStaffNestedInput = {
   connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
   update?: Prisma.LeadUpdateWithWhereUniqueWithoutAssignedStaffInput | Prisma.LeadUpdateWithWhereUniqueWithoutAssignedStaffInput[]
   updateMany?: Prisma.LeadUpdateManyWithWhereWithoutAssignedStaffInput | Prisma.LeadUpdateManyWithWhereWithoutAssignedStaffInput[]
+  deleteMany?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
+}
+
+export type LeadCreateNestedManyWithoutPartnerInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutPartnerInput, Prisma.LeadUncheckedCreateWithoutPartnerInput> | Prisma.LeadCreateWithoutPartnerInput[] | Prisma.LeadUncheckedCreateWithoutPartnerInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutPartnerInput | Prisma.LeadCreateOrConnectWithoutPartnerInput[]
+  createMany?: Prisma.LeadCreateManyPartnerInputEnvelope
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+}
+
+export type LeadUncheckedCreateNestedManyWithoutPartnerInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutPartnerInput, Prisma.LeadUncheckedCreateWithoutPartnerInput> | Prisma.LeadCreateWithoutPartnerInput[] | Prisma.LeadUncheckedCreateWithoutPartnerInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutPartnerInput | Prisma.LeadCreateOrConnectWithoutPartnerInput[]
+  createMany?: Prisma.LeadCreateManyPartnerInputEnvelope
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+}
+
+export type LeadUpdateManyWithoutPartnerNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutPartnerInput, Prisma.LeadUncheckedCreateWithoutPartnerInput> | Prisma.LeadCreateWithoutPartnerInput[] | Prisma.LeadUncheckedCreateWithoutPartnerInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutPartnerInput | Prisma.LeadCreateOrConnectWithoutPartnerInput[]
+  upsert?: Prisma.LeadUpsertWithWhereUniqueWithoutPartnerInput | Prisma.LeadUpsertWithWhereUniqueWithoutPartnerInput[]
+  createMany?: Prisma.LeadCreateManyPartnerInputEnvelope
+  set?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  disconnect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  delete?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  update?: Prisma.LeadUpdateWithWhereUniqueWithoutPartnerInput | Prisma.LeadUpdateWithWhereUniqueWithoutPartnerInput[]
+  updateMany?: Prisma.LeadUpdateManyWithWhereWithoutPartnerInput | Prisma.LeadUpdateManyWithWhereWithoutPartnerInput[]
+  deleteMany?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
+}
+
+export type LeadUncheckedUpdateManyWithoutPartnerNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutPartnerInput, Prisma.LeadUncheckedCreateWithoutPartnerInput> | Prisma.LeadCreateWithoutPartnerInput[] | Prisma.LeadUncheckedCreateWithoutPartnerInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutPartnerInput | Prisma.LeadCreateOrConnectWithoutPartnerInput[]
+  upsert?: Prisma.LeadUpsertWithWhereUniqueWithoutPartnerInput | Prisma.LeadUpsertWithWhereUniqueWithoutPartnerInput[]
+  createMany?: Prisma.LeadCreateManyPartnerInputEnvelope
+  set?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  disconnect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  delete?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  update?: Prisma.LeadUpdateWithWhereUniqueWithoutPartnerInput | Prisma.LeadUpdateWithWhereUniqueWithoutPartnerInput[]
+  updateMany?: Prisma.LeadUpdateManyWithWhereWithoutPartnerInput | Prisma.LeadUpdateManyWithWhereWithoutPartnerInput[]
   deleteMany?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
 }
 
@@ -839,6 +905,7 @@ export type LeadCreateWithoutAssignedStaffInput = {
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
   notes?: Prisma.LeadNoteCreateNestedManyWithoutLeadInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutLeadInput
   partnerAssignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutLeadInput
@@ -860,6 +927,7 @@ export type LeadUncheckedCreateWithoutAssignedStaffInput = {
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  partnerId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -913,10 +981,87 @@ export type LeadScalarWhereInput = {
   explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableFilter<"Lead"> | string | null
+  partnerId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
+}
+
+export type LeadCreateWithoutPartnerInput = {
+  id?: string
+  companyName: string
+  contactName: string
+  email: string
+  phone?: string | null
+  industry?: string | null
+  inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  estimatedMin: number
+  estimatedMax: number
+  creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
+  eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
+  status?: $Enums.LeadStatus
+  source?: string | null
+  assignedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedStaff?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  notes?: Prisma.LeadNoteCreateNestedManyWithoutLeadInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutLeadInput
+  partnerAssignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutLeadInput
+}
+
+export type LeadUncheckedCreateWithoutPartnerInput = {
+  id?: string
+  companyName: string
+  contactName: string
+  email: string
+  phone?: string | null
+  industry?: string | null
+  inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  estimatedMin: number
+  estimatedMax: number
+  creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
+  eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
+  status?: $Enums.LeadStatus
+  source?: string | null
+  assignedStaffId?: string | null
+  assignedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutLeadInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutLeadInput
+  partnerAssignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutPartnerInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutPartnerInput, Prisma.LeadUncheckedCreateWithoutPartnerInput>
+}
+
+export type LeadCreateManyPartnerInputEnvelope = {
+  data: Prisma.LeadCreateManyPartnerInput | Prisma.LeadCreateManyPartnerInput[]
+  skipDuplicates?: boolean
+}
+
+export type LeadUpsertWithWhereUniqueWithoutPartnerInput = {
+  where: Prisma.LeadWhereUniqueInput
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutPartnerInput, Prisma.LeadUncheckedUpdateWithoutPartnerInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutPartnerInput, Prisma.LeadUncheckedCreateWithoutPartnerInput>
+}
+
+export type LeadUpdateWithWhereUniqueWithoutPartnerInput = {
+  where: Prisma.LeadWhereUniqueInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutPartnerInput, Prisma.LeadUncheckedUpdateWithoutPartnerInput>
+}
+
+export type LeadUpdateManyWithWhereWithoutPartnerInput = {
+  where: Prisma.LeadScalarWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateManyMutationInput, Prisma.LeadUncheckedUpdateManyWithoutPartnerInput>
 }
 
 export type LeadCreateWithoutNotesInput = {
@@ -938,6 +1083,7 @@ export type LeadCreateWithoutNotesInput = {
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
   assignedStaff?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutLeadInput
   partnerAssignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutLeadInput
@@ -959,6 +1105,7 @@ export type LeadUncheckedCreateWithoutNotesInput = {
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  partnerId?: string | null
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
@@ -1002,6 +1149,7 @@ export type LeadUpdateWithoutNotesInput = {
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
   assignedStaff?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutLeadNestedInput
   partnerAssignments?: Prisma.PartnerAssignmentUpdateManyWithoutLeadNestedInput
@@ -1023,6 +1171,7 @@ export type LeadUncheckedUpdateWithoutNotesInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1050,6 +1199,7 @@ export type LeadCreateWithoutPartnerAssignmentsInput = {
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
   assignedStaff?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
   notes?: Prisma.LeadNoteCreateNestedManyWithoutLeadInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutLeadInput
@@ -1071,6 +1221,7 @@ export type LeadUncheckedCreateWithoutPartnerAssignmentsInput = {
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  partnerId?: string | null
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
@@ -1114,6 +1265,7 @@ export type LeadUpdateWithoutPartnerAssignmentsInput = {
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
   assignedStaff?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
   notes?: Prisma.LeadNoteUpdateManyWithoutLeadNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutLeadNestedInput
@@ -1135,6 +1287,7 @@ export type LeadUncheckedUpdateWithoutPartnerAssignmentsInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1162,6 +1315,7 @@ export type LeadCreateWithoutAuditLogsInput = {
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  partner?: Prisma.PartnerCreateNestedOneWithoutLeadsInput
   assignedStaff?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
   notes?: Prisma.LeadNoteCreateNestedManyWithoutLeadInput
   partnerAssignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutLeadInput
@@ -1183,6 +1337,7 @@ export type LeadUncheckedCreateWithoutAuditLogsInput = {
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  partnerId?: string | null
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
@@ -1226,6 +1381,7 @@ export type LeadUpdateWithoutAuditLogsInput = {
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
   assignedStaff?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
   notes?: Prisma.LeadNoteUpdateManyWithoutLeadNestedInput
   partnerAssignments?: Prisma.PartnerAssignmentUpdateManyWithoutLeadNestedInput
@@ -1247,6 +1403,7 @@ export type LeadUncheckedUpdateWithoutAuditLogsInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1271,6 +1428,7 @@ export type LeadCreateManyAssignedStaffInput = {
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  partnerId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1295,6 +1453,7 @@ export type LeadUpdateWithoutAssignedStaffInput = {
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  partner?: Prisma.PartnerUpdateOneWithoutLeadsNestedInput
   notes?: Prisma.LeadNoteUpdateManyWithoutLeadNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutLeadNestedInput
   partnerAssignments?: Prisma.PartnerAssignmentUpdateManyWithoutLeadNestedInput
@@ -1316,6 +1475,7 @@ export type LeadUncheckedUpdateWithoutAssignedStaffInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1340,6 +1500,101 @@ export type LeadUncheckedUpdateManyWithoutAssignedStaffInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LeadCreateManyPartnerInput = {
+  id?: string
+  companyName: string
+  contactName: string
+  email: string
+  phone?: string | null
+  industry?: string | null
+  inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  estimatedMin: number
+  estimatedMax: number
+  creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
+  eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
+  status?: $Enums.LeadStatus
+  source?: string | null
+  assignedStaffId?: string | null
+  assignedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LeadUpdateWithoutPartnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
+  creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
+  eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedStaff?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
+  notes?: Prisma.LeadNoteUpdateManyWithoutLeadNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutLeadNestedInput
+  partnerAssignments?: Prisma.PartnerAssignmentUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutPartnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
+  creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
+  eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.LeadNoteUncheckedUpdateManyWithoutLeadNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  partnerAssignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateManyWithoutPartnerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
+  creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
+  eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1410,10 +1665,12 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   explanations?: boolean
   status?: boolean
   source?: boolean
+  partnerId?: boolean
   assignedStaffId?: boolean
   assignedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  partner?: boolean | Prisma.Lead$partnerArgs<ExtArgs>
   assignedStaff?: boolean | Prisma.Lead$assignedStaffArgs<ExtArgs>
   notes?: boolean | Prisma.Lead$notesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Lead$auditLogsArgs<ExtArgs>
@@ -1437,10 +1694,12 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   explanations?: boolean
   status?: boolean
   source?: boolean
+  partnerId?: boolean
   assignedStaffId?: boolean
   assignedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  partner?: boolean | Prisma.Lead$partnerArgs<ExtArgs>
   assignedStaff?: boolean | Prisma.Lead$assignedStaffArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
@@ -1460,10 +1719,12 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   explanations?: boolean
   status?: boolean
   source?: boolean
+  partnerId?: boolean
   assignedStaffId?: boolean
   assignedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  partner?: boolean | Prisma.Lead$partnerArgs<ExtArgs>
   assignedStaff?: boolean | Prisma.Lead$assignedStaffArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
@@ -1483,14 +1744,16 @@ export type LeadSelectScalar = {
   explanations?: boolean
   status?: boolean
   source?: boolean
+  partnerId?: boolean
   assignedStaffId?: boolean
   assignedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "contactName" | "email" | "phone" | "industry" | "inputsJson" | "estimatedMin" | "estimatedMax" | "creditFlags" | "eligibility" | "rulesVersion" | "explanations" | "status" | "source" | "assignedStaffId" | "assignedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
+export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "contactName" | "email" | "phone" | "industry" | "inputsJson" | "estimatedMin" | "estimatedMax" | "creditFlags" | "eligibility" | "rulesVersion" | "explanations" | "status" | "source" | "partnerId" | "assignedStaffId" | "assignedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
 export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  partner?: boolean | Prisma.Lead$partnerArgs<ExtArgs>
   assignedStaff?: boolean | Prisma.Lead$assignedStaffArgs<ExtArgs>
   notes?: boolean | Prisma.Lead$notesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Lead$auditLogsArgs<ExtArgs>
@@ -1498,15 +1761,18 @@ export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LeadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  partner?: boolean | Prisma.Lead$partnerArgs<ExtArgs>
   assignedStaff?: boolean | Prisma.Lead$assignedStaffArgs<ExtArgs>
 }
 export type LeadIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  partner?: boolean | Prisma.Lead$partnerArgs<ExtArgs>
   assignedStaff?: boolean | Prisma.Lead$assignedStaffArgs<ExtArgs>
 }
 
 export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Lead"
   objects: {
+    partner: Prisma.$PartnerPayload<ExtArgs> | null
     assignedStaff: Prisma.$UserPayload<ExtArgs> | null
     notes: Prisma.$LeadNotePayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
@@ -1528,6 +1794,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     explanations: string[]
     status: $Enums.LeadStatus
     source: string | null
+    partnerId: string | null
     assignedStaffId: string | null
     assignedAt: Date | null
     createdAt: Date
@@ -1926,6 +2193,7 @@ readonly fields: LeadFieldRefs;
  */
 export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  partner<T extends Prisma.Lead$partnerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$partnerArgs<ExtArgs>>): Prisma.Prisma__PartnerClient<runtime.Types.Result.GetResult<Prisma.$PartnerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   assignedStaff<T extends Prisma.Lead$assignedStaffArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$assignedStaffArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   notes<T extends Prisma.Lead$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Lead$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1974,6 +2242,7 @@ export interface LeadFieldRefs {
   readonly explanations: Prisma.FieldRef<"Lead", 'String[]'>
   readonly status: Prisma.FieldRef<"Lead", 'LeadStatus'>
   readonly source: Prisma.FieldRef<"Lead", 'String'>
+  readonly partnerId: Prisma.FieldRef<"Lead", 'String'>
   readonly assignedStaffId: Prisma.FieldRef<"Lead", 'String'>
   readonly assignedAt: Prisma.FieldRef<"Lead", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Lead", 'DateTime'>
@@ -2371,6 +2640,25 @@ export type LeadDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Leads to delete.
    */
   limit?: number
+}
+
+/**
+ * Lead.partner
+ */
+export type Lead$partnerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Partner
+   */
+  select?: Prisma.PartnerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Partner
+   */
+  omit?: Prisma.PartnerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerInclude<ExtArgs> | null
+  where?: Prisma.PartnerWhereInput
 }
 
 /**
