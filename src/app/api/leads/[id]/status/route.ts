@@ -38,7 +38,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     // Check if user has access to this lead
     const lead = await db.lead.findUnique({
       where: { id },
-      select: { id: true, status: true, assignedStaffId: true },
+      select: { id: true, status: true, assignedStaffId: true, partnerId: true },
     });
 
     if (!lead) {
@@ -70,6 +70,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         newValues: { status },
       },
     });
+
+    // Invalidate caches
+    const { cache } = await import('@/lib/redis');
+    await cache.invalidateLead(id, lead.partnerId || undefined);
 
     return secureJsonResponse({ success: true });
   } catch (error) {

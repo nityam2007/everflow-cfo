@@ -8,6 +8,8 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   const adapter = new PrismaPg({
     connectionString: process.env.prisma_main_DATABASE_URL,
+    // Connection pool settings for better performance
+    max: 10, // Max connections in pool
   });
   
   return new PrismaClient({

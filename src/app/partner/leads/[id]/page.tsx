@@ -80,19 +80,45 @@ export default async function PartnerLeadDetailPage({ params }: PartnerLeadDetai
       </Link>
 
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">
             {lead.companyName}
           </h1>
           <p className="text-slate-600">{lead.contactName}</p>
         </div>
-        <Badge variant={LEAD_STATUS_COLORS[lead.status] || 'outline'}>
+        <Badge variant={LEAD_STATUS_COLORS[lead.status] || 'outline'} className="self-start">
           {lead.status.replace('_', ' ')}
         </Badge>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
+        {/* Status card - shown first on mobile */}
+        <div className="lg:hidden space-y-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Application Status</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <Badge 
+                  variant={LEAD_STATUS_COLORS[lead.status] || 'outline'}
+                  className="text-sm px-3 py-1"
+                >
+                  {lead.status.replace('_', ' ')}
+                </Badge>
+                <span className="text-sm text-[var(--color-foreground-muted)]">
+                  {lead.status === 'NEW' && 'Awaiting review'}
+                  {lead.status === 'ASSIGNED' && 'Assigned to specialist'}
+                  {lead.status === 'IN_PROGRESS' && 'Being processed'}
+                  {lead.status === 'CLOSED' && 'Completed'}
+                  {lead.status === 'LOST' && 'Not approved'}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Main info */}
         <div className="lg:col-span-2 space-y-6">
           {/* Contact Info */}
@@ -100,7 +126,7 @@ export default async function PartnerLeadDetailPage({ params }: PartnerLeadDetai
             <CardHeader>
               <CardTitle className="text-lg">Contact Information</CardTitle>
             </CardHeader>
-            <CardContent className="grid gap-4 sm:grid-cols-2">
+            <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-2">
               <div className="flex items-center gap-3">
                 <Building className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                 <div>
@@ -190,8 +216,8 @@ export default async function PartnerLeadDetailPage({ params }: PartnerLeadDetai
           </Card>
         </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
+        {/* Sidebar - hidden on mobile, status shown above */}
+        <div className="hidden lg:block space-y-6">
           {/* Application Status */}
           <Card>
             <CardHeader>

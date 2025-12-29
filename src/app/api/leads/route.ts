@@ -111,6 +111,12 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Invalidate caches
+    await Promise.all([
+      cache.invalidateDashboard(),
+      cache.invalidatePartner(partner.id),
+    ]);
+
     return secureJsonResponse({ leadId: lead.id }, 201);
   } catch (error) {
     console.error('Lead creation error:', error);

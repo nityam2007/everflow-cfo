@@ -54,33 +54,21 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Try user credentials first (admin/staff)
-      let result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      });
+      // Try both credential providers in parallel for faster login
+      const [userResult, partnerResult] = await Promise.all([
+        signIn('credentials', { email, password, redirect: false }),
+        signIn('partner-credentials', { email, password, redirect: false }),
+      ]);
 
-      let isPartner = false;
-
-      // If user login fails, try partner credentials
-      if (result?.error) {
-        result = await signIn('partner-credentials', {
-          email,
-          password,
-          redirect: false,
-        });
-        if (!result?.error) {
-          isPartner = true;
-        }
-      }
-
-      if (result?.error) {
-        setError('Invalid email or password');
-      } else {
+      // Check which one succeeded
+      if (!userResult?.error) {
         router.refresh();
-        // Redirect based on user type
-        router.push(isPartner ? '/partner' : '/dashboard');
+        router.push('/dashboard');
+      } else if (!partnerResult?.error) {
+        router.refresh();
+        router.push('/partner');
+      } else {
+        setError('Invalid email or password');
       }
     } catch {
       setError('Something went wrong');

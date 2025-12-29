@@ -1,5 +1,6 @@
 import { getSession } from '@/lib/auth-utils';
 import { db } from '@/lib/db';
+import { cache } from '@/lib/redis';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PageHeader } from '@/components/page-header';
@@ -8,35 +9,73 @@ import { LEAD_STATUS_COLORS, ELIGIBILITY_COLORS, ASSIGNMENT_STATUS_COLORS } from
 import { Users, DollarSign, TrendingUp, Clock, Building2, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 
+interface DashboardStats {
+  totalLeads: number;
+  newLeads: number;
+  inProgressLeads: number;
+  closedLeads: number;
+  partnersCount: number;
+  assignmentsCount: number;
+  totalEstimatedValue: number;
+}
+
+interface RecentLead {
+  id: string;
+  companyName: string;
+  status: string;
+  eligibility: string;
+  estimatedMax: number;
+  createdAt: Date;
+}
+
+async function getDashboardStats(userId: string, isAdmin: boolean): Promise<DashboardStats> {
+  const cacheKey = cache.keys.dashboardStats(userId, isAdmin);
+  
+  return cache.getOrFetch(cacheKey, async () => {
+    const whereClause = isAdmin ? {} : { assignedStaffId: userId };
+
+    const [totalLeads, newLeads, inProgressLeads, closedLeads, partnersCount, assignmentsCount] = await Promise.all([
+      db.lead.count({ where: whereClause }),
+      db.lead.count({ where: { ...whereClause, status: 'NEW' } }),
+      db.lead.count({ where: { ...whereClause, status: 'IN_PROGRESS' } }),
+      db.lead.count({ where: { ...whereClause, status: 'CLOSED' } }),
+      isAdmin ? db.partner.count({ where: { isActive: true } }) : 0,
+      isAdmin ? db.partnerAssignment.count({ where: { status: { in: ['PENDING', 'IN_PROGRESS'] } } }) : 0,
+    ]);
+
+    // Calculate total estimated value
+    const leads = await db.lead.findMany({
+      where: whereClause,
+      select: { estimatedMin: true, estimatedMax: true },
+    });
+
+    const totalEstimatedValue = leads.reduce(
+      (sum, lead) => sum + (lead.estimatedMin + lead.estimatedMax) / 2,
+      0
+    );
+
+    return {
+      totalLeads,
+      newLeads,
+      inProgressLeads,
+      closedLeads,
+      partnersCount,
+      assignmentsCount,
+      totalEstimatedValue,
+    };
+  }, cache.ttl.dashboardStats);
+}
+
 export default async function DashboardPage() {
   const session = await getSession();
   const isAdmin = session?.user?.role === 'ADMIN';
+  const userId = session?.user?.id || 'anonymous';
 
-  // Build query based on role
-  const whereClause = isAdmin ? {} : { assignedStaffId: session?.user?.id };
+  // Fetch cached stats
+  const stats = await getDashboardStats(userId, isAdmin);
 
-  // Fetch stats
-  const [totalLeads, newLeads, inProgressLeads, closedLeads, partnersCount, assignmentsCount] = await Promise.all([
-    db.lead.count({ where: whereClause }),
-    db.lead.count({ where: { ...whereClause, status: 'NEW' } }),
-    db.lead.count({ where: { ...whereClause, status: 'IN_PROGRESS' } }),
-    db.lead.count({ where: { ...whereClause, status: 'CLOSED' } }),
-    isAdmin ? db.partner.count({ where: { isActive: true } }) : Promise.resolve(0),
-    isAdmin ? db.partnerAssignment.count({ where: { status: { in: ['PENDING', 'IN_PROGRESS'] } } }) : Promise.resolve(0),
-  ]);
-
-  // Calculate total estimated value
-  const leads = await db.lead.findMany({
-    where: whereClause,
-    select: { estimatedMin: true, estimatedMax: true },
-  });
-
-  const totalEstimatedValue = leads.reduce(
-    (sum, lead) => sum + (lead.estimatedMin + lead.estimatedMax) / 2,
-    0
-  );
-
-  // Recent leads
+  // Recent leads (not cached - always fresh)
+  const whereClause = isAdmin ? {} : { assignedStaffId: userId };
   const recentLeads = await db.lead.findMany({
     where: whereClause,
     orderBy: { createdAt: 'desc' },
@@ -49,7 +88,7 @@ export default async function DashboardPage() {
       estimatedMax: true,
       createdAt: true,
     },
-  });
+  }) as RecentLead[];
 
   // Recent partner activity (admin only)
   const recentAssignments = isAdmin
@@ -63,28 +102,28 @@ export default async function DashboardPage() {
       })
     : [];
 
-  const stats = [
+  const statCards = [
     {
       title: 'Total Leads',
-      value: totalLeads,
+      value: stats.totalLeads,
       icon: Users,
       description: isAdmin ? 'All leads' : 'Assigned to you',
     },
     {
       title: 'New Leads',
-      value: newLeads,
+      value: stats.newLeads,
       icon: Clock,
       description: 'Awaiting action',
     },
     {
       title: 'In Progress',
-      value: inProgressLeads,
+      value: stats.inProgressLeads,
       icon: TrendingUp,
       description: 'Being processed',
     },
     {
       title: 'Est. Pipeline Value',
-      value: formatCurrency(totalEstimatedValue),
+      value: formatCurrency(stats.totalEstimatedValue),
       icon: DollarSign,
       description: 'Average of ranges',
     },
@@ -99,7 +138,7 @@ export default async function DashboardPage() {
 
       {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
+        {statCards.map((stat) => (
           <Card key={stat.title}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">
@@ -126,7 +165,7 @@ export default async function DashboardPage() {
               <Building2 className="h-4 w-4 text-[var(--color-foreground-muted)]" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-light text-[var(--color-foreground)]">{partnersCount}</div>
+              <div className="text-2xl font-light text-[var(--color-foreground)]">{stats.partnersCount}</div>
               <p className="text-xs text-[var(--color-foreground-muted)]">Backend payroll processors</p>
             </CardContent>
           </Card>
@@ -138,7 +177,7 @@ export default async function DashboardPage() {
               <CheckCircle className="h-4 w-4 text-[var(--color-foreground-muted)]" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-light text-[var(--color-foreground)]">{assignmentsCount}</div>
+              <div className="text-2xl font-light text-[var(--color-foreground)]">{stats.assignmentsCount}</div>
               <p className="text-xs text-[var(--color-foreground-muted)]">Pending + In Progress</p>
             </CardContent>
           </Card>

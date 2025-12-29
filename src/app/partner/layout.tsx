@@ -24,7 +24,7 @@ export default async function PartnerLayout({
       <PartnerHeader user={{ name: session.user.name }} />
 
       {/* Main content */}
-      <main className="mx-auto max-w-7xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">{children}</main>
     </div>
   );
 }
