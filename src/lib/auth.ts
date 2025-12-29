@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/redis';
+import { timingSafeEqual, maskEmail, hashForLogging } from '@/lib/security';
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -14,6 +15,11 @@ const otpLoginSchema = z.object({
   email: z.string().email(),
   code: z.string().length(6),
 });
+
+// Constants for login security
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOGIN_LOCKOUT_SECONDS = 15 * 60; // 15 minutes
+const MAX_OTP_VERIFICATION_ATTEMPTS = 3;
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -30,15 +36,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!parsed.success) return null;
 
         const { email, password } = parsed.data;
+        const normalizedEmail = email.toLowerCase().trim();
 
+        // Check for account lockout
+        const lockoutKey = `lockout:${normalizedEmail}`;
+        const isLockedOut = await cache.exists(lockoutKey);
+        if (isLockedOut) {
+          console.warn(`[SECURITY] Login attempt on locked account: ${maskEmail(normalizedEmail)}`);
+          return null;
+        }
+
+        // Track failed attempts
+        const attemptsKey = `login-attempts:${normalizedEmail}`;
+        
         const user = await db.user.findUnique({
-          where: { email: email.toLowerCase() },
+          where: { email: normalizedEmail },
         });
 
-        if (!user || !user.isActive) return null;
+        if (!user || !user.isActive) {
+          // Increment failed attempts even for non-existent users (prevent enumeration)
+          await incrementFailedAttempts(attemptsKey, lockoutKey, normalizedEmail);
+          return null;
+        }
 
         const isValid = await bcrypt.compare(password, user.password);
-        if (!isValid) return null;
+        if (!isValid) {
+          await incrementFailedAttempts(attemptsKey, lockoutKey, normalizedEmail);
+          console.warn(`[SECURITY] Failed login attempt for: ${maskEmail(normalizedEmail)}`);
+          return null;
+        }
+
+        // Clear failed attempts on successful login
+        await cache.del(attemptsKey);
 
         // Log successful login
         await db.auditLog.create({
@@ -47,7 +76,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             entityType: 'user',
             entityId: user.id,
             userId: user.id,
-            newValues: { method: 'credentials' },
+            newValues: { method: 'credentials', timestamp: new Date().toISOString() },
           },
         });
 
@@ -73,17 +102,43 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!parsed.success) return null;
 
         const { email, code } = parsed.data;
-        const normalizedEmail = email.toLowerCase();
+        const normalizedEmail = email.toLowerCase().trim();
 
-        // Verify OTP from Redis
+        // Verify OTP from Redis with attempt tracking
         const otpKey = `otp:${normalizedEmail}`;
-        const storedOtp = await cache.get(otpKey);
+        const storedData = await cache.get<string>(otpKey);
 
-        if (!storedOtp || storedOtp !== code) {
+        if (!storedData) {
+          console.warn(`[SECURITY] OTP verification with no stored OTP: ${maskEmail(normalizedEmail)}`);
           return null;
         }
 
-        // Delete used OTP
+        let otpData: { code: string; attempts: number; createdAt: number };
+        try {
+          otpData = JSON.parse(storedData);
+        } catch {
+          // Legacy format - just the code string
+          otpData = { code: storedData, attempts: 0, createdAt: Date.now() };
+        }
+
+        // Check attempt limit
+        if (otpData.attempts >= MAX_OTP_VERIFICATION_ATTEMPTS) {
+          console.warn(`[SECURITY] OTP max attempts exceeded: ${maskEmail(normalizedEmail)}`);
+          await cache.del(otpKey);
+          return null;
+        }
+
+        // Use timing-safe comparison to prevent timing attacks
+        if (!timingSafeEqual(otpData.code, code)) {
+          // Increment attempts
+          otpData.attempts += 1;
+          const remainingTTL = Math.max(0, 600 - Math.floor((Date.now() - otpData.createdAt) / 1000));
+          await cache.set(otpKey, JSON.stringify(otpData), remainingTTL);
+          console.warn(`[SECURITY] Failed OTP attempt for: ${maskEmail(normalizedEmail)} (attempt ${otpData.attempts})`);
+          return null;
+        }
+
+        // Delete used OTP immediately
         await cache.del(otpKey);
 
         // Try to find user first
@@ -98,7 +153,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               entityType: 'user',
               entityId: user.id,
               userId: user.id,
-              newValues: { method: 'email-otp' },
+              newValues: { method: 'email-otp', timestamp: new Date().toISOString() },
             },
           });
 
@@ -181,5 +236,28 @@ declare module '@auth/core/jwt' {
     id: string;
     role: 'ADMIN' | 'STAFF' | 'PARTNER';
     userType: 'user' | 'partner';
+  }
+}
+
+// Helper function to track failed login attempts
+async function incrementFailedAttempts(
+  attemptsKey: string,
+  lockoutKey: string,
+  email: string
+): Promise<void> {
+  const attempts = await cache.incr(attemptsKey);
+  
+  // Set expiry on first attempt (1 hour window)
+  if (attempts === 1) {
+    await cache.expire(attemptsKey, 3600);
+  }
+  
+  // Lock account after max attempts
+  if (attempts >= MAX_LOGIN_ATTEMPTS) {
+    await cache.set(lockoutKey, '1', LOGIN_LOCKOUT_SECONDS);
+    console.warn(`[SECURITY] Account locked due to too many failed attempts: ${maskEmail(email)}`);
+    
+    // Clear the attempts counter
+    await cache.del(attemptsKey);
   }
 }

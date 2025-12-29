@@ -3,11 +3,19 @@ import { db } from '@/lib/db';
 import { getServerSession } from '@/lib/auth-utils';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+import {
+  strongPasswordSchema,
+  sanitizeEmail,
+  sanitizeString,
+  secureJsonResponse,
+  secureErrorResponse,
+  addSecurityHeaders,
+} from '@/lib/security';
 
 const createUserSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
+  email: z.string().email('Invalid email address').max(255),
+  password: strongPasswordSchema,
   role: z.enum(['ADMIN', 'STAFF']),
 });
 
@@ -16,7 +24,7 @@ export async function GET() {
   const session = await getServerSession();
 
   if (!session?.user || session.user.role !== 'ADMIN') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
   }
 
   const users = await db.user.findMany({
@@ -31,7 +39,7 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json(users);
+  return secureJsonResponse(users);
 }
 
 // POST - Create new user (admin only)
@@ -39,33 +47,34 @@ export async function POST(request: NextRequest) {
   const session = await getServerSession();
 
   if (!session?.user || session.user.role !== 'ADMIN') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
   }
 
   try {
     const body = await request.json();
     const data = createUserSchema.parse(body);
 
+    // Sanitize inputs
+    const sanitizedEmail = sanitizeEmail(data.email);
+    const sanitizedName = sanitizeString(data.name);
+
     // Check if email already exists
     const existingUser = await db.user.findUnique({
-      where: { email: data.email },
+      where: { email: sanitizedEmail },
     });
 
     if (existingUser) {
-      return NextResponse.json(
-        { error: 'A user with this email already exists' },
-        { status: 400 }
-      );
+      return secureErrorResponse('A user with this email already exists', 400);
     }
 
-    // Hash password
+    // Hash password with high cost factor
     const hashedPassword = await bcrypt.hash(data.password, 12);
 
     // Create user (using correct field name from schema)
     const user = await db.user.create({
       data: {
-        name: data.name,
-        email: data.email,
+        name: sanitizedName,
+        email: sanitizedEmail,
         password: hashedPassword,
         role: data.role,
         isActive: true,
@@ -94,19 +103,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(user, { status: 201 });
+    return secureJsonResponse(user, 201);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 }
-      );
+      return secureErrorResponse(error.errors[0].message, 400);
     }
 
     console.error('Error creating user:', error);
-    return NextResponse.json(
-      { error: 'Failed to create user' },
-      { status: 500 }
-    );
+    return secureErrorResponse('Failed to create user', 500);
   }
 }

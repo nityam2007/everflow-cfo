@@ -60,6 +60,14 @@ export const cache = {
     return (await redis.exists(key)) === 1;
   },
 
+  async incr(key: string): Promise<number> {
+    return await redis.incr(key);
+  },
+
+  async expire(key: string, seconds: number): Promise<void> {
+    await redis.expire(key, seconds);
+  },
+
   // Rate limiting
   async rateLimit(key: string, limit: number, windowSeconds: number): Promise<{ allowed: boolean; remaining: number }> {
     const current = await redis.incr(key);

@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getServerSession } from '@/lib/auth-utils';
 import { z } from 'zod';
+import { isValidId, sanitizeString, secureJsonResponse, secureErrorResponse } from '@/lib/security';
 
 const addNoteSchema = z.object({
-  content: z.string().min(1, 'Note content is required'),
+  content: z.string().min(1, 'Note content is required').max(10000),
 });
 
 // POST - Add a note to assignment (partner only)
@@ -16,10 +17,15 @@ export async function POST(
 
   // Must be authenticated as partner
   if (!session?.user || session.user.userType !== 'partner') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
   }
 
   const { id } = await params;
+
+  // Validate ID format
+  if (!isValidId(id)) {
+    return secureErrorResponse('Invalid assignment ID', 400);
+  }
 
   try {
     const body = await request.json();
@@ -34,34 +40,25 @@ export async function POST(
     });
 
     if (!assignment) {
-      return NextResponse.json(
-        { error: 'Assignment not found' },
-        { status: 404 }
-      );
+      return secureErrorResponse('Assignment not found', 404);
     }
 
-    // Create note
+    // Create note with sanitized content
     const note = await db.partnerLeadNote.create({
       data: {
         assignmentId: id,
-        content: data.content,
+        content: sanitizeString(data.content),
       },
     });
 
-    return NextResponse.json(note, { status: 201 });
+    return secureJsonResponse(note, 201);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 }
-      );
+      return secureErrorResponse(error.errors[0].message, 400);
     }
 
     console.error('Error adding note:', error);
-    return NextResponse.json(
-      { error: 'Failed to add note' },
-      { status: 500 }
-    );
+    return secureErrorResponse('Failed to add note', 500);
   }
 }
 
@@ -73,10 +70,15 @@ export async function GET(
   const session = await getServerSession();
 
   if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
   }
 
   const { id } = await params;
+
+  // Validate ID format
+  if (!isValidId(id)) {
+    return secureErrorResponse('Invalid assignment ID', 400);
+  }
 
   // Check access - partner can only see their own, staff/admin can see all
   let assignment;
@@ -95,10 +97,7 @@ export async function GET(
   }
 
   if (!assignment) {
-    return NextResponse.json(
-      { error: 'Assignment not found' },
-      { status: 404 }
-    );
+    return secureErrorResponse('Assignment not found', 404);
   }
 
   const notes = await db.partnerLeadNote.findMany({
@@ -106,5 +105,5 @@ export async function GET(
     orderBy: { createdAt: 'desc' },
   });
 
-  return NextResponse.json(notes);
+  return secureJsonResponse(notes);
 }

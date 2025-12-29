@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getServerSession } from '@/lib/auth-utils';
 import { z } from 'zod';
+import { isValidId, sanitizeString, secureJsonResponse, secureErrorResponse } from '@/lib/security';
 
 const assignPartnerSchema = z.object({
   partnerId: z.string().min(1, 'Partner ID is required'),
-  notes: z.string().optional(),
+  notes: z.string().max(2000).optional(),
 });
 
 // POST - Assign a partner to a lead
@@ -16,14 +17,24 @@ export async function POST(
   const session = await getServerSession();
 
   if (!session?.user || !['ADMIN', 'STAFF'].includes(session.user.role)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
   }
 
   const { id } = await params;
 
+  // Validate ID format
+  if (!isValidId(id)) {
+    return secureErrorResponse('Invalid lead ID', 400);
+  }
+
   try {
     const body = await request.json();
     const data = assignPartnerSchema.parse(body);
+
+    // Validate partner ID format
+    if (!isValidId(data.partnerId)) {
+      return secureErrorResponse('Invalid partner ID', 400);
+    }
 
     // Check if lead exists
     const lead = await db.lead.findUnique({
@@ -32,7 +43,7 @@ export async function POST(
     });
 
     if (!lead) {
-      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+      return secureErrorResponse('Lead not found', 404);
     }
 
     // Check if partner exists and is active
@@ -42,14 +53,11 @@ export async function POST(
     });
 
     if (!partner) {
-      return NextResponse.json({ error: 'Partner not found' }, { status: 404 });
+      return secureErrorResponse('Partner not found', 404);
     }
 
     if (!partner.isActive) {
-      return NextResponse.json(
-        { error: 'Cannot assign to inactive partner' },
-        { status: 400 }
-      );
+      return secureErrorResponse('Cannot assign to inactive partner', 400);
     }
 
     // Check if already assigned to this partner
@@ -62,11 +70,11 @@ export async function POST(
     });
 
     if (existingAssignment) {
-      return NextResponse.json(
-        { error: 'Lead is already assigned to this partner' },
-        { status: 400 }
-      );
+      return secureErrorResponse('Lead is already assigned to this partner', 400);
     }
+
+    // Sanitize notes if provided
+    const sanitizedNotes = data.notes ? sanitizeString(data.notes) : undefined;
 
     // Create assignment
     const assignment = await db.partnerAssignment.create({
@@ -74,7 +82,7 @@ export async function POST(
         leadId: id,
         partnerId: data.partnerId,
         assignedById: session.user.id,
-        notes: data.notes,
+        notes: sanitizedNotes,
         status: 'PENDING',
       },
       include: {
@@ -99,20 +107,14 @@ export async function POST(
       },
     });
 
-    return NextResponse.json(assignment, { status: 201 });
+    return secureJsonResponse(assignment, 201);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 }
-      );
+      return secureErrorResponse(error.errors[0].message, 400);
     }
 
     console.error('Error assigning partner:', error);
-    return NextResponse.json(
-      { error: 'Failed to assign partner' },
-      { status: 500 }
-    );
+    return secureErrorResponse('Failed to assign partner', 500);
   }
 }
 
@@ -124,10 +126,15 @@ export async function GET(
   const session = await getServerSession();
 
   if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
   }
 
   const { id } = await params;
+
+  // Validate ID format
+  if (!isValidId(id)) {
+    return secureErrorResponse('Invalid lead ID', 400);
+  }
 
   const assignments = await db.partnerAssignment.findMany({
     where: { leadId: id },
@@ -142,5 +149,5 @@ export async function GET(
     orderBy: { assignedAt: 'desc' },
   });
 
-  return NextResponse.json(assignments);
+  return secureJsonResponse(assignments);
 }

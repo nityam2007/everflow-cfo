@@ -3,43 +3,66 @@ import { db } from '@/lib/db';
 import { cache } from '@/lib/redis';
 import { leadSubmissionSchema } from '@/lib/validations';
 import { calculateEstimate, CURRENT_RULES_VERSION } from '@/lib/estimation-engine';
+import {
+  sanitizeString,
+  sanitizeEmail,
+  sanitizePhone,
+  getClientIP,
+  secureJsonResponse,
+  secureErrorResponse,
+  rateLimits,
+  hashForLogging,
+} from '@/lib/security';
 
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting
-    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    // Get real client IP with proxy support
+    const ip = getClientIP(request);
+    const ipHash = hashForLogging(ip);
+    
+    // Rate limiting with configured limits
     const rateKey = `rate:lead:${ip}`;
-    const { allowed, remaining } = await cache.rateLimit(rateKey, 10, 3600); // 10 per hour
+    const { allowed, remaining } = await cache.rateLimit(
+      rateKey, 
+      rateLimits.leadSubmission.maxRequests, 
+      Math.floor(rateLimits.leadSubmission.windowMs / 1000)
+    );
 
     if (!allowed) {
-      return NextResponse.json(
-        { error: 'Rate limit exceeded. Please try again later.' },
-        { status: 429, headers: { 'X-RateLimit-Remaining': remaining.toString() } }
-      );
+      console.warn(`[SECURITY] Rate limit exceeded for lead submission: ${ipHash}`);
+      const response = secureErrorResponse('Rate limit exceeded. Please try again later.', 429);
+      response.headers.set('X-RateLimit-Remaining', remaining.toString());
+      response.headers.set('Retry-After', Math.floor(rateLimits.leadSubmission.windowMs / 1000).toString());
+      return response;
     }
 
     const body = await request.json();
     const parsed = leadSubmissionSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json(
-        { error: 'Invalid input', details: parsed.error.flatten() },
-        { status: 400 }
-      );
+      return secureErrorResponse('Invalid input', 400);
     }
 
     const { estimator, identity, source } = parsed.data;
 
+    // Sanitize all user inputs before storing
+    const sanitizedIdentity = {
+      companyName: sanitizeString(identity.companyName),
+      contactName: sanitizeString(identity.contactName),
+      email: sanitizeEmail(identity.email),
+      phone: identity.phone ? sanitizePhone(identity.phone) : undefined,
+    };
+
     // Calculate estimate with versioned rules
     const estimation = calculateEstimate(estimator);
 
-    // Create lead with rules version for auditability
+    // Create lead with sanitized data
     const lead = await db.lead.create({
       data: {
-        companyName: identity.companyName,
-        contactName: identity.contactName,
-        email: identity.email.toLowerCase(),
-        phone: identity.phone,
+        companyName: sanitizedIdentity.companyName,
+        contactName: sanitizedIdentity.contactName,
+        email: sanitizedIdentity.email,
+        phone: sanitizedIdentity.phone,
         industry: estimator.industry,
         inputsJson: estimator,
         estimatedMin: estimation.estimatedMin,
@@ -48,12 +71,12 @@ export async function POST(request: NextRequest) {
         eligibility: estimation.eligibility,
         rulesVersion: estimation.rulesVersion,
         explanations: estimation.explanations,
-        source: source || 'direct',
+        source: sanitizeString(source || 'direct'),
         status: 'NEW',
       },
     });
 
-    // Create audit log
+    // Create audit log (don't store raw IP for privacy)
     await db.auditLog.create({
       data: {
         action: 'LEAD_CREATED',
@@ -61,20 +84,17 @@ export async function POST(request: NextRequest) {
         entityId: lead.id,
         leadId: lead.id,
         newValues: { 
-          source, 
-          ip,
+          source: sanitizeString(source || 'direct'), 
+          ipHash,
           rulesVersion: estimation.rulesVersion,
           creditFlags: estimation.creditFlags,
         },
       },
     });
 
-    return NextResponse.json({ leadId: lead.id }, { status: 201 });
+    return secureJsonResponse({ leadId: lead.id }, 201);
   } catch (error) {
     console.error('Lead creation error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return secureErrorResponse('Internal server error', 500);
   }
 }

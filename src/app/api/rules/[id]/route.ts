@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth-utils';
+import { isValidId, sanitizeString, secureJsonResponse, secureErrorResponse } from '@/lib/security';
 
 // GET /api/rules/[id] - Get specific rules by ID
 export async function GET(
@@ -10,10 +11,15 @@ export async function GET(
   try {
     const session = await requireAuth();
     if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return secureErrorResponse('Unauthorized', 401);
     }
 
     const { id } = await params;
+    
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid rules ID', 400);
+    }
     
     const rules = await db.estimatorRules.findUnique({
       where: { id },
@@ -21,13 +27,13 @@ export async function GET(
     });
 
     if (!rules) {
-      return NextResponse.json({ error: 'Rules not found' }, { status: 404 });
+      return secureErrorResponse('Rules not found', 404);
     }
 
-    return NextResponse.json(rules);
+    return secureJsonResponse(rules);
   } catch (error) {
     console.error('Error fetching rules:', error);
-    return NextResponse.json({ error: 'Failed to fetch rules' }, { status: 500 });
+    return secureErrorResponse('Failed to fetch rules', 500);
   }
 }
 
@@ -39,16 +45,27 @@ export async function PUT(
   try {
     const session = await requireAuth();
     if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+      return secureErrorResponse('Admin access required', 403);
     }
 
     const { id } = await params;
+
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid rules ID', 400);
+    }
+
     const body = await request.json();
     const { effectiveDate, description, rulesConfig, setActive } = body;
 
+    // Sanitize description
+    const sanitizedDescription = description !== undefined 
+      ? sanitizeString(description).substring(0, 500) 
+      : undefined;
+
     const existing = await db.estimatorRules.findUnique({ where: { id } });
     if (!existing) {
-      return NextResponse.json({ error: 'Rules not found' }, { status: 404 });
+      return secureErrorResponse('Rules not found', 404);
     }
 
     // If setting as active, deactivate all other rules first
@@ -63,7 +80,7 @@ export async function PUT(
       where: { id },
       data: {
         ...(effectiveDate && { effectiveDate: new Date(effectiveDate) }),
-        ...(description !== undefined && { description }),
+        ...(sanitizedDescription !== undefined && { description: sanitizedDescription }),
         ...(rulesConfig && { rulesConfig }),
         ...(setActive !== undefined && { isActive: setActive })
       },
@@ -82,10 +99,10 @@ export async function PUT(
       }
     });
 
-    return NextResponse.json(updated);
+    return secureJsonResponse(updated);
   } catch (error) {
     console.error('Error updating rules:', error);
-    return NextResponse.json({ error: 'Failed to update rules' }, { status: 500 });
+    return secureErrorResponse('Failed to update rules', 500);
   }
 }
 
@@ -97,21 +114,23 @@ export async function DELETE(
   try {
     const session = await requireAuth();
     if (!session || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+      return secureErrorResponse('Admin access required', 403);
     }
 
     const { id } = await params;
 
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid rules ID', 400);
+    }
+
     const existing = await db.estimatorRules.findUnique({ where: { id } });
     if (!existing) {
-      return NextResponse.json({ error: 'Rules not found' }, { status: 404 });
+      return secureErrorResponse('Rules not found', 404);
     }
 
     if (existing.isActive) {
-      return NextResponse.json(
-        { error: 'Cannot delete active rules. Activate another version first.' },
-        { status: 400 }
-      );
+      return secureErrorResponse('Cannot delete active rules. Activate another version first.', 400);
     }
 
     await db.estimatorRules.delete({ where: { id } });
@@ -127,9 +146,9 @@ export async function DELETE(
       }
     });
 
-    return NextResponse.json({ success: true });
+    return secureJsonResponse({ success: true });
   } catch (error) {
     console.error('Error deleting rules:', error);
-    return NextResponse.json({ error: 'Failed to delete rules' }, { status: 500 });
+    return secureErrorResponse('Failed to delete rules', 500);
   }
 }

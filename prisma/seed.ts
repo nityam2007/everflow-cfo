@@ -217,7 +217,7 @@ async function main() {
     const rules = await prisma.estimatorRules.create({
       data: {
         version: '1.0.0',
-        effectiveDate: new Date('2024-12-01'),
+        effectiveDate: new Date('2025-12-29'),
         description: 'Initial conservative estimation rules based on statutory limits',
         isActive: true,
         rulesConfig: defaultRulesConfig,

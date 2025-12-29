@@ -2,15 +2,24 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/redis';
+import { 
+  generateSecureOTP, 
+  sanitizeEmail, 
+  getClientIP,
+  hashForLogging,
+  maskEmail,
+  secureErrorResponse,
+  addSecurityHeaders,
+  rateLimits 
+} from '@/lib/security';
 
 const sendOtpSchema = z.object({
   email: z.string().email(),
 });
 
-// Generate 6-digit OTP
-function generateOTP(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
+// Constants for OTP security
+const OTP_EXPIRY_SECONDS = 600; // 10 minutes
+const MAX_OTP_ATTEMPTS = 3;
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,14 +27,30 @@ export async function POST(request: NextRequest) {
     const parsed = sendOtpSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json(
-        { error: 'Valid email is required' },
-        { status: 400 }
-      );
+      return secureErrorResponse('Valid email is required', 400);
     }
 
     const { email } = parsed.data;
-    const normalizedEmail = email.toLowerCase();
+    const normalizedEmail = sanitizeEmail(email);
+    const clientIP = getClientIP(request);
+
+    // Rate limiting: max 3 OTP requests per email per hour
+    const emailRateKey = `otp-rate:${normalizedEmail}`;
+    const { allowed: emailAllowed } = await cache.rateLimit(emailRateKey, rateLimits.otp.maxRequests, rateLimits.otp.windowMs / 1000);
+
+    if (!emailAllowed) {
+      console.warn(`[SECURITY] OTP rate limit exceeded for email: ${maskEmail(normalizedEmail)}, IP: ${hashForLogging(clientIP)}`);
+      return secureErrorResponse('Too many requests. Please try again later.', 429);
+    }
+
+    // Additional IP-based rate limiting
+    const ipRateKey = `otp-rate-ip:${hashForLogging(clientIP)}`;
+    const { allowed: ipAllowed } = await cache.rateLimit(ipRateKey, 10, 3600);
+
+    if (!ipAllowed) {
+      console.warn(`[SECURITY] OTP IP rate limit exceeded: ${hashForLogging(clientIP)}`);
+      return secureErrorResponse('Too many requests. Please try again later.', 429);
+    }
 
     // Check if user exists (either User or Partner)
     const user = await db.user.findUnique({
@@ -40,59 +65,52 @@ export async function POST(request: NextRequest) {
 
     const account = user || partner;
 
+    // Always return success message to prevent email enumeration
+    const successResponse = NextResponse.json(
+      { message: 'If an account exists, a code has been sent' },
+      { status: 200 }
+    );
+    addSecurityHeaders(successResponse);
+
     if (!account) {
-      // Don't reveal if user exists or not for security
-      return NextResponse.json(
-        { message: 'If an account exists, a code has been sent' },
-        { status: 200 }
-      );
+      // Log potential enumeration attempt
+      console.info(`[SECURITY] OTP request for non-existent email: ${maskEmail(normalizedEmail)}`);
+      return successResponse;
     }
 
     if (!account.isActive) {
-      return NextResponse.json(
-        { error: 'Account is inactive' },
-        { status: 403 }
-      );
+      console.info(`[SECURITY] OTP request for inactive account: ${maskEmail(normalizedEmail)}`);
+      return successResponse;
     }
 
-    // Rate limiting: max 5 OTP requests per email per hour
-    const rateKey = `otp-rate:${normalizedEmail}`;
-    const { allowed } = await cache.rateLimit(rateKey, 5, 3600);
-
-    if (!allowed) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
-        { status: 429 }
-      );
-    }
-
-    // Generate OTP
-    const otp = generateOTP();
+    // Generate cryptographically secure OTP
+    const otp = generateSecureOTP(6);
     
-    // Store OTP in Redis (expires in 10 minutes)
+    // Store OTP with attempt counter in Redis
     const otpKey = `otp:${normalizedEmail}`;
-    await cache.set(otpKey, otp, 600);
+    const otpData = JSON.stringify({
+      code: otp,
+      attempts: 0,
+      createdAt: Date.now(),
+    });
+    await cache.set(otpKey, otpData, OTP_EXPIRY_SECONDS);
 
     // In production, send email here
-    // For now, log it (in development)
-    console.log(`[OTP] Code for ${normalizedEmail}: ${otp}`);
+    // For development, log it securely
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[DEV OTP] Code for ${maskEmail(normalizedEmail)}: ${otp}`);
+    }
 
     // TODO: Integrate with email service (SendGrid, Resend, etc.)
     // await sendEmail({
     //   to: normalizedEmail,
     //   subject: 'Your EverflowCFO Verification Code',
-    //   text: `Your verification code is: ${otp}\n\nThis code expires in 10 minutes.`,
+    //   text: `Your verification code is: ${otp}\n\nThis code expires in 10 minutes.\n\nIf you didn't request this code, please ignore this email.`,
     // });
 
-    return NextResponse.json(
-      { message: 'Verification code sent' },
-      { status: 200 }
-    );
+    return successResponse;
   } catch (error) {
-    console.error('Send OTP error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('[ERROR] Send OTP error:', error);
+    return secureErrorResponse('Internal server error', 500);
   }
 }

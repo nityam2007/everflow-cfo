@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin, getSession } from '@/lib/auth-utils';
 import { db } from '@/lib/db';
+import {
+  isValidId,
+  sanitizeString,
+  sanitizeEmail,
+  sanitizePhone,
+  secureJsonResponse,
+  secureErrorResponse,
+} from '@/lib/security';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -11,6 +19,11 @@ export async function GET(request: Request, { params }: RouteParams) {
   try {
     await requireAdmin();
     const { id } = await params;
+
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid partner ID', 400);
+    }
 
     const partner = await db.partner.findUnique({
       where: { id },
@@ -27,12 +40,12 @@ export async function GET(request: Request, { params }: RouteParams) {
     });
 
     if (!partner) {
-      return NextResponse.json({ error: 'Partner not found' }, { status: 404 });
+      return secureErrorResponse('Partner not found', 404);
     }
 
-    return NextResponse.json(partner);
+    return secureJsonResponse(partner);
   } catch {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
   }
 }
 
@@ -41,12 +54,18 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   try {
     await requireAdmin();
     const { id } = await params;
+
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid partner ID', 400);
+    }
+
     const session = await getSession();
     const body = await request.json();
 
     const { name, companyName, email, phone, isActive } = body;
 
-    // Build update data
+    // Build update data with sanitization
     const updateData: {
       name?: string;
       companyName?: string;
@@ -55,22 +74,22 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       isActive?: boolean;
     } = {};
 
-    if (name !== undefined) updateData.name = name;
-    if (companyName !== undefined) updateData.companyName = companyName;
-    if (email !== undefined) updateData.email = email.toLowerCase();
-    if (phone !== undefined) updateData.phone = phone;
+    if (name !== undefined) updateData.name = sanitizeString(name);
+    if (companyName !== undefined) updateData.companyName = sanitizeString(companyName);
+    if (email !== undefined) updateData.email = sanitizeEmail(email);
+    if (phone !== undefined) updateData.phone = phone ? sanitizePhone(phone) : null;
     if (isActive !== undefined) updateData.isActive = isActive;
 
     // Check if email is already taken by another partner
     if (email) {
       const existing = await db.partner.findFirst({
         where: { 
-          email: email.toLowerCase(),
+          email: sanitizeEmail(email),
           id: { not: id },
         },
       });
       if (existing) {
-        return NextResponse.json({ error: 'Email already in use' }, { status: 400 });
+        return secureErrorResponse('Email already in use', 400);
       }
     }
 
@@ -98,9 +117,9 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       },
     });
 
-    return NextResponse.json(partner);
+    return secureJsonResponse(partner);
   } catch {
-    return NextResponse.json({ error: 'Failed to update partner' }, { status: 500 });
+    return secureErrorResponse('Failed to update partner', 500);
   }
 }
 
@@ -109,6 +128,12 @@ export async function DELETE(request: Request, { params }: RouteParams) {
   try {
     await requireAdmin();
     const { id } = await params;
+
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid partner ID', 400);
+    }
+
     const session = await getSession();
 
     await db.partner.update({
@@ -126,8 +151,8 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       },
     });
 
-    return NextResponse.json({ success: true });
+    return secureJsonResponse({ success: true });
   } catch {
-    return NextResponse.json({ error: 'Failed to deactivate partner' }, { status: 500 });
+    return secureErrorResponse('Failed to deactivate partner', 500);
   }
 }

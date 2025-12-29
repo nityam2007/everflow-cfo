@@ -2,12 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getServerSession } from '@/lib/auth-utils';
 import { z } from 'zod';
+import {
+  sanitizeString,
+  sanitizeEmail,
+  sanitizePhone,
+  secureJsonResponse,
+  secureErrorResponse,
+} from '@/lib/security';
 
 const createPartnerSchema = z.object({
-  name: z.string().min(2, 'Contact name must be at least 2 characters'),
-  companyName: z.string().min(2, 'Company name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  phone: z.string().optional(),
+  name: z.string().min(2, 'Contact name must be at least 2 characters').max(100),
+  companyName: z.string().min(2, 'Company name must be at least 2 characters').max(200),
+  email: z.string().email('Invalid email address').max(255),
+  phone: z.string().max(30).optional(),
 });
 
 // GET - List all partners (admin/staff only)
@@ -15,7 +22,7 @@ export async function GET() {
   const session = await getServerSession();
 
   if (!session?.user || !['ADMIN', 'STAFF'].includes(session.user.role)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
   }
 
   const partners = await db.partner.findMany({
@@ -32,7 +39,7 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json(partners);
+  return secureJsonResponse(partners);
 }
 
 // POST - Create new partner (admin only)
@@ -40,33 +47,38 @@ export async function POST(request: NextRequest) {
   const session = await getServerSession();
 
   if (!session?.user || session.user.role !== 'ADMIN') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
   }
 
   try {
     const body = await request.json();
     const data = createPartnerSchema.parse(body);
 
+    // Sanitize all inputs
+    const sanitizedData = {
+      name: sanitizeString(data.name),
+      companyName: sanitizeString(data.companyName),
+      email: sanitizeEmail(data.email),
+      phone: data.phone ? sanitizePhone(data.phone) : undefined,
+    };
+
     // Check if email already exists (in both User and Partner tables)
     const [existingUser, existingPartner] = await Promise.all([
-      db.user.findUnique({ where: { email: data.email } }),
-      db.partner.findUnique({ where: { email: data.email } }),
+      db.user.findUnique({ where: { email: sanitizedData.email } }),
+      db.partner.findUnique({ where: { email: sanitizedData.email } }),
     ]);
 
     if (existingUser || existingPartner) {
-      return NextResponse.json(
-        { error: 'An account with this email already exists' },
-        { status: 400 }
-      );
+      return secureErrorResponse('An account with this email already exists', 400);
     }
 
     // Create partner
     const partner = await db.partner.create({
       data: {
-        name: data.name,
-        companyName: data.companyName,
-        email: data.email,
-        phone: data.phone,
+        name: sanitizedData.name,
+        companyName: sanitizedData.companyName,
+        email: sanitizedData.email,
+        phone: sanitizedData.phone,
         isActive: true,
       },
       select: {
@@ -94,19 +106,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(partner, { status: 201 });
+    return secureJsonResponse(partner, 201);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 }
-      );
+      return secureErrorResponse(error.errors[0].message, 400);
     }
 
     console.error('Error creating partner:', error);
-    return NextResponse.json(
-      { error: 'Failed to create partner' },
-      { status: 500 }
-    );
+    return secureErrorResponse('Failed to create partner', 500);
   }
 }

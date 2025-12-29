@@ -2,23 +2,50 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { getServerSession } from '@/lib/auth-utils';
 import { formatDate } from '@/lib/utils';
+import { cache } from '@/lib/redis';
+import { 
+  sanitizeString, 
+  getClientIP, 
+  rateLimits, 
+  secureErrorResponse,
+  addSecurityHeaders 
+} from '@/lib/security';
 
 // GET - Export leads as CSV (admin only)
 export async function GET(request: NextRequest) {
   const session = await getServerSession();
 
   if (!session?.user || session.user.role !== 'ADMIN') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
+  }
+
+  // Rate limit exports (resource-intensive operation)
+  const ip = getClientIP(request);
+  const rateKey = `rate:export:${session.user.id}`;
+  const { allowed, remaining } = await cache.rateLimit(
+    rateKey,
+    rateLimits.export.maxRequests,
+    Math.floor(rateLimits.export.windowMs / 1000)
+  );
+
+  if (!allowed) {
+    const response = secureErrorResponse('Export rate limit exceeded. Try again later.', 429);
+    response.headers.set('X-RateLimit-Remaining', remaining.toString());
+    return response;
   }
 
   const { searchParams } = new URL(request.url);
   const status = searchParams.get('status');
   const eligibility = searchParams.get('eligibility');
 
+  // Sanitize filter values
+  const sanitizedStatus = status ? sanitizeString(status) : null;
+  const sanitizedEligibility = eligibility ? sanitizeString(eligibility) : null;
+
   // Build filters
   const where: Record<string, unknown> = {};
-  if (status && status !== 'all') where.status = status;
-  if (eligibility && eligibility !== 'all') where.eligibility = eligibility;
+  if (sanitizedStatus && sanitizedStatus !== 'all') where.status = sanitizedStatus;
+  if (sanitizedEligibility && sanitizedEligibility !== 'all') where.eligibility = sanitizedEligibility;
 
   const leads = await db.lead.findMany({
     where,
@@ -77,18 +104,20 @@ export async function GET(request: NextRequest) {
       userId: session.user.id,
       newValues: {
         count: leads.length,
-        filters: { status, eligibility },
+        filters: { status: sanitizedStatus, eligibility: sanitizedEligibility },
         exportType: 'csv',
       },
     },
   });
 
-  return new NextResponse(csv, {
+  const response = new NextResponse(csv, {
     headers: {
       'Content-Type': 'text/csv',
       'Content-Disposition': `attachment; filename="leads-export-${new Date().toISOString().split('T')[0]}.csv"`,
     },
   });
+  
+  return addSecurityHeaders(response);
 }
 
 function escapeCSV(value: string): string {

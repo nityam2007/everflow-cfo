@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import { isValidId, secureJsonResponse, secureErrorResponse } from '@/lib/security';
 
 const statusSchema = z.object({
   status: z.enum(['NEW', 'ASSIGNED', 'IN_PROGRESS', 'CLOSED', 'LOST']),
@@ -15,15 +16,21 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return secureErrorResponse('Unauthorized', 401);
     }
 
     const { id } = await params;
+    
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid lead ID', 400);
+    }
+
     const body = await request.json();
     const parsed = statusSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
+      return secureErrorResponse('Invalid status', 400);
     }
 
     const { status } = parsed.data;
@@ -35,12 +42,12 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     });
 
     if (!lead) {
-      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+      return secureErrorResponse('Lead not found', 404);
     }
 
     // Staff can only update their assigned leads
     if (session.user.role === 'STAFF' && lead.assignedStaffId !== session.user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return secureErrorResponse('Forbidden', 403);
     }
 
     const oldStatus = lead.status;
@@ -64,9 +71,9 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       },
     });
 
-    return NextResponse.json({ success: true });
+    return secureJsonResponse({ success: true });
   } catch (error) {
     console.error('Status update error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return secureErrorResponse('Internal server error', 500);
   }
 }

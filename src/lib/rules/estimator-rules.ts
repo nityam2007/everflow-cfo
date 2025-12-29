@@ -74,7 +74,7 @@ export const CURRENT_RULES_VERSION = '1.0.0';
 
 export const rulesV1_0_0: EstimatorRulesConfig = {
   version: '1.0.0',
-  effectiveDate: '2024-12-01',
+  effectiveDate: '2025-12-29',
   description: 'Initial conservative estimation rules based on statutory limits',
 
   // Employee count midpoints for estimation

@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import { sanitizeString, isValidId, secureJsonResponse, secureErrorResponse } from '@/lib/security';
 
 const noteSchema = z.object({
-  content: z.string().min(1),
+  content: z.string().min(1).max(10000),
 });
 
 interface RouteParams {
@@ -15,18 +16,25 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return secureErrorResponse('Unauthorized', 401);
     }
 
     const { id } = await params;
+    
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid lead ID', 400);
+    }
+
     const body = await request.json();
     const parsed = noteSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Content is required' }, { status: 400 });
+      return secureErrorResponse('Content is required', 400);
     }
 
-    const { content } = parsed.data;
+    // Sanitize content
+    const content = sanitizeString(parsed.data.content);
 
     // Check if user has access to this lead
     const lead = await db.lead.findUnique({
@@ -35,12 +43,12 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     });
 
     if (!lead) {
-      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+      return secureErrorResponse('Lead not found', 404);
     }
 
     // Staff can only add notes to their assigned leads
     if (session.user.role === 'STAFF' && lead.assignedStaffId !== session.user.id) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return secureErrorResponse('Forbidden', 403);
     }
 
     // Create note
@@ -64,9 +72,9 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       },
     });
 
-    return NextResponse.json({ success: true, noteId: note.id }, { status: 201 });
+    return secureJsonResponse({ success: true, noteId: note.id }, 201);
   } catch (error) {
     console.error('Note creation error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return secureErrorResponse('Internal server error', 500);
   }
 }

@@ -2,6 +2,14 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { requireAdmin, getSession } from '@/lib/auth-utils';
 import { db } from '@/lib/db';
+import {
+  isValidId,
+  sanitizeString,
+  sanitizeEmail,
+  strongPasswordSchema,
+  secureJsonResponse,
+  secureErrorResponse,
+} from '@/lib/security';
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -12,6 +20,11 @@ export async function GET(request: Request, { params }: RouteParams) {
   try {
     await requireAdmin();
     const { id } = await params;
+
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid user ID', 400);
+    }
 
     const user = await db.user.findUnique({
       where: { id },
@@ -27,12 +40,12 @@ export async function GET(request: Request, { params }: RouteParams) {
     });
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return secureErrorResponse('User not found', 404);
     }
 
-    return NextResponse.json(user);
+    return secureJsonResponse(user);
   } catch {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return secureErrorResponse('Unauthorized', 401);
   }
 }
 
@@ -41,12 +54,26 @@ export async function PATCH(request: Request, { params }: RouteParams) {
   try {
     await requireAdmin();
     const { id } = await params;
+
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid user ID', 400);
+    }
+
     const session = await getSession();
     const body = await request.json();
 
     const { name, email, password, role, isActive } = body;
 
-    // Build update data
+    // Validate password if provided
+    if (password) {
+      const passwordResult = strongPasswordSchema.safeParse(password);
+      if (!passwordResult.success) {
+        return secureErrorResponse(passwordResult.error.errors[0].message, 400);
+      }
+    }
+
+    // Build update data with sanitization
     const updateData: {
       name?: string;
       email?: string;
@@ -55,13 +82,13 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       isActive?: boolean;
     } = {};
 
-    if (name !== undefined) updateData.name = name;
-    if (email !== undefined) updateData.email = email.toLowerCase();
-    if (role !== undefined) updateData.role = role;
+    if (name !== undefined) updateData.name = sanitizeString(name);
+    if (email !== undefined) updateData.email = sanitizeEmail(email);
+    if (role !== undefined && ['ADMIN', 'STAFF'].includes(role)) updateData.role = role;
     if (isActive !== undefined) updateData.isActive = isActive;
 
     // Hash new password if provided
-    if (password && password.length >= 6) {
+    if (password) {
       updateData.password = await bcrypt.hash(password, 12);
     }
 
@@ -69,12 +96,12 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     if (email) {
       const existing = await db.user.findFirst({
         where: { 
-          email: email.toLowerCase(),
+          email: sanitizeEmail(email),
           id: { not: id },
         },
       });
       if (existing) {
-        return NextResponse.json({ error: 'Email already in use' }, { status: 400 });
+        return secureErrorResponse('Email already in use', 400);
       }
     }
 
@@ -107,9 +134,9 @@ export async function PATCH(request: Request, { params }: RouteParams) {
       },
     });
 
-    return NextResponse.json(user);
+    return secureJsonResponse(user);
   } catch {
-    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+    return secureErrorResponse('Failed to update user', 500);
   }
 }
 
@@ -118,6 +145,12 @@ export async function DELETE(request: Request, { params }: RouteParams) {
   try {
     await requireAdmin();
     const { id } = await params;
+
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid user ID', 400);
+    }
+
     const session = await getSession();
 
     await db.user.update({
@@ -135,8 +168,8 @@ export async function DELETE(request: Request, { params }: RouteParams) {
       },
     });
 
-    return NextResponse.json({ success: true });
+    return secureJsonResponse({ success: true });
   } catch {
-    return NextResponse.json({ error: 'Failed to deactivate user' }, { status: 500 });
+    return secureErrorResponse('Failed to deactivate user', 500);
   }
 }

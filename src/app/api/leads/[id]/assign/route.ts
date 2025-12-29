@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import { isValidId, secureJsonResponse, secureErrorResponse } from '@/lib/security';
 
 const assignSchema = z.object({
   staffId: z.string(),
@@ -15,18 +16,29 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
     const session = await auth();
     if (!session?.user || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return secureErrorResponse('Unauthorized', 401);
     }
 
     const { id } = await params;
+    
+    // Validate ID format
+    if (!isValidId(id)) {
+      return secureErrorResponse('Invalid lead ID', 400);
+    }
+
     const body = await request.json();
     const parsed = assignSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json({ error: 'Invalid staff ID' }, { status: 400 });
+      return secureErrorResponse('Invalid staff ID', 400);
     }
 
     const { staffId } = parsed.data;
+
+    // Validate staff ID format
+    if (!isValidId(staffId)) {
+      return secureErrorResponse('Invalid staff ID format', 400);
+    }
 
     // Verify lead exists
     const lead = await db.lead.findUnique({
@@ -35,7 +47,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     });
 
     if (!lead) {
-      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+      return secureErrorResponse('Lead not found', 404);
     }
 
     // Verify staff exists
@@ -45,7 +57,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     });
 
     if (!staff) {
-      return NextResponse.json({ error: 'Staff not found' }, { status: 404 });
+      return secureErrorResponse('Staff not found', 404);
     }
 
     const oldStaffId = lead.assignedStaffId;
@@ -72,9 +84,9 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       },
     });
 
-    return NextResponse.json({ success: true });
+    return secureJsonResponse({ success: true });
   } catch (error) {
     console.error('Assignment error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return secureErrorResponse('Internal server error', 500);
   }
 }
