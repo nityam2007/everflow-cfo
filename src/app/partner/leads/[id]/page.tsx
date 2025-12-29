@@ -208,10 +208,10 @@ export default async function PartnerLeadDetailPage({ params }: PartnerLeadDetai
               </div>
               <p className="text-sm text-[var(--color-foreground-muted)] text-center">
                 {lead.status === 'NEW' && 'Your application is awaiting review.'}
-                {lead.status === 'CONTACTED' && 'Our team has reached out to you.'}
+                {lead.status === 'ASSIGNED' && 'Your application has been assigned to a specialist.'}
                 {lead.status === 'IN_PROGRESS' && 'Your application is being processed.'}
-                {lead.status === 'CLOSED_WON' && 'Congratulations! Your credits have been approved.'}
-                {lead.status === 'CLOSED_LOST' && 'Unfortunately, your application was not approved.'}
+                {lead.status === 'CLOSED' && 'Your application has been completed successfully.'}
+                {lead.status === 'LOST' && 'Unfortunately, your application was not approved.'}
               </p>
             </CardContent>
           </Card>

@@ -66,9 +66,9 @@ export default async function PartnerDashboardPage() {
 
   // Stats based on lead status
   const totalApplications = leads.length;
-  const inReview = leads.filter((l) => ['NEW', 'CONTACTED', 'IN_PROGRESS'].includes(l.status)).length;
-  const approved = leads.filter((l) => l.status === 'CLOSED_WON').length;
-  const declined = leads.filter((l) => l.status === 'CLOSED_LOST').length;
+  const inReview = leads.filter((l) => ['NEW', 'ASSIGNED', 'IN_PROGRESS'].includes(l.status)).length;
+  const approved = leads.filter((l) => l.status === 'CLOSED').length;
+  const declined = leads.filter((l) => l.status === 'LOST').length;
 
   return (
     <div className="space-y-8">
