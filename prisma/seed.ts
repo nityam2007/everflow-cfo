@@ -18,7 +18,7 @@ async function main() {
     create: {   
       name: 'Admin User',
       email: 'admin@everflowcfo.com',
-      passwordHash: adminPassword,
+      password: adminPassword,
       role: UserRole.ADMIN,
       isActive: true,
     },
@@ -33,7 +33,7 @@ async function main() {
     create: {
       name: 'Staff Member',
       email: 'staff@everflowcfo.com',
-      passwordHash: staffPassword,
+      password: staffPassword,
       role: UserRole.STAFF,
       isActive: true,
     },
@@ -121,6 +121,153 @@ async function main() {
       data: leadData,
     });
     console.log('✅ Created lead:', lead.companyName);
+  }
+
+  // Create default estimator rules
+  const defaultRulesConfig = {
+    employeeRanges: {
+      '1-10': 5,
+      '10-25': 17,
+      '25-50': 37,
+      '50-100': 75,
+      '100-250': 175,
+      '250-500': 375,
+      '500+': 600,
+    },
+    payrollRanges: {
+      '100000-500000': 300000,
+      '500000-1000000': 750000,
+      '1000000-2000000': 1500000,
+      '2000000-5000000': 3500000,
+      '5000000-10000000': 7500000,
+      '10000000+': 15000000,
+    },
+    credits: {
+      erc: {
+        enabled: true,
+        maxPerEmployee: 26000,
+        qualifiers: {
+          operationalDisruption: true,
+          governmentMandates: true,
+        },
+        factors: {
+          conservativeMin: 0.25,
+          conservativeMax: 0.45,
+          bothQualifiersMin: 0.35,
+          bothQualifiersMax: 0.55,
+        },
+        explanations: {
+          eligible: [
+            'Based on reported 2020-2021 operational disruption',
+            'Subject to IRS verification of qualifying periods',
+            'Conservative pre-assessment pending documentation review',
+          ],
+          notEligible: [
+            'No qualifying disruption or mandate impact reported',
+            'ERC requires specific 2020-2021 eligibility criteria',
+          ],
+        },
+      },
+      tip: {
+        enabled: true,
+        ficaRate: 0.0765,
+        eligibleIndustries: ['restaurant', 'hospitality'],
+        avgAnnualTipsPerEmployee: 15000,
+        tippedEmployeeRatio: 0.35,
+        factors: {
+          conservativeMin: 0.6,
+          conservativeMax: 0.85,
+        },
+        explanations: {
+          eligible: [
+            'Based on tipped workforce in qualifying industry',
+            'Ongoing annual credit opportunity',
+            'Credit applies to FICA taxes on tips above minimum wage',
+          ],
+          notEligible: [
+            'Requires tipped employees in restaurant/hospitality',
+          ],
+        },
+      },
+      wotc: {
+        enabled: true,
+        avgCreditPerHire: 4000,
+        maxCreditPerHire: 9600,
+        annualTurnoverRate: 0.20,
+        factors: {
+          qualifiedHireRateLow: 0.05,
+          qualifiedHireRateHigh: 0.12,
+        },
+        explanations: {
+          eligible: [
+            'Based on targeted population hiring signals',
+            'Credit varies by hire category ($2,400 - $9,600)',
+            'Requires certification documentation per hire',
+          ],
+          notEligible: [
+            'No targeted population hiring reported',
+          ],
+        },
+      },
+    },
+  };
+
+  const existingRules = await prisma.estimatorRules.findFirst();
+  if (!existingRules) {
+    const rules = await prisma.estimatorRules.create({
+      data: {
+        version: '1.0.0',
+        effectiveDate: new Date('2024-12-01'),
+        description: 'Initial conservative estimation rules based on statutory limits',
+        isActive: true,
+        rulesConfig: defaultRulesConfig,
+        createdById: admin.id,
+      },
+    });
+    console.log('✅ Created default estimator rules:', rules.version);
+  } else {
+    console.log('⏭️ Estimator rules already exist, skipping');
+  }
+
+  // Create some default site settings
+  const defaultSettings = [
+    {
+      key: 'site_name',
+      value: 'EverflowCFO',
+      description: 'The name of the site displayed in headers and emails',
+      category: 'general',
+    },
+    {
+      key: 'contact_email',
+      value: 'support@everflowcfo.com',
+      description: 'Primary contact email address',
+      category: 'general',
+    },
+    {
+      key: 'minimum_estimate_threshold',
+      value: 1000,
+      description: 'Minimum estimated credit to qualify as a lead',
+      category: 'estimator',
+    },
+    {
+      key: 'default_contingency_fee',
+      value: 0.25,
+      description: 'Default contingency fee percentage (25%)',
+      category: 'estimator',
+    },
+  ];
+
+  for (const setting of defaultSettings) {
+    const existing = await prisma.siteSetting.findUnique({ where: { key: setting.key } });
+    if (!existing) {
+      await prisma.siteSetting.create({
+        data: {
+          ...setting,
+          updatedById: admin.id,
+        },
+      });
+      console.log('✅ Created setting:', setting.key);
+    }
   }
 
   console.log('');

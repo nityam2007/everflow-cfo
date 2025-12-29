@@ -1,38 +1,21 @@
 import Link from 'next/link';
 
-interface HeaderProps {
-  showNav?: boolean;
-}
-
-export function Header({ showNav = true }: HeaderProps) {
+export function Header() {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/20">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-        <Link href="/" className="text-base font-medium tracking-wide">
-          EverflowCFO
+    <header className="ef-header">
+      <div className="ef-header-inner">
+        <Link href="/" className="ef-logo">
+          <div className="ef-logo-icon">EF</div>
+          <span className="ef-logo-text">EverflowCFO</span>
         </Link>
-        {showNav && (
-          <nav className="flex items-center gap-8 text-sm tracking-wide">
-            <Link 
-              href="/quiz" 
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Assessment
-            </Link>
-            <Link 
-              href="/calculator" 
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Calculator
-            </Link>
-            <Link 
-              href="/login" 
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Login
-            </Link>
-          </nav>
-        )}
+        <nav className="ef-nav hidden md:flex">
+          <Link href="/estimator" className="ef-nav-link">Assessment</Link>
+          <Link href="/calculator" className="ef-nav-link">Calculator</Link>
+          <Link href="/login" className="ef-nav-link">Partner Login</Link>
+          <Link href="/estimator">
+            <button className="ef-btn ef-btn-primary">Begin Assessment</button>
+          </Link>
+        </nav>
       </div>
     </header>
   );

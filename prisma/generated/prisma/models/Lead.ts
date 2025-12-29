@@ -46,6 +46,7 @@ export type LeadMinAggregateOutputType = {
   estimatedMin: number | null
   estimatedMax: number | null
   eligibility: $Enums.EligibilitySignal | null
+  rulesVersion: string | null
   status: $Enums.LeadStatus | null
   source: string | null
   assignedStaffId: string | null
@@ -64,6 +65,7 @@ export type LeadMaxAggregateOutputType = {
   estimatedMin: number | null
   estimatedMax: number | null
   eligibility: $Enums.EligibilitySignal | null
+  rulesVersion: string | null
   status: $Enums.LeadStatus | null
   source: string | null
   assignedStaffId: string | null
@@ -84,6 +86,8 @@ export type LeadCountAggregateOutputType = {
   estimatedMax: number
   creditFlags: number
   eligibility: number
+  rulesVersion: number
+  explanations: number
   status: number
   source: number
   assignedStaffId: number
@@ -114,6 +118,7 @@ export type LeadMinAggregateInputType = {
   estimatedMin?: true
   estimatedMax?: true
   eligibility?: true
+  rulesVersion?: true
   status?: true
   source?: true
   assignedStaffId?: true
@@ -132,6 +137,7 @@ export type LeadMaxAggregateInputType = {
   estimatedMin?: true
   estimatedMax?: true
   eligibility?: true
+  rulesVersion?: true
   status?: true
   source?: true
   assignedStaffId?: true
@@ -152,6 +158,8 @@ export type LeadCountAggregateInputType = {
   estimatedMax?: true
   creditFlags?: true
   eligibility?: true
+  rulesVersion?: true
+  explanations?: true
   status?: true
   source?: true
   assignedStaffId?: true
@@ -259,6 +267,8 @@ export type LeadGroupByOutputType = {
   estimatedMax: number
   creditFlags: string[]
   eligibility: $Enums.EligibilitySignal
+  rulesVersion: string
+  explanations: string[]
   status: $Enums.LeadStatus
   source: string | null
   assignedStaffId: string | null
@@ -302,6 +312,8 @@ export type LeadWhereInput = {
   estimatedMax?: Prisma.IntFilter<"Lead"> | number
   creditFlags?: Prisma.StringNullableListFilter<"Lead">
   eligibility?: Prisma.EnumEligibilitySignalFilter<"Lead"> | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFilter<"Lead"> | string
+  explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -311,6 +323,7 @@ export type LeadWhereInput = {
   assignedStaff?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   notes?: Prisma.LeadNoteListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  partnerAssignments?: Prisma.PartnerAssignmentListRelationFilter
 }
 
 export type LeadOrderByWithRelationInput = {
@@ -325,6 +338,8 @@ export type LeadOrderByWithRelationInput = {
   estimatedMax?: Prisma.SortOrder
   creditFlags?: Prisma.SortOrder
   eligibility?: Prisma.SortOrder
+  rulesVersion?: Prisma.SortOrder
+  explanations?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -334,6 +349,7 @@ export type LeadOrderByWithRelationInput = {
   assignedStaff?: Prisma.UserOrderByWithRelationInput
   notes?: Prisma.LeadNoteOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  partnerAssignments?: Prisma.PartnerAssignmentOrderByRelationAggregateInput
 }
 
 export type LeadWhereUniqueInput = Prisma.AtLeast<{
@@ -351,6 +367,8 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   estimatedMax?: Prisma.IntFilter<"Lead"> | number
   creditFlags?: Prisma.StringNullableListFilter<"Lead">
   eligibility?: Prisma.EnumEligibilitySignalFilter<"Lead"> | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFilter<"Lead"> | string
+  explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -360,6 +378,7 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   assignedStaff?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   notes?: Prisma.LeadNoteListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  partnerAssignments?: Prisma.PartnerAssignmentListRelationFilter
 }, "id">
 
 export type LeadOrderByWithAggregationInput = {
@@ -374,6 +393,8 @@ export type LeadOrderByWithAggregationInput = {
   estimatedMax?: Prisma.SortOrder
   creditFlags?: Prisma.SortOrder
   eligibility?: Prisma.SortOrder
+  rulesVersion?: Prisma.SortOrder
+  explanations?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -402,6 +423,8 @@ export type LeadScalarWhereWithAggregatesInput = {
   estimatedMax?: Prisma.IntWithAggregatesFilter<"Lead"> | number
   creditFlags?: Prisma.StringNullableListFilter<"Lead">
   eligibility?: Prisma.EnumEligibilitySignalWithAggregatesFilter<"Lead"> | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringWithAggregatesFilter<"Lead"> | string
+  explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusWithAggregatesFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
@@ -422,6 +445,8 @@ export type LeadCreateInput = {
   estimatedMax: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
   assignedAt?: Date | string | null
@@ -430,6 +455,7 @@ export type LeadCreateInput = {
   assignedStaff?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
   notes?: Prisma.LeadNoteCreateNestedManyWithoutLeadInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutLeadInput
+  partnerAssignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateInput = {
@@ -444,6 +470,8 @@ export type LeadUncheckedCreateInput = {
   estimatedMax: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
   assignedStaffId?: string | null
@@ -452,6 +480,7 @@ export type LeadUncheckedCreateInput = {
   updatedAt?: Date | string
   notes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutLeadInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutLeadInput
+  partnerAssignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUpdateInput = {
@@ -466,6 +495,8 @@ export type LeadUpdateInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -474,6 +505,7 @@ export type LeadUpdateInput = {
   assignedStaff?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
   notes?: Prisma.LeadNoteUpdateManyWithoutLeadNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutLeadNestedInput
+  partnerAssignments?: Prisma.PartnerAssignmentUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateInput = {
@@ -488,6 +520,8 @@ export type LeadUncheckedUpdateInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -496,6 +530,7 @@ export type LeadUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.LeadNoteUncheckedUpdateManyWithoutLeadNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  partnerAssignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateManyInput = {
@@ -510,6 +545,8 @@ export type LeadCreateManyInput = {
   estimatedMax: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
   assignedStaffId?: string | null
@@ -530,6 +567,8 @@ export type LeadUpdateManyMutationInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -549,6 +588,8 @@ export type LeadUncheckedUpdateManyInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -587,6 +628,8 @@ export type LeadCountOrderByAggregateInput = {
   estimatedMax?: Prisma.SortOrder
   creditFlags?: Prisma.SortOrder
   eligibility?: Prisma.SortOrder
+  rulesVersion?: Prisma.SortOrder
+  explanations?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrder
@@ -610,6 +653,7 @@ export type LeadMaxOrderByAggregateInput = {
   estimatedMin?: Prisma.SortOrder
   estimatedMax?: Prisma.SortOrder
   eligibility?: Prisma.SortOrder
+  rulesVersion?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrder
@@ -628,6 +672,7 @@ export type LeadMinOrderByAggregateInput = {
   estimatedMin?: Prisma.SortOrder
   estimatedMax?: Prisma.SortOrder
   eligibility?: Prisma.SortOrder
+  rulesVersion?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrder
@@ -697,8 +742,8 @@ export type LeadCreatecreditFlagsInput = {
   set: string[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
+export type LeadCreateexplanationsInput = {
+  set: string[]
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -716,6 +761,11 @@ export type LeadUpdatecreditFlagsInput = {
 
 export type EnumEligibilitySignalFieldUpdateOperationsInput = {
   set?: $Enums.EligibilitySignal
+}
+
+export type LeadUpdateexplanationsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type EnumLeadStatusFieldUpdateOperationsInput = {
@@ -738,6 +788,20 @@ export type LeadUpdateOneRequiredWithoutNotesNestedInput = {
   upsert?: Prisma.LeadUpsertWithoutNotesInput
   connect?: Prisma.LeadWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutNotesInput, Prisma.LeadUpdateWithoutNotesInput>, Prisma.LeadUncheckedUpdateWithoutNotesInput>
+}
+
+export type LeadCreateNestedOneWithoutPartnerAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutPartnerAssignmentsInput, Prisma.LeadUncheckedCreateWithoutPartnerAssignmentsInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutPartnerAssignmentsInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUpdateOneRequiredWithoutPartnerAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutPartnerAssignmentsInput, Prisma.LeadUncheckedCreateWithoutPartnerAssignmentsInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutPartnerAssignmentsInput
+  upsert?: Prisma.LeadUpsertWithoutPartnerAssignmentsInput
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutPartnerAssignmentsInput, Prisma.LeadUpdateWithoutPartnerAssignmentsInput>, Prisma.LeadUncheckedUpdateWithoutPartnerAssignmentsInput>
 }
 
 export type LeadCreateNestedOneWithoutAuditLogsInput = {
@@ -768,6 +832,8 @@ export type LeadCreateWithoutAssignedStaffInput = {
   estimatedMax: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
   assignedAt?: Date | string | null
@@ -775,6 +841,7 @@ export type LeadCreateWithoutAssignedStaffInput = {
   updatedAt?: Date | string
   notes?: Prisma.LeadNoteCreateNestedManyWithoutLeadInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutLeadInput
+  partnerAssignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutAssignedStaffInput = {
@@ -789,6 +856,8 @@ export type LeadUncheckedCreateWithoutAssignedStaffInput = {
   estimatedMax: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
   assignedAt?: Date | string | null
@@ -796,6 +865,7 @@ export type LeadUncheckedCreateWithoutAssignedStaffInput = {
   updatedAt?: Date | string
   notes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutLeadInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutLeadInput
+  partnerAssignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutAssignedStaffInput = {
@@ -839,6 +909,8 @@ export type LeadScalarWhereInput = {
   estimatedMax?: Prisma.IntFilter<"Lead"> | number
   creditFlags?: Prisma.StringNullableListFilter<"Lead">
   eligibility?: Prisma.EnumEligibilitySignalFilter<"Lead"> | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFilter<"Lead"> | string
+  explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableFilter<"Lead"> | string | null
@@ -859,6 +931,8 @@ export type LeadCreateWithoutNotesInput = {
   estimatedMax: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
   assignedAt?: Date | string | null
@@ -866,6 +940,7 @@ export type LeadCreateWithoutNotesInput = {
   updatedAt?: Date | string
   assignedStaff?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutLeadInput
+  partnerAssignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutNotesInput = {
@@ -880,6 +955,8 @@ export type LeadUncheckedCreateWithoutNotesInput = {
   estimatedMax: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
   assignedStaffId?: string | null
@@ -887,6 +964,7 @@ export type LeadUncheckedCreateWithoutNotesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutLeadInput
+  partnerAssignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutNotesInput = {
@@ -917,6 +995,8 @@ export type LeadUpdateWithoutNotesInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -924,6 +1004,7 @@ export type LeadUpdateWithoutNotesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedStaff?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutLeadNestedInput
+  partnerAssignments?: Prisma.PartnerAssignmentUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutNotesInput = {
@@ -938,12 +1019,127 @@ export type LeadUncheckedUpdateWithoutNotesInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  partnerAssignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadCreateWithoutPartnerAssignmentsInput = {
+  id?: string
+  companyName: string
+  contactName: string
+  email: string
+  phone?: string | null
+  industry?: string | null
+  inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  estimatedMin: number
+  estimatedMax: number
+  creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
+  eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
+  status?: $Enums.LeadStatus
+  source?: string | null
+  assignedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedStaff?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
+  notes?: Prisma.LeadNoteCreateNestedManyWithoutLeadInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutLeadInput
+}
+
+export type LeadUncheckedCreateWithoutPartnerAssignmentsInput = {
+  id?: string
+  companyName: string
+  contactName: string
+  email: string
+  phone?: string | null
+  industry?: string | null
+  inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  estimatedMin: number
+  estimatedMax: number
+  creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
+  eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
+  status?: $Enums.LeadStatus
+  source?: string | null
+  assignedStaffId?: string | null
+  assignedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutLeadInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutPartnerAssignmentsInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutPartnerAssignmentsInput, Prisma.LeadUncheckedCreateWithoutPartnerAssignmentsInput>
+}
+
+export type LeadUpsertWithoutPartnerAssignmentsInput = {
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutPartnerAssignmentsInput, Prisma.LeadUncheckedUpdateWithoutPartnerAssignmentsInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutPartnerAssignmentsInput, Prisma.LeadUncheckedCreateWithoutPartnerAssignmentsInput>
+  where?: Prisma.LeadWhereInput
+}
+
+export type LeadUpdateToOneWithWhereWithoutPartnerAssignmentsInput = {
+  where?: Prisma.LeadWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutPartnerAssignmentsInput, Prisma.LeadUncheckedUpdateWithoutPartnerAssignmentsInput>
+}
+
+export type LeadUpdateWithoutPartnerAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
+  creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
+  eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedStaff?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
+  notes?: Prisma.LeadNoteUpdateManyWithoutLeadNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutPartnerAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  contactName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
+  estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
+  creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
+  eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notes?: Prisma.LeadNoteUncheckedUpdateManyWithoutLeadNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutLeadNestedInput
 }
 
@@ -959,6 +1155,8 @@ export type LeadCreateWithoutAuditLogsInput = {
   estimatedMax: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
   assignedAt?: Date | string | null
@@ -966,6 +1164,7 @@ export type LeadCreateWithoutAuditLogsInput = {
   updatedAt?: Date | string
   assignedStaff?: Prisma.UserCreateNestedOneWithoutAssignedLeadsInput
   notes?: Prisma.LeadNoteCreateNestedManyWithoutLeadInput
+  partnerAssignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutAuditLogsInput = {
@@ -980,6 +1179,8 @@ export type LeadUncheckedCreateWithoutAuditLogsInput = {
   estimatedMax: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
   assignedStaffId?: string | null
@@ -987,6 +1188,7 @@ export type LeadUncheckedCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutLeadInput
+  partnerAssignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutAuditLogsInput = {
@@ -1017,6 +1219,8 @@ export type LeadUpdateWithoutAuditLogsInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1024,6 +1228,7 @@ export type LeadUpdateWithoutAuditLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedStaff?: Prisma.UserUpdateOneWithoutAssignedLeadsNestedInput
   notes?: Prisma.LeadNoteUpdateManyWithoutLeadNestedInput
+  partnerAssignments?: Prisma.PartnerAssignmentUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutAuditLogsInput = {
@@ -1038,6 +1243,8 @@ export type LeadUncheckedUpdateWithoutAuditLogsInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1045,6 +1252,7 @@ export type LeadUncheckedUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.LeadNoteUncheckedUpdateManyWithoutLeadNestedInput
+  partnerAssignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateManyAssignedStaffInput = {
@@ -1059,6 +1267,8 @@ export type LeadCreateManyAssignedStaffInput = {
   estimatedMax: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
+  rulesVersion?: string
+  explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
   assignedAt?: Date | string | null
@@ -1078,6 +1288,8 @@ export type LeadUpdateWithoutAssignedStaffInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1085,6 +1297,7 @@ export type LeadUpdateWithoutAssignedStaffInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.LeadNoteUpdateManyWithoutLeadNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutLeadNestedInput
+  partnerAssignments?: Prisma.PartnerAssignmentUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutAssignedStaffInput = {
@@ -1099,6 +1312,8 @@ export type LeadUncheckedUpdateWithoutAssignedStaffInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1106,6 +1321,7 @@ export type LeadUncheckedUpdateWithoutAssignedStaffInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.LeadNoteUncheckedUpdateManyWithoutLeadNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutLeadNestedInput
+  partnerAssignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutAssignedStaffInput = {
@@ -1120,6 +1336,8 @@ export type LeadUncheckedUpdateManyWithoutAssignedStaffInput = {
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
   creditFlags?: Prisma.LeadUpdatecreditFlagsInput | string[]
   eligibility?: Prisma.EnumEligibilitySignalFieldUpdateOperationsInput | $Enums.EligibilitySignal
+  rulesVersion?: Prisma.StringFieldUpdateOperationsInput | string
+  explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1135,11 +1353,13 @@ export type LeadUncheckedUpdateManyWithoutAssignedStaffInput = {
 export type LeadCountOutputType = {
   notes: number
   auditLogs: number
+  partnerAssignments: number
 }
 
 export type LeadCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notes?: boolean | LeadCountOutputTypeCountNotesArgs
   auditLogs?: boolean | LeadCountOutputTypeCountAuditLogsArgs
+  partnerAssignments?: boolean | LeadCountOutputTypeCountPartnerAssignmentsArgs
 }
 
 /**
@@ -1166,6 +1386,13 @@ export type LeadCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * LeadCountOutputType without action
+ */
+export type LeadCountOutputTypeCountPartnerAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PartnerAssignmentWhereInput
+}
+
 
 export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1179,6 +1406,8 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   estimatedMax?: boolean
   creditFlags?: boolean
   eligibility?: boolean
+  rulesVersion?: boolean
+  explanations?: boolean
   status?: boolean
   source?: boolean
   assignedStaffId?: boolean
@@ -1188,6 +1417,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   assignedStaff?: boolean | Prisma.Lead$assignedStaffArgs<ExtArgs>
   notes?: boolean | Prisma.Lead$notesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Lead$auditLogsArgs<ExtArgs>
+  partnerAssignments?: boolean | Prisma.Lead$partnerAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
@@ -1203,6 +1433,8 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   estimatedMax?: boolean
   creditFlags?: boolean
   eligibility?: boolean
+  rulesVersion?: boolean
+  explanations?: boolean
   status?: boolean
   source?: boolean
   assignedStaffId?: boolean
@@ -1224,6 +1456,8 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   estimatedMax?: boolean
   creditFlags?: boolean
   eligibility?: boolean
+  rulesVersion?: boolean
+  explanations?: boolean
   status?: boolean
   source?: boolean
   assignedStaffId?: boolean
@@ -1245,6 +1479,8 @@ export type LeadSelectScalar = {
   estimatedMax?: boolean
   creditFlags?: boolean
   eligibility?: boolean
+  rulesVersion?: boolean
+  explanations?: boolean
   status?: boolean
   source?: boolean
   assignedStaffId?: boolean
@@ -1253,11 +1489,12 @@ export type LeadSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "contactName" | "email" | "phone" | "industry" | "inputsJson" | "estimatedMin" | "estimatedMax" | "creditFlags" | "eligibility" | "status" | "source" | "assignedStaffId" | "assignedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
+export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "contactName" | "email" | "phone" | "industry" | "inputsJson" | "estimatedMin" | "estimatedMax" | "creditFlags" | "eligibility" | "rulesVersion" | "explanations" | "status" | "source" | "assignedStaffId" | "assignedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
 export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignedStaff?: boolean | Prisma.Lead$assignedStaffArgs<ExtArgs>
   notes?: boolean | Prisma.Lead$notesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Lead$auditLogsArgs<ExtArgs>
+  partnerAssignments?: boolean | Prisma.Lead$partnerAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LeadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1273,6 +1510,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     assignedStaff: Prisma.$UserPayload<ExtArgs> | null
     notes: Prisma.$LeadNotePayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    partnerAssignments: Prisma.$PartnerAssignmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1286,6 +1524,8 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     estimatedMax: number
     creditFlags: string[]
     eligibility: $Enums.EligibilitySignal
+    rulesVersion: string
+    explanations: string[]
     status: $Enums.LeadStatus
     source: string | null
     assignedStaffId: string | null
@@ -1689,6 +1929,7 @@ export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Typ
   assignedStaff<T extends Prisma.Lead$assignedStaffArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$assignedStaffArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   notes<T extends Prisma.Lead$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Lead$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  partnerAssignments<T extends Prisma.Lead$partnerAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$partnerAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PartnerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1729,6 +1970,8 @@ export interface LeadFieldRefs {
   readonly estimatedMax: Prisma.FieldRef<"Lead", 'Int'>
   readonly creditFlags: Prisma.FieldRef<"Lead", 'String[]'>
   readonly eligibility: Prisma.FieldRef<"Lead", 'EligibilitySignal'>
+  readonly rulesVersion: Prisma.FieldRef<"Lead", 'String'>
+  readonly explanations: Prisma.FieldRef<"Lead", 'String[]'>
   readonly status: Prisma.FieldRef<"Lead", 'LeadStatus'>
   readonly source: Prisma.FieldRef<"Lead", 'String'>
   readonly assignedStaffId: Prisma.FieldRef<"Lead", 'String'>
@@ -2195,6 +2438,30 @@ export type Lead$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * Lead.partnerAssignments
+ */
+export type Lead$partnerAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PartnerAssignment
+   */
+  select?: Prisma.PartnerAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PartnerAssignment
+   */
+  omit?: Prisma.PartnerAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerAssignmentInclude<ExtArgs> | null
+  where?: Prisma.PartnerAssignmentWhereInput
+  orderBy?: Prisma.PartnerAssignmentOrderByWithRelationInput | Prisma.PartnerAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.PartnerAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PartnerAssignmentScalarFieldEnum | Prisma.PartnerAssignmentScalarFieldEnum[]
 }
 
 /**

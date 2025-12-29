@@ -28,7 +28,7 @@ export type UserMinAggregateOutputType = {
   id: string | null
   name: string | null
   email: string | null
-  passwordHash: string | null
+  password: string | null
   role: $Enums.UserRole | null
   isActive: boolean | null
   createdAt: Date | null
@@ -39,7 +39,7 @@ export type UserMaxAggregateOutputType = {
   id: string | null
   name: string | null
   email: string | null
-  passwordHash: string | null
+  password: string | null
   role: $Enums.UserRole | null
   isActive: boolean | null
   createdAt: Date | null
@@ -50,7 +50,7 @@ export type UserCountAggregateOutputType = {
   id: number
   name: number
   email: number
-  passwordHash: number
+  password: number
   role: number
   isActive: number
   createdAt: number
@@ -63,7 +63,7 @@ export type UserMinAggregateInputType = {
   id?: true
   name?: true
   email?: true
-  passwordHash?: true
+  password?: true
   role?: true
   isActive?: true
   createdAt?: true
@@ -74,7 +74,7 @@ export type UserMaxAggregateInputType = {
   id?: true
   name?: true
   email?: true
-  passwordHash?: true
+  password?: true
   role?: true
   isActive?: true
   createdAt?: true
@@ -85,7 +85,7 @@ export type UserCountAggregateInputType = {
   id?: true
   name?: true
   email?: true
-  passwordHash?: true
+  password?: true
   role?: true
   isActive?: true
   createdAt?: true
@@ -169,7 +169,7 @@ export type UserGroupByOutputType = {
   id: string
   name: string
   email: string
-  passwordHash: string
+  password: string
   role: $Enums.UserRole
   isActive: boolean
   createdAt: Date
@@ -201,7 +201,7 @@ export type UserWhereInput = {
   id?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
-  passwordHash?: Prisma.StringFilter<"User"> | string
+  password?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   isActive?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -209,13 +209,16 @@ export type UserWhereInput = {
   assignedLeads?: Prisma.LeadListRelationFilter
   leadNotes?: Prisma.LeadNoteListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentListRelationFilter
+  estimatorRulesCreated?: Prisma.EstimatorRulesListRelationFilter
+  siteSettingsUpdated?: Prisma.SiteSettingListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  passwordHash?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -223,6 +226,9 @@ export type UserOrderByWithRelationInput = {
   assignedLeads?: Prisma.LeadOrderByRelationAggregateInput
   leadNotes?: Prisma.LeadNoteOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentOrderByRelationAggregateInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesOrderByRelationAggregateInput
+  siteSettingsUpdated?: Prisma.SiteSettingOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -232,7 +238,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringFilter<"User"> | string
-  passwordHash?: Prisma.StringFilter<"User"> | string
+  password?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   isActive?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -240,13 +246,16 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   assignedLeads?: Prisma.LeadListRelationFilter
   leadNotes?: Prisma.LeadNoteListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentListRelationFilter
+  estimatorRulesCreated?: Prisma.EstimatorRulesListRelationFilter
+  siteSettingsUpdated?: Prisma.SiteSettingListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  passwordHash?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -263,7 +272,7 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
-  passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
+  password?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -274,63 +283,75 @@ export type UserCreateInput = {
   id?: string
   name: string
   email: string
-  passwordHash: string
+  password: string
   role?: $Enums.UserRole
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedStaffInput
   leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPerformedByInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentCreateNestedManyWithoutAssignedByInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesCreateNestedManyWithoutCreatedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   name: string
   email: string
-  passwordHash: string
+  password: string
   role?: $Enums.UserRole
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedStaffInput
   leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedCreateNestedManyWithoutCreatedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedStaffNestedInput
   leadNotes?: Prisma.LeadNoteUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPerformedByNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUpdateManyWithoutAssignedByNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUpdateManyWithoutCreatedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedStaffNestedInput
   leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedUpdateManyWithoutCreatedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
   name: string
   email: string
-  passwordHash: string
+  password: string
   role?: $Enums.UserRole
   isActive?: boolean
   createdAt?: Date | string
@@ -341,7 +362,7 @@ export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -352,7 +373,7 @@ export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -363,7 +384,7 @@ export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  passwordHash?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -374,7 +395,7 @@ export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  passwordHash?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -385,7 +406,7 @@ export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  passwordHash?: Prisma.SortOrder
+  password?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -448,6 +469,22 @@ export type UserUpdateOneRequiredWithoutLeadNotesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLeadNotesInput, Prisma.UserUpdateWithoutLeadNotesInput>, Prisma.UserUncheckedUpdateWithoutLeadNotesInput>
 }
 
+export type UserCreateNestedOneWithoutPartnerAssignmentsCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPartnerAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutPartnerAssignmentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPartnerAssignmentsCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutPartnerAssignmentsCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPartnerAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutPartnerAssignmentsCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPartnerAssignmentsCreatedInput
+  upsert?: Prisma.UserUpsertWithoutPartnerAssignmentsCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPartnerAssignmentsCreatedInput, Prisma.UserUpdateWithoutPartnerAssignmentsCreatedInput>, Prisma.UserUncheckedUpdateWithoutPartnerAssignmentsCreatedInput>
+}
+
 export type UserCreateNestedOneWithoutAuditLogsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuditLogsInput
@@ -464,30 +501,68 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type UserCreateNestedOneWithoutEstimatorRulesCreatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEstimatorRulesCreatedInput, Prisma.UserUncheckedCreateWithoutEstimatorRulesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEstimatorRulesCreatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutEstimatorRulesCreatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutEstimatorRulesCreatedInput, Prisma.UserUncheckedCreateWithoutEstimatorRulesCreatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutEstimatorRulesCreatedInput
+  upsert?: Prisma.UserUpsertWithoutEstimatorRulesCreatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEstimatorRulesCreatedInput, Prisma.UserUpdateWithoutEstimatorRulesCreatedInput>, Prisma.UserUncheckedUpdateWithoutEstimatorRulesCreatedInput>
+}
+
+export type UserCreateNestedOneWithoutSiteSettingsUpdatedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSiteSettingsUpdatedInput, Prisma.UserUncheckedCreateWithoutSiteSettingsUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSiteSettingsUpdatedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSiteSettingsUpdatedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSiteSettingsUpdatedInput, Prisma.UserUncheckedCreateWithoutSiteSettingsUpdatedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSiteSettingsUpdatedInput
+  upsert?: Prisma.UserUpsertWithoutSiteSettingsUpdatedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSiteSettingsUpdatedInput, Prisma.UserUpdateWithoutSiteSettingsUpdatedInput>, Prisma.UserUncheckedUpdateWithoutSiteSettingsUpdatedInput>
+}
+
 export type UserCreateWithoutAssignedLeadsInput = {
   id?: string
   name: string
   email: string
-  passwordHash: string
+  password: string
   role?: $Enums.UserRole
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPerformedByInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentCreateNestedManyWithoutAssignedByInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesCreateNestedManyWithoutCreatedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   id?: string
   name: string
   email: string
-  passwordHash: string
+  password: string
   role?: $Enums.UserRole
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutUserInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedCreateNestedManyWithoutCreatedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserCreateOrConnectWithoutAssignedLeadsInput = {
@@ -510,52 +585,64 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leadNotes?: Prisma.LeadNoteUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPerformedByNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUpdateManyWithoutAssignedByNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUpdateManyWithoutCreatedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutUserNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedUpdateManyWithoutCreatedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserCreateWithoutLeadNotesInput = {
   id?: string
   name: string
   email: string
-  passwordHash: string
+  password: string
   role?: $Enums.UserRole
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedStaffInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPerformedByInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentCreateNestedManyWithoutAssignedByInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesCreateNestedManyWithoutCreatedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateWithoutLeadNotesInput = {
   id?: string
   name: string
   email: string
-  passwordHash: string
+  password: string
   role?: $Enums.UserRole
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedStaffInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedCreateNestedManyWithoutCreatedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserCreateOrConnectWithoutLeadNotesInput = {
@@ -578,52 +665,144 @@ export type UserUpdateWithoutLeadNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedStaffNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutPerformedByNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUpdateManyWithoutAssignedByNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUpdateManyWithoutCreatedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeadNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedStaffNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedUpdateManyWithoutCreatedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
-export type UserCreateWithoutAuditLogsInput = {
+export type UserCreateWithoutPartnerAssignmentsCreatedInput = {
   id?: string
   name: string
   email: string
-  passwordHash: string
+  password: string
   role?: $Enums.UserRole
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedStaffInput
   leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesCreateNestedManyWithoutCreatedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingCreateNestedManyWithoutUpdatedByInput
 }
 
-export type UserUncheckedCreateWithoutAuditLogsInput = {
+export type UserUncheckedCreateWithoutPartnerAssignmentsCreatedInput = {
   id?: string
   name: string
   email: string
-  passwordHash: string
+  password: string
   role?: $Enums.UserRole
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedStaffInput
   leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedCreateNestedManyWithoutCreatedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserCreateOrConnectWithoutPartnerAssignmentsCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPartnerAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutPartnerAssignmentsCreatedInput>
+}
+
+export type UserUpsertWithoutPartnerAssignmentsCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPartnerAssignmentsCreatedInput, Prisma.UserUncheckedUpdateWithoutPartnerAssignmentsCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPartnerAssignmentsCreatedInput, Prisma.UserUncheckedCreateWithoutPartnerAssignmentsCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPartnerAssignmentsCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPartnerAssignmentsCreatedInput, Prisma.UserUncheckedUpdateWithoutPartnerAssignmentsCreatedInput>
+}
+
+export type UserUpdateWithoutPartnerAssignmentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedStaffNestedInput
+  leadNotes?: Prisma.LeadNoteUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUpdateManyWithoutCreatedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPartnerAssignmentsCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedStaffNestedInput
+  leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedUpdateManyWithoutCreatedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserCreateWithoutAuditLogsInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedStaffInput
+  leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentCreateNestedManyWithoutAssignedByInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesCreateNestedManyWithoutCreatedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserUncheckedCreateWithoutAuditLogsInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedStaffInput
+  leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedCreateNestedManyWithoutCreatedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -646,26 +825,192 @@ export type UserUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedStaffNestedInput
   leadNotes?: Prisma.LeadNoteUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUpdateManyWithoutAssignedByNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUpdateManyWithoutCreatedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedStaffNestedInput
   leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedUpdateManyWithoutCreatedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserCreateWithoutEstimatorRulesCreatedInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedStaffInput
+  leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentCreateNestedManyWithoutAssignedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserUncheckedCreateWithoutEstimatorRulesCreatedInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedStaffInput
+  leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserCreateOrConnectWithoutEstimatorRulesCreatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutEstimatorRulesCreatedInput, Prisma.UserUncheckedCreateWithoutEstimatorRulesCreatedInput>
+}
+
+export type UserUpsertWithoutEstimatorRulesCreatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutEstimatorRulesCreatedInput, Prisma.UserUncheckedUpdateWithoutEstimatorRulesCreatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutEstimatorRulesCreatedInput, Prisma.UserUncheckedCreateWithoutEstimatorRulesCreatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutEstimatorRulesCreatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutEstimatorRulesCreatedInput, Prisma.UserUncheckedUpdateWithoutEstimatorRulesCreatedInput>
+}
+
+export type UserUpdateWithoutEstimatorRulesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedStaffNestedInput
+  leadNotes?: Prisma.LeadNoteUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUpdateManyWithoutAssignedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutEstimatorRulesCreatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedStaffNestedInput
+  leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  siteSettingsUpdated?: Prisma.SiteSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserCreateWithoutSiteSettingsUpdatedInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedStaffInput
+  leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentCreateNestedManyWithoutAssignedByInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutSiteSettingsUpdatedInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  role?: $Enums.UserRole
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedStaffInput
+  leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutSiteSettingsUpdatedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSiteSettingsUpdatedInput, Prisma.UserUncheckedCreateWithoutSiteSettingsUpdatedInput>
+}
+
+export type UserUpsertWithoutSiteSettingsUpdatedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSiteSettingsUpdatedInput, Prisma.UserUncheckedUpdateWithoutSiteSettingsUpdatedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSiteSettingsUpdatedInput, Prisma.UserUncheckedCreateWithoutSiteSettingsUpdatedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSiteSettingsUpdatedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSiteSettingsUpdatedInput, Prisma.UserUncheckedUpdateWithoutSiteSettingsUpdatedInput>
+}
+
+export type UserUpdateWithoutSiteSettingsUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedStaffNestedInput
+  leadNotes?: Prisma.LeadNoteUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUpdateManyWithoutAssignedByNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSiteSettingsUpdatedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedStaffNestedInput
+  leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  partnerAssignmentsCreated?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  estimatorRulesCreated?: Prisma.EstimatorRulesUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 
@@ -677,12 +1022,18 @@ export type UserCountOutputType = {
   assignedLeads: number
   leadNotes: number
   auditLogs: number
+  partnerAssignmentsCreated: number
+  estimatorRulesCreated: number
+  siteSettingsUpdated: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignedLeads?: boolean | UserCountOutputTypeCountAssignedLeadsArgs
   leadNotes?: boolean | UserCountOutputTypeCountLeadNotesArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+  partnerAssignmentsCreated?: boolean | UserCountOutputTypeCountPartnerAssignmentsCreatedArgs
+  estimatorRulesCreated?: boolean | UserCountOutputTypeCountEstimatorRulesCreatedArgs
+  siteSettingsUpdated?: boolean | UserCountOutputTypeCountSiteSettingsUpdatedArgs
 }
 
 /**
@@ -716,12 +1067,33 @@ export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPartnerAssignmentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PartnerAssignmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountEstimatorRulesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EstimatorRulesWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSiteSettingsUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SiteSettingWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   email?: boolean
-  passwordHash?: boolean
+  password?: boolean
   role?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -729,6 +1101,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
   leadNotes?: boolean | Prisma.User$leadNotesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  partnerAssignmentsCreated?: boolean | Prisma.User$partnerAssignmentsCreatedArgs<ExtArgs>
+  estimatorRulesCreated?: boolean | Prisma.User$estimatorRulesCreatedArgs<ExtArgs>
+  siteSettingsUpdated?: boolean | Prisma.User$siteSettingsUpdatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -736,7 +1111,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   name?: boolean
   email?: boolean
-  passwordHash?: boolean
+  password?: boolean
   role?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -747,7 +1122,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   name?: boolean
   email?: boolean
-  passwordHash?: boolean
+  password?: boolean
   role?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -758,18 +1133,21 @@ export type UserSelectScalar = {
   id?: boolean
   name?: boolean
   email?: boolean
-  passwordHash?: boolean
+  password?: boolean
   role?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "role" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
   leadNotes?: boolean | Prisma.User$leadNotesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  partnerAssignmentsCreated?: boolean | Prisma.User$partnerAssignmentsCreatedArgs<ExtArgs>
+  estimatorRulesCreated?: boolean | Prisma.User$estimatorRulesCreatedArgs<ExtArgs>
+  siteSettingsUpdated?: boolean | Prisma.User$siteSettingsUpdatedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -781,12 +1159,15 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     assignedLeads: Prisma.$LeadPayload<ExtArgs>[]
     leadNotes: Prisma.$LeadNotePayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    partnerAssignmentsCreated: Prisma.$PartnerAssignmentPayload<ExtArgs>[]
+    estimatorRulesCreated: Prisma.$EstimatorRulesPayload<ExtArgs>[]
+    siteSettingsUpdated: Prisma.$SiteSettingPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     email: string
-    passwordHash: string
+    password: string
     role: $Enums.UserRole
     isActive: boolean
     createdAt: Date
@@ -1188,6 +1569,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   assignedLeads<T extends Prisma.User$assignedLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadNotes<T extends Prisma.User$leadNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  partnerAssignmentsCreated<T extends Prisma.User$partnerAssignmentsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$partnerAssignmentsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PartnerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  estimatorRulesCreated<T extends Prisma.User$estimatorRulesCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$estimatorRulesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EstimatorRulesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  siteSettingsUpdated<T extends Prisma.User$siteSettingsUpdatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$siteSettingsUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SiteSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1220,7 +1604,7 @@ export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
-  readonly passwordHash: Prisma.FieldRef<"User", 'String'>
+  readonly password: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -1682,6 +2066,78 @@ export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.partnerAssignmentsCreated
+ */
+export type User$partnerAssignmentsCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PartnerAssignment
+   */
+  select?: Prisma.PartnerAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PartnerAssignment
+   */
+  omit?: Prisma.PartnerAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PartnerAssignmentInclude<ExtArgs> | null
+  where?: Prisma.PartnerAssignmentWhereInput
+  orderBy?: Prisma.PartnerAssignmentOrderByWithRelationInput | Prisma.PartnerAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.PartnerAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PartnerAssignmentScalarFieldEnum | Prisma.PartnerAssignmentScalarFieldEnum[]
+}
+
+/**
+ * User.estimatorRulesCreated
+ */
+export type User$estimatorRulesCreatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EstimatorRules
+   */
+  select?: Prisma.EstimatorRulesSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EstimatorRules
+   */
+  omit?: Prisma.EstimatorRulesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EstimatorRulesInclude<ExtArgs> | null
+  where?: Prisma.EstimatorRulesWhereInput
+  orderBy?: Prisma.EstimatorRulesOrderByWithRelationInput | Prisma.EstimatorRulesOrderByWithRelationInput[]
+  cursor?: Prisma.EstimatorRulesWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EstimatorRulesScalarFieldEnum | Prisma.EstimatorRulesScalarFieldEnum[]
+}
+
+/**
+ * User.siteSettingsUpdated
+ */
+export type User$siteSettingsUpdatedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SiteSetting
+   */
+  select?: Prisma.SiteSettingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SiteSetting
+   */
+  omit?: Prisma.SiteSettingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SiteSettingInclude<ExtArgs> | null
+  where?: Prisma.SiteSettingWhereInput
+  orderBy?: Prisma.SiteSettingOrderByWithRelationInput | Prisma.SiteSettingOrderByWithRelationInput[]
+  cursor?: Prisma.SiteSettingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SiteSettingScalarFieldEnum | Prisma.SiteSettingScalarFieldEnum[]
 }
 
 /**

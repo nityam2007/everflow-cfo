@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type User = Prisma.UserModel
 /**
+ * Model Partner
+ * 
+ */
+export type Partner = Prisma.PartnerModel
+/**
  * Model Lead
  * 
  */
@@ -33,7 +38,27 @@ export type Lead = Prisma.LeadModel
  */
 export type LeadNote = Prisma.LeadNoteModel
 /**
+ * Model PartnerAssignment
+ * 
+ */
+export type PartnerAssignment = Prisma.PartnerAssignmentModel
+/**
+ * Model PartnerLeadNote
+ * 
+ */
+export type PartnerLeadNote = Prisma.PartnerLeadNoteModel
+/**
  * Model AuditLog
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model EstimatorRules
+ * 
+ */
+export type EstimatorRules = Prisma.EstimatorRulesModel
+/**
+ * Model SiteSetting
+ * 
+ */
+export type SiteSetting = Prisma.SiteSettingModel

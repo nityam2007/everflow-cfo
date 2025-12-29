@@ -37,15 +37,11 @@ export const EligibilitySignal = {
 export type EligibilitySignal = (typeof EligibilitySignal)[keyof typeof EligibilitySignal]
 
 
-export const AuditAction = {
-  LEAD_CREATED: 'LEAD_CREATED',
-  LEAD_ASSIGNED: 'LEAD_ASSIGNED',
-  LEAD_STATUS_CHANGED: 'LEAD_STATUS_CHANGED',
-  LEAD_UPDATED: 'LEAD_UPDATED',
-  NOTE_ADDED: 'NOTE_ADDED',
-  USER_CREATED: 'USER_CREATED',
-  USER_UPDATED: 'USER_UPDATED',
-  USER_LOGIN: 'USER_LOGIN'
+export const AssignmentStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
 } as const
 
-export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction]
+export type AssignmentStatus = (typeof AssignmentStatus)[keyof typeof AssignmentStatus]

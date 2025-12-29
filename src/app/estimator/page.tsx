@@ -100,7 +100,7 @@ export default function EstimatorPage() {
         <div className="max-w-xl mx-auto">
           {/* Step indicator */}
           <div className="mb-8 text-center">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--color-foreground-muted)]">
               Step {step} of {TOTAL_STEPS}
             </p>
           </div>
@@ -110,7 +110,7 @@ export default function EstimatorPage() {
             <div className="space-y-8">
               <div className="text-center mb-12">
                 <h1 className="text-2xl font-light mb-3">Business Profile</h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[var(--color-foreground-muted)]">
                   Used to determine statutory eligibility windows.
                 </p>
               </div>
@@ -175,7 +175,7 @@ export default function EstimatorPage() {
                 <div className="space-y-8">
               <div className="text-center mb-12">
                 <h1 className="text-2xl font-light mb-3">Workforce Composition</h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[var(--color-foreground-muted)]">
                   Certain credits apply per employee class.
                 </p>
               </div>
@@ -252,7 +252,7 @@ export default function EstimatorPage() {
             <div className="space-y-8">
               <div className="text-center mb-12">
                 <h1 className="text-2xl font-light mb-3">Payroll Scale</h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[var(--color-foreground-muted)]">
                   Credit caps are tied directly to payroll exposure.
                 </p>
               </div>
@@ -285,7 +285,7 @@ export default function EstimatorPage() {
             <div className="space-y-8">
               <div className="text-center mb-12">
                 <h1 className="text-2xl font-light mb-3">Impact & Hiring Signals</h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-[var(--color-foreground-muted)]">
                   Used to model eligibility thresholds under federal statutes.
                 </p>
               </div>
@@ -365,8 +365,11 @@ export default function EstimatorPage() {
             <div className="space-y-8">
               <div className="text-center mb-12">
                 <h1 className="text-2xl font-light mb-3">Identity Confirmation</h1>
-                <p className="text-sm text-muted-foreground">
-                  We only generate credit ranges for verified employers.
+                <p className="text-sm text-[var(--color-foreground-muted)]">
+                  Identity confirmation required to view employer-specific estimates.
+                </p>
+                <p className="text-xs text-[var(--color-foreground-muted)] mt-2">
+                  This ensures estimates are delivered securely to authorized representatives.
                 </p>
               </div>
               
@@ -422,7 +425,7 @@ export default function EstimatorPage() {
               variant="ghost"
               onClick={() => setStep((s) => Math.max(1, s - 1))}
               disabled={step === 1}
-              className="text-muted-foreground"
+              className="text-[var(--color-foreground-muted)]"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back

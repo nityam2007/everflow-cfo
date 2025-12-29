@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/redis';
 import { leadSubmissionSchema } from '@/lib/validations';
-import { calculateEstimate } from '@/lib/estimation-engine';
+import { calculateEstimate, CURRENT_RULES_VERSION } from '@/lib/estimation-engine';
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,10 +30,10 @@ export async function POST(request: NextRequest) {
 
     const { estimator, identity, source } = parsed.data;
 
-    // Calculate estimate
+    // Calculate estimate with versioned rules
     const estimation = calculateEstimate(estimator);
 
-    // Create lead
+    // Create lead with rules version for auditability
     const lead = await db.lead.create({
       data: {
         companyName: identity.companyName,
@@ -46,6 +46,8 @@ export async function POST(request: NextRequest) {
         estimatedMax: estimation.estimatedMax,
         creditFlags: estimation.creditFlags,
         eligibility: estimation.eligibility,
+        rulesVersion: estimation.rulesVersion,
+        explanations: estimation.explanations,
         source: source || 'direct',
         status: 'NEW',
       },
@@ -58,7 +60,12 @@ export async function POST(request: NextRequest) {
         entityType: 'lead',
         entityId: lead.id,
         leadId: lead.id,
-        details: { source, ip },
+        newValues: { 
+          source, 
+          ip,
+          rulesVersion: estimation.rulesVersion,
+          creditFlags: estimation.creditFlags,
+        },
       },
     });
 

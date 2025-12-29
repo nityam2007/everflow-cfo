@@ -58,8 +58,9 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
         entityType: 'lead',
         entityId: id,
         leadId: id,
-        performedById: session.user.id,
-        details: { oldStatus, newStatus: status },
+        userId: session.user.id,
+        oldValues: { status: oldStatus },
+        newValues: { status },
       },
     });
 

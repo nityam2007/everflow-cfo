@@ -59,8 +59,8 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
         entityType: 'lead_note',
         entityId: note.id,
         leadId: id,
-        performedById: session.user.id,
-        details: { contentPreview: content.slice(0, 100) },
+        userId: session.user.id,
+        newValues: { contentPreview: content.slice(0, 100) },
       },
     });
 

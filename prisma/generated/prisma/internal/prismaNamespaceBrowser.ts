@@ -52,9 +52,14 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  Partner: 'Partner',
   Lead: 'Lead',
   LeadNote: 'LeadNote',
-  AuditLog: 'AuditLog'
+  PartnerAssignment: 'PartnerAssignment',
+  PartnerLeadNote: 'PartnerLeadNote',
+  AuditLog: 'AuditLog',
+  EstimatorRules: 'EstimatorRules',
+  SiteSetting: 'SiteSetting'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -77,7 +82,7 @@ export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  passwordHash: 'passwordHash',
+  password: 'password',
   role: 'role',
   isActive: 'isActive',
   createdAt: 'createdAt',
@@ -85,6 +90,21 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const PartnerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  companyName: 'companyName',
+  email: 'email',
+  phone: 'phone',
+  isActive: 'isActive',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PartnerScalarFieldEnum = (typeof PartnerScalarFieldEnum)[keyof typeof PartnerScalarFieldEnum]
 
 
 export const LeadScalarFieldEnum = {
@@ -99,6 +119,8 @@ export const LeadScalarFieldEnum = {
   estimatedMax: 'estimatedMax',
   creditFlags: 'creditFlags',
   eligibility: 'eligibility',
+  rulesVersion: 'rulesVersion',
+  explanations: 'explanations',
   status: 'status',
   source: 'source',
   assignedStaffId: 'assignedStaffId',
@@ -121,18 +143,73 @@ export const LeadNoteScalarFieldEnum = {
 export type LeadNoteScalarFieldEnum = (typeof LeadNoteScalarFieldEnum)[keyof typeof LeadNoteScalarFieldEnum]
 
 
+export const PartnerAssignmentScalarFieldEnum = {
+  id: 'id',
+  leadId: 'leadId',
+  partnerId: 'partnerId',
+  status: 'status',
+  notes: 'notes',
+  assignedAt: 'assignedAt',
+  completedAt: 'completedAt',
+  assignedById: 'assignedById'
+} as const
+
+export type PartnerAssignmentScalarFieldEnum = (typeof PartnerAssignmentScalarFieldEnum)[keyof typeof PartnerAssignmentScalarFieldEnum]
+
+
+export const PartnerLeadNoteScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  assignmentId: 'assignmentId',
+  createdAt: 'createdAt'
+} as const
+
+export type PartnerLeadNoteScalarFieldEnum = (typeof PartnerLeadNoteScalarFieldEnum)[keyof typeof PartnerLeadNoteScalarFieldEnum]
+
+
 export const AuditLogScalarFieldEnum = {
   id: 'id',
   action: 'action',
   entityType: 'entityType',
   entityId: 'entityId',
-  details: 'details',
-  performedById: 'performedById',
+  oldValues: 'oldValues',
+  newValues: 'newValues',
+  userId: 'userId',
+  partnerId: 'partnerId',
   leadId: 'leadId',
   createdAt: 'createdAt'
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const EstimatorRulesScalarFieldEnum = {
+  id: 'id',
+  version: 'version',
+  effectiveDate: 'effectiveDate',
+  description: 'description',
+  isActive: 'isActive',
+  rulesConfig: 'rulesConfig',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EstimatorRulesScalarFieldEnum = (typeof EstimatorRulesScalarFieldEnum)[keyof typeof EstimatorRulesScalarFieldEnum]
+
+
+export const SiteSettingScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  value: 'value',
+  description: 'description',
+  category: 'category',
+  updatedById: 'updatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SiteSettingScalarFieldEnum = (typeof SiteSettingScalarFieldEnum)[keyof typeof SiteSettingScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -166,6 +243,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const JsonNullValueFilter = {
   DbNull: 'DbNull',
   JsonNull: 'JsonNull',
@@ -173,12 +258,4 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

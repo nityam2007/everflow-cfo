@@ -9,7 +9,12 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/Partner'
 export type * from './models/Lead'
 export type * from './models/LeadNote'
+export type * from './models/PartnerAssignment'
+export type * from './models/PartnerLeadNote'
 export type * from './models/AuditLog'
+export type * from './models/EstimatorRules'
+export type * from './models/SiteSetting'
 export type * from './commonInputTypes'

@@ -73,7 +73,7 @@ export function LeadActions({
       <CardContent className="space-y-4">
         {/* Status update */}
         <div>
-          <label className="text-sm text-muted-foreground mb-2 block">Status</label>
+          <label className="text-sm text-[var(--color-foreground-muted)] mb-2 block">Status</label>
           <Select value={status} onValueChange={updateStatus} disabled={isPending}>
             <SelectTrigger>
               <SelectValue />
@@ -91,7 +91,7 @@ export function LeadActions({
         {/* Staff assignment (admin only) */}
         {isAdmin && staffList.length > 0 && (
           <div>
-            <label className="text-sm text-muted-foreground mb-2 block">Assign To</label>
+            <label className="text-sm text-[var(--color-foreground-muted)] mb-2 block">Assign To</label>
             <Select value={staffId} onValueChange={assignStaff} disabled={isPending}>
               <SelectTrigger>
                 <SelectValue placeholder="Select staff member" />
@@ -108,7 +108,7 @@ export function LeadActions({
         )}
 
         {isPending && (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-foreground-muted)]">
             <Loader2 className="h-4 w-4 animate-spin" />
             Updating...
           </div>

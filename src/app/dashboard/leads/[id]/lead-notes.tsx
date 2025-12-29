@@ -61,7 +61,7 @@ export function LeadNotes({ leadId, notes }: LeadNotesProps) {
 
         {/* Notes list */}
         {notes.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">
+          <p className="text-sm text-[var(--color-foreground-muted)] text-center py-4">
             No notes yet. Add one above.
           </p>
         ) : (
@@ -69,7 +69,7 @@ export function LeadNotes({ leadId, notes }: LeadNotesProps) {
             {notes.map((note) => (
               <div key={note.id} className="rounded-lg border p-3">
                 <p className="text-sm">{note.content}</p>
-                <p className="mt-2 text-xs text-muted-foreground">
+                <p className="mt-2 text-xs text-[var(--color-foreground-muted)]">
                   {note.user.name} • {formatDate(note.createdAt)}
                 </p>
               </div>

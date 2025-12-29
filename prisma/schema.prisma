@@ -8,7 +8,7 @@ datasource db {
 }
 
 // ============================================
-// USER MANAGEMENT
+// USER MANAGEMENT (Internal Admin/Staff)
 // ============================================
 
 enum UserRole {
@@ -20,7 +20,7 @@ model User {
   id           String   @id @default(cuid())
   name         String
   email        String   @unique
-  passwordHash String   @map("password_hash")
+  password     String   @map("password")
   role         UserRole @default(STAFF)
   isActive     Boolean  @default(true) @map("is_active")
   createdAt    DateTime @default(now()) @map("created_at")
@@ -30,8 +30,40 @@ model User {
   assignedLeads Lead[]     @relation("AssignedStaff")
   leadNotes     LeadNote[]
   auditLogs     AuditLog[] @relation("PerformedBy")
+  partnerAssignmentsCreated PartnerAssignment[] @relation("AssignedByUser")
+  
+  // New relations for rules and settings
+  estimatorRulesCreated EstimatorRules[] @relation("RulesCreatedBy")
+  siteSettingsUpdated   SiteSetting[]    @relation("SettingsUpdatedBy")
 
   @@map("users")
+}
+
+// ============================================
+// PARTNER MANAGEMENT (External Backend Processors)
+// Partners are granted conditional, revocable access
+// ============================================
+
+model Partner {
+  id              String   @id @default(cuid())
+  name            String
+  companyName     String   @map("company_name")
+  email           String   @unique
+  phone           String?  @map("phone")
+  isActive        Boolean  @default(true) @map("is_active")
+  
+  // Partner metadata
+  notes           String?  @db.Text
+  
+  // Timestamps
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  assignments     PartnerAssignment[]
+  auditLogs       AuditLog[] @relation("PartnerAudit")
+  
+  @@map("partners")
 }
 
 // ============================================
@@ -69,11 +101,15 @@ model Lead {
   creditFlags   String[]          @map("credit_flags") // ERC, TIP, WOTC
   eligibility   EligibilitySignal @default(MODERATE)
   
+  // Rules versioning for auditability
+  rulesVersion  String            @default("1.0.0") @map("rules_version")
+  explanations  String[]          @default([]) // Explanation bullets from estimation
+  
   // Lead management
   status        LeadStatus        @default(NEW)
   source        String?           // Campaign/source tracking
   
-  // Assignment
+  // Internal staff assignment
   assignedStaffId String?         @map("assigned_staff_id")
   assignedStaff   User?           @relation("AssignedStaff", fields: [assignedStaffId], references: [id])
   assignedAt      DateTime?       @map("assigned_at")
@@ -83,8 +119,9 @@ model Lead {
   updatedAt     DateTime          @updatedAt @map("updated_at")
   
   // Relations
-  notes         LeadNote[]
-  auditLogs     AuditLog[]
+  notes              LeadNote[]
+  auditLogs          AuditLog[]
+  partnerAssignments PartnerAssignment[]
 
   @@index([status])
   @@index([assignedStaffId])
@@ -94,7 +131,7 @@ model Lead {
 }
 
 // ============================================
-// LEAD NOTES
+// LEAD NOTES (Internal Staff)
 // ============================================
 
 model LeadNote {
@@ -115,39 +152,152 @@ model LeadNote {
 }
 
 // ============================================
+// PARTNER LEAD ASSIGNMENT
+// Admin-controlled, revocable access to leads
+// ============================================
+
+enum AssignmentStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model PartnerAssignment {
+  id          String           @id @default(cuid())
+  
+  // Lead being assigned
+  leadId      String           @map("lead_id")
+  lead        Lead             @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  // Partner receiving access
+  partnerId   String           @map("partner_id")
+  partner     Partner          @relation(fields: [partnerId], references: [id])
+  
+  // Assignment status
+  status      AssignmentStatus @default(PENDING)
+  
+  // Assignment notes from admin
+  notes       String?          @db.Text
+  
+  // Timestamps
+  assignedAt    DateTime       @default(now()) @map("assigned_at")
+  completedAt   DateTime?      @map("completed_at")
+  
+  // Audit: who performed assignment
+  assignedById  String?        @map("assigned_by_id")
+  assignedBy    User?          @relation("AssignedByUser", fields: [assignedById], references: [id])
+  
+  // Partner notes on this assignment
+  partnerNotes  PartnerLeadNote[]
+
+  @@unique([leadId, partnerId, assignedAt]) // Allow reassignment after completion
+  @@index([leadId])
+  @@index([partnerId])
+  @@index([status])
+  @@map("partner_assignments")
+}
+
+// ============================================
+// PARTNER LEAD NOTES
+// Notes added by partners on their assigned leads
+// ============================================
+
+model PartnerLeadNote {
+  id           String   @id @default(cuid())
+  content      String   @db.Text
+  
+  // Relations
+  assignmentId String   @map("assignment_id")
+  assignment   PartnerAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([assignmentId])
+  @@map("partner_lead_notes")
+}
+
+// ============================================
 // AUDIT LOGGING
 // ============================================
 
-enum AuditAction {
-  LEAD_CREATED
-  LEAD_ASSIGNED
-  LEAD_STATUS_CHANGED
-  LEAD_UPDATED
-  NOTE_ADDED
-  USER_CREATED
-  USER_UPDATED
-  USER_LOGIN
-}
-
 model AuditLog {
-  id           String      @id @default(cuid())
-  action       AuditAction
-  entityType   String      @map("entity_type") // lead, user, etc.
-  entityId     String      @map("entity_id")
-  details      Json?       // Additional context
+  id           String   @id @default(cuid())
+  action       String   // Flexible action type
+  entityType   String   @map("entity_type") // lead, user, partner, etc.
+  entityId     String   @map("entity_id")
+  oldValues    Json?    @map("old_values")
+  newValues    Json?    @map("new_values")
   
-  // Who performed the action
-  performedById String?    @map("performed_by_id")
-  performedBy   User?      @relation("PerformedBy", fields: [performedById], references: [id])
+  // Who performed the action (internal user)
+  userId       String?  @map("user_id")
+  user         User?    @relation("PerformedBy", fields: [userId], references: [id])
+  
+  // Or partner (external)
+  partnerId    String?  @map("partner_id")
+  partner      Partner? @relation("PartnerAudit", fields: [partnerId], references: [id])
   
   // For lead-specific audits
-  leadId       String?     @map("lead_id")
-  lead         Lead?       @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  leadId       String?  @map("lead_id")
+  lead         Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
   
-  createdAt    DateTime    @default(now()) @map("created_at")
+  createdAt    DateTime @default(now()) @map("created_at")
 
   @@index([entityType, entityId])
   @@index([leadId])
+  @@index([userId])
+  @@index([partnerId])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// ============================================
+// ESTIMATOR RULES (Database-driven configuration)
+// As per planv2.md: Logic must be editable without redeploying
+// ============================================
+
+model EstimatorRules {
+  id              String   @id @default(cuid())
+  version         String   @unique  // e.g., "1.0.0", "1.1.0"
+  effectiveDate   DateTime @map("effective_date")
+  description     String?
+  
+  // Is this the currently active ruleset?
+  isActive        Boolean  @default(false) @map("is_active")
+  
+  // Complete rules configuration as JSON
+  // Contains: credits, employeeRanges, payrollRanges
+  rulesConfig     Json     @map("rules_config")
+  
+  // Audit fields
+  createdById     String?  @map("created_by_id")
+  createdBy       User?    @relation("RulesCreatedBy", fields: [createdById], references: [id])
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+  
+  @@index([isActive])
+  @@index([version])
+  @@map("estimator_rules")
+}
+
+// ============================================
+// SITE SETTINGS (Configurable without deploy)
+// ============================================
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       Json
+  description String?
+  category    String   @default("general") // general, estimator, display, etc.
+  
+  updatedById String?  @map("updated_by_id")
+  updatedBy   User?    @relation("SettingsUpdatedBy", fields: [updatedById], references: [id])
+  
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@map("site_settings")
 }

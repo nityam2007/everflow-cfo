@@ -5,15 +5,10 @@ import { formatCurrency, formatDateShort } from '@/lib/utils';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Download } from 'lucide-react';
-
-const statusColors: Record<string, 'default' | 'secondary' | 'success' | 'warning' | 'destructive'> = {
-  NEW: 'default',
-  ASSIGNED: 'secondary',
-  IN_PROGRESS: 'warning',
-  CLOSED: 'success',
-  LOST: 'destructive',
-};
+import { PageHeader } from '@/components/page-header';
+import { LEAD_STATUS_COLORS } from '@/lib/constants';
+import { Eye } from 'lucide-react';
+import { ExportButton } from './export-button';
 
 export default async function LeadsPage() {
   const session = await getSession();
@@ -32,20 +27,12 @@ export default async function LeadsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Leads</h1>
-          <p className="text-muted-foreground">
-            {isAdmin ? 'All leads in the system' : 'Leads assigned to you'}
-          </p>
-        </div>
-        {isAdmin && (
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" />
-            Export CSV
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        title="Leads"
+        description={isAdmin ? 'All leads in the system' : 'Leads assigned to you'}
+      >
+        {isAdmin && <ExportButton />}
+      </PageHeader>
 
       <Card>
         <CardHeader>
@@ -55,13 +42,13 @@ export default async function LeadsPage() {
         <CardContent>
           {leads.length === 0 ? (
             <div className="py-12 text-center">
-              <p className="text-muted-foreground">No leads found.</p>
+              <p className="text-[var(--color-foreground-muted)]">No leads found.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b text-left text-sm text-muted-foreground">
+                  <tr className="border-b border-[var(--color-border)] text-left text-sm text-[var(--color-foreground-muted)]">
                     <th className="pb-3 font-medium">Company</th>
                     <th className="pb-3 font-medium">Contact</th>
                     <th className="pb-3 font-medium">Industry</th>
@@ -73,19 +60,19 @@ export default async function LeadsPage() {
                     <th className="pb-3 font-medium"></th>
                   </tr>
                 </thead>
-                <tbody className="divide-y">
+                <tbody className="divide-y divide-[var(--color-border)]">
                   {leads.map((lead) => (
                     <tr key={lead.id} className="text-sm">
-                      <td className="py-4 font-medium">{lead.companyName}</td>
+                      <td className="py-4 font-medium text-[var(--color-foreground)]">{lead.companyName}</td>
                       <td className="py-4">
                         <div>
-                          <p>{lead.contactName}</p>
-                          <p className="text-xs text-muted-foreground">{lead.email}</p>
+                          <p className="text-[var(--color-foreground)]">{lead.contactName}</p>
+                          <p className="text-xs text-[var(--color-foreground-muted)]">{lead.email}</p>
                         </div>
                       </td>
-                      <td className="py-4 capitalize">{lead.industry}</td>
+                      <td className="py-4 capitalize text-[var(--color-foreground)]">{lead.industry}</td>
                       <td className="py-4">
-                        <span className="font-medium">
+                        <span className="font-medium text-[var(--color-foreground)]">
                           {formatCurrency(lead.estimatedMin)} - {formatCurrency(lead.estimatedMax)}
                         </span>
                       </td>
@@ -99,14 +86,14 @@ export default async function LeadsPage() {
                         </div>
                       </td>
                       <td className="py-4">
-                        <Badge variant={statusColors[lead.status]}>{lead.status}</Badge>
+                        <Badge variant={LEAD_STATUS_COLORS[lead.status]}>{lead.status}</Badge>
                       </td>
                       {isAdmin && (
-                        <td className="py-4 text-muted-foreground">
+                        <td className="py-4 text-[var(--color-foreground-muted)]">
                           {lead.assignedStaff?.name || '—'}
                         </td>
                       )}
-                      <td className="py-4 text-muted-foreground">
+                      <td className="py-4 text-[var(--color-foreground-muted)]">
                         {formatDateShort(lead.createdAt)}
                       </td>
                       <td className="py-4">

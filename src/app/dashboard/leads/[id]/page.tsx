@@ -6,7 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { LeadActions } from './lead-actions';
 import { LeadNotes } from './lead-notes';
-import { Building, Mail, Phone, Calendar, DollarSign, Users } from 'lucide-react';
+import { PartnerAssignment } from './partner-assignment';
+import { Building, Mail, Phone, Calendar, DollarSign, Users, Briefcase } from 'lucide-react';
 
 interface LeadDetailPageProps {
   params: Promise<{ id: string }>;
@@ -25,6 +26,13 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
         orderBy: { createdAt: 'desc' },
         include: { user: { select: { name: true } } },
       },
+      partnerAssignments: {
+        orderBy: { assignedAt: 'desc' },
+        include: {
+          partner: { select: { id: true, name: true, companyName: true } },
+          assignedBy: { select: { name: true } },
+        },
+      },
     },
   });
 
@@ -42,6 +50,15 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
     ? await db.user.findMany({
         where: { role: 'STAFF', isActive: true },
         select: { id: true, name: true, email: true },
+      })
+    : [];
+
+  // Fetch partners list for admin assignment
+  const partnersList = isAdmin
+    ? await db.partner.findMany({
+        where: { isActive: true },
+        select: { id: true, name: true, companyName: true },
+        orderBy: { companyName: 'asc' },
       })
     : [];
 
@@ -65,7 +82,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold">{lead.companyName}</h1>
-          <p className="text-muted-foreground">{lead.contactName}</p>
+          <p className="text-[var(--color-foreground-muted)]">{lead.contactName}</p>
         </div>
         <Badge variant={statusColors[lead.status]} className="text-sm">
           {lead.status.replace('_', ' ')}
@@ -82,23 +99,23 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-2">
               <div className="flex items-center gap-3">
-                <Building className="h-4 w-4 text-muted-foreground" />
+                <Building className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Company</p>
+                  <p className="text-sm text-[var(--color-foreground-muted)]">Company</p>
                   <p className="font-medium">{lead.companyName}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <Users className="h-4 w-4 text-muted-foreground" />
+                <Users className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Contact</p>
+                  <p className="text-sm text-[var(--color-foreground-muted)]">Contact</p>
                   <p className="font-medium">{lead.contactName}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-muted-foreground" />
+                <Mail className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Email</p>
+                  <p className="text-sm text-[var(--color-foreground-muted)]">Email</p>
                   <a href={`mailto:${lead.email}`} className="font-medium hover:text-primary">
                     {lead.email}
                   </a>
@@ -106,9 +123,9 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
               </div>
               {lead.phone && (
                 <div className="flex items-center gap-3">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <Phone className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Phone</p>
+                    <p className="text-sm text-[var(--color-foreground-muted)]">Phone</p>
                     <a href={`tel:${lead.phone}`} className="font-medium hover:text-primary">
                       {lead.phone}
                     </a>
@@ -125,9 +142,9 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3">
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                <DollarSign className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Estimated Range</p>
+                  <p className="text-sm text-[var(--color-foreground-muted)]">Estimated Range</p>
                   <p className="text-2xl font-bold">
                     {formatCurrency(lead.estimatedMin)} – {formatCurrency(lead.estimatedMax)}
                   </p>
@@ -135,7 +152,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
               </div>
 
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Credits Flagged</p>
+                <p className="text-sm text-[var(--color-foreground-muted)] mb-2">Credits Flagged</p>
                 <div className="flex gap-2">
                   {lead.creditFlags.map((flag) => (
                     <Badge key={flag} variant="outline">
@@ -146,7 +163,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
               </div>
 
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Eligibility Signal</p>
+                <p className="text-sm text-[var(--color-foreground-muted)] mb-2">Eligibility Signal</p>
                 <Badge variant={eligibilityColors[lead.eligibility]}>{lead.eligibility}</Badge>
               </div>
             </CardContent>
@@ -154,6 +171,15 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
 
           {/* Notes */}
           <LeadNotes leadId={lead.id} notes={lead.notes} />
+
+          {/* Partner Assignment (Admin only) */}
+          {isAdmin && (
+            <PartnerAssignment
+              leadId={lead.id}
+              assignments={lead.partnerAssignments}
+              partnersList={partnersList}
+            />
+          )}
         </div>
 
         {/* Sidebar */}
@@ -174,27 +200,27 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <Calendar className="h-4 w-4 text-[var(--color-foreground-muted)]" />
                 <div>
-                  <p className="text-muted-foreground">Created</p>
+                  <p className="text-[var(--color-foreground-muted)]">Created</p>
                   <p>{formatDate(lead.createdAt)}</p>
                 </div>
               </div>
               {lead.industry && (
                 <div>
-                  <p className="text-muted-foreground">Industry</p>
+                  <p className="text-[var(--color-foreground-muted)]">Industry</p>
                   <p className="capitalize">{lead.industry}</p>
                 </div>
               )}
               {lead.source && (
                 <div>
-                  <p className="text-muted-foreground">Source</p>
+                  <p className="text-[var(--color-foreground-muted)]">Source</p>
                   <p>{lead.source}</p>
                 </div>
               )}
               {lead.assignedStaff && (
                 <div>
-                  <p className="text-muted-foreground">Assigned To</p>
+                  <p className="text-[var(--color-foreground-muted)]">Assigned To</p>
                   <p>{lead.assignedStaff.name}</p>
                 </div>
               )}

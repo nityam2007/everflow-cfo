@@ -8,19 +8,19 @@ const Badge = React.forwardRef<
   }
 >(({ className, variant = 'default', ...props }, ref) => {
   const variantClasses = {
-    default: 'bg-primary text-primary-foreground hover:bg-primary/80',
-    secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-    destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/80',
-    outline: 'border border-input bg-background text-foreground',
-    success: 'bg-green-900/50 text-green-400 border border-green-800',
-    warning: 'bg-yellow-900/50 text-yellow-400 border border-yellow-800',
+    default: 'bg-[var(--brand-primary-light)] text-[var(--brand-primary)]',
+    secondary: 'bg-[var(--color-background-alt)] text-[var(--color-foreground-muted)]',
+    destructive: 'bg-red-50 text-red-700 border border-red-200',
+    outline: 'border border-[var(--color-border)] bg-[var(--color-background)] text-[var(--color-foreground)]',
+    success: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+    warning: 'bg-amber-50 text-amber-700 border border-amber-200',
   };
 
   return (
     <div
       ref={ref}
       className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors',
+        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors',
         variantClasses[variant],
         className
       )}

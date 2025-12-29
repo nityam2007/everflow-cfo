@@ -1,127 +1,136 @@
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { ArrowRight } from 'lucide-react';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[var(--color-background)]">
       <Header />
 
-      <main className="pt-16">
+      <main>
         {/* Hero */}
-        <section className="min-h-[80vh] flex items-center justify-center px-6">
-          <div className="max-w-2xl text-center">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">
-              Payroll Credit Pre-Assessment
-            </p>
-            <h1 className="text-4xl md:text-5xl font-light tracking-tight leading-tight">
-              Federal credits can return six-figure refunds to qualifying employers
-            </h1>
-            <p className="mt-8 text-lg text-muted-foreground leading-relaxed">
-              Most businesses leave $50,000–$500,000+ unclaimed.
-            </p>
-            <div className="mt-12">
-              <Link href="/quiz">
-                <Button size="lg" className="px-8">
-                  Begin Assessment
-                  <ArrowRight className="ml-3 h-4 w-4" />
-                </Button>
-              </Link>
+        <section className="ef-hero">
+          <div className="ef-container">
+            <div className="grid lg:grid-cols-2 gap-20 items-start">
+              <div>
+                <p className="ef-section-label mb-6">Payroll Credit Pre-Assessment Platform</p>
+                
+                <h1 className="ef-hero-title mb-8">
+                  Federal Payroll<br />
+                  <span className="ef-hero-title-accent">Credit Recovery</span>
+                </h1>
+                
+                <p className="ef-section-subtitle mb-10">
+                  Evaluate your eligibility for FICA Tip Credit, WOTC, and 
+                  other federal programs. Conservative estimates. No obligation.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-start gap-4">
+                  <Link href="/estimator">
+                    <button className="ef-btn ef-btn-primary ef-btn-lg">
+                      Begin Pre-Assessment
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </Link>
+                  <span className="ef-step-desc pt-3">
+                    2 minutes · No account required
+                  </span>
+                </div>
+              </div>
+
+              {/* Value Props */}
+              <div className="space-y-4 pt-4">
+                <div className="ef-card">
+                  <p className="text-brand text-[var(--text-xs)] font-medium tracking-wide mb-2">$</p>
+                  <h3 className="ef-feature-title">Recover Unclaimed Credits</h3>
+                  <p className="ef-feature-desc">Federal programs return billions annually to qualifying employers.</p>
+                </div>
+
+                <div className="ef-card">
+                  <p className="text-brand text-[var(--text-xs)] font-medium tracking-wide mb-2">⚡</p>
+                  <h3 className="ef-feature-title">Instant Preliminary Estimate</h3>
+                  <p className="ef-feature-desc">Get your credit exposure range in under 2 minutes.</p>
+                </div>
+
+                <div className="ef-card">
+                  <p className="text-brand text-[var(--text-xs)] font-medium tracking-wide mb-2">✓</p>
+                  <h3 className="ef-feature-title">Verified Before Filing</h3>
+                  <p className="ef-feature-desc">No claims filed without complete documentation review.</p>
+                </div>
+              </div>
             </div>
-            <p className="mt-6 text-xs text-muted-foreground">
-              2 minutes · No account required
-            </p>
           </div>
         </section>
 
         {/* Stats */}
-        <section className="py-32 px-6 border-t border-border/10">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-3 gap-16 text-center">
-              <div>
-                <p className="text-3xl font-light">$2.1B+</p>
-                <p className="mt-2 text-xs uppercase tracking-wider text-muted-foreground">
-                  Credits Identified
-                </p>
+        <section className="ef-section-alt py-12">
+          <div className="ef-container">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="ef-stat">
+                <p className="ef-stat-value">7.65%</p>
+                <p className="ef-stat-label">FICA Tip Credit Rate</p>
               </div>
-              <div>
-                <p className="text-3xl font-light">15,000+</p>
-                <p className="mt-2 text-xs uppercase tracking-wider text-muted-foreground">
-                  Businesses Assessed
-                </p>
+              <div className="ef-stat">
+                <p className="ef-stat-value">$9,600</p>
+                <p className="ef-stat-label">Max WOTC Per Hire</p>
               </div>
-              <div>
-                <p className="text-3xl font-light">98%</p>
-                <p className="mt-2 text-xs uppercase tracking-wider text-muted-foreground">
-                  Accuracy Rate
-                </p>
+              <div className="ef-stat">
+                <p className="ef-stat-value">Annual</p>
+                <p className="ef-stat-label">Recurring Benefits</p>
+              </div>
+              <div className="ef-stat">
+                <p className="ef-stat-value">100%</p>
+                <p className="ef-stat-label">Verification Required</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Credits */}
-        <section className="py-32 px-6">
-          <div className="max-w-4xl mx-auto">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground text-center mb-4">
-              Available Credits
-            </p>
-            <h2 className="text-2xl md:text-3xl font-light text-center mb-20">
-              Federal payroll tax credits we evaluate
-            </h2>
+        {/* Credit Programs */}
+        <section className="ef-section">
+          <div className="ef-container">
+            <div className="mb-16">
+              <p className="ef-section-label">Credit Programs</p>
+              <h2 className="ef-section-title">Federal Payroll Tax Credits</h2>
+            </div>
 
-            <div className="space-y-16">
-              {/* ERC */}
-              <div className="grid md:grid-cols-2 gap-8 items-start">
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">ERC</p>
-                  <h3 className="text-xl font-light">Employee Retention Credit</h3>
-                </div>
-                <div>
-                  <p className="text-3xl font-light mb-4">Up to $26,000<span className="text-base text-muted-foreground">/employee</span></p>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>COVID-19 operational disruption</li>
-                    <li>Revenue decline 2020–2021</li>
-                    <li>Refundable payroll tax credit</li>
-                  </ul>
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* TIP Credit */}
+              <div className="ef-credit-card ef-credit-tip">
+                <p className="ef-credit-label">ONGOING ANNUAL BENEFIT</p>
+                <h3 className="ef-credit-title">FICA Tip Credit</h3>
+                <p className="ef-credit-desc">
+                  Section 45B credit for restaurants, bars, and hospitality employers with tipped employees.
+                </p>
+                <div className="pt-6 border-t border-white/30">
+                  <p className="ef-credit-value">7.65%</p>
+                  <p className="ef-credit-subvalue">of qualifying tips</p>
                 </div>
               </div>
-
-              <div className="border-t border-border/10" />
-
-              {/* TIP */}
-              <div className="grid md:grid-cols-2 gap-8 items-start">
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Section 45B</p>
-                  <h3 className="text-xl font-light">FICA Tip Credit</h3>
-                </div>
-                <div>
-                  <p className="text-3xl font-light mb-4">7.65%<span className="text-base text-muted-foreground"> of qualifying tips</span></p>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>Restaurants, bars, hospitality</li>
-                    <li>Tipped employee wages</li>
-                    <li>Ongoing annual credit</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div className="border-t border-border/10" />
 
               {/* WOTC */}
-              <div className="grid md:grid-cols-2 gap-8 items-start">
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">WOTC</p>
-                  <h3 className="text-xl font-light">Work Opportunity Tax Credit</h3>
+              <div className="ef-credit-card ef-credit-wotc">
+                <h3 className="ef-credit-title">Work Opportunity Credit</h3>
+                <p className="ef-credit-desc">
+                  Credits for hiring veterans, SNAP recipients, long-term unemployed, and other targeted groups.
+                </p>
+                <div className="pt-6 border-t border-[var(--color-border)]">
+                  <p className="ef-credit-value">Up to $9,600</p>
+                  <p className="ef-credit-subvalue">per qualified hire</p>
                 </div>
-                <div>
-                  <p className="text-3xl font-light mb-4">Up to $9,600<span className="text-base text-muted-foreground">/qualified hire</span></p>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>Veterans and disabled veterans</li>
-                    <li>SNAP and SSI recipients</li>
-                    <li>Long-term unemployed</li>
-                  </ul>
+              </div>
+
+              {/* ERC */}
+              <div className="ef-credit-card ef-credit-erc">
+                <p className="ef-credit-label">MAY APPLY IN CERTAIN CASES</p>
+                <h3 className="ef-credit-title">Employee Retention Credit</h3>
+                <p className="ef-credit-desc">
+                  Specific 2020–2021 eligibility requirements. Subject to IRS verification.
+                </p>
+                <div className="pt-6 border-t border-[var(--color-border-strong)]">
+                  <p className="ef-credit-value">Up to $26,000</p>
+                  <p className="ef-credit-subvalue">per employee</p>
                 </div>
               </div>
             </div>
@@ -129,92 +138,79 @@ export default function HomePage() {
         </section>
 
         {/* Process */}
-        <section className="py-32 px-6 border-t border-border/10">
-          <div className="max-w-3xl mx-auto">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground text-center mb-4">
-              Process
-            </p>
-            <h2 className="text-2xl md:text-3xl font-light text-center mb-20">
-              How it works
-            </h2>
+        <section className="ef-section ef-section-alt">
+          <div className="ef-container">
+            <div className="grid lg:grid-cols-2 gap-20">
+              <div>
+                <p className="ef-section-label">How It Works</p>
+                <h2 className="ef-section-title mb-6">From Assessment to Recovery</h2>
+                <p className="ef-section-subtitle mb-10">
+                  Our statute-based methodology ensures conservative, defensible estimates. 
+                  Every claim is verified before filing.
+                </p>
 
-            <div className="space-y-12">
-              {[
-                { num: '01', title: 'Complete the assessment', desc: 'Answer questions about your business, workforce, and operations.' },
-                { num: '02', title: 'Receive your estimate', desc: 'View your preliminary credit exposure and eligible programs.' },
-                { num: '03', title: 'Verify with a specialist', desc: 'Our team reviews documentation and prepares your claim.' },
-                { num: '04', title: 'Claim your refund', desc: 'Receive funds directly from the IRS.' },
-              ].map((step) => (
-                <div key={step.num} className="flex gap-8 items-start">
-                  <p className="text-xs text-muted-foreground font-mono">{step.num}</p>
-                  <div>
-                    <h3 className="font-medium mb-1">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground">{step.desc}</p>
-                  </div>
+                <div className="space-y-8">
+                  {[
+                    { num: '01', title: 'Complete Pre-Assessment', desc: 'Answer questions about your business and workforce.' },
+                    { num: '02', title: 'Review Your Estimate', desc: 'Receive a conservative credit exposure range.' },
+                    { num: '03', title: 'Documentation Review', desc: 'Our team verifies eligibility with payroll records.' },
+                    { num: '04', title: 'Credit Recovery', desc: 'Claims filed. Funds deposited from IRS.' },
+                  ].map((step) => (
+                    <div key={step.num} className="ef-step">
+                      <span className="ef-step-number">{step.num}</span>
+                      <div>
+                        <h3 className="ef-step-title">{step.title}</h3>
+                        <p className="ef-step-desc">{step.desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Features */}
+              <div className="grid grid-cols-2 gap-4 content-start">
+                <div className="ef-feature">
+                  <h3 className="ef-feature-title">Statute-Based</h3>
+                  <p className="ef-feature-desc">IRS guidelines & conservative assumptions</p>
+                </div>
+                <div className="ef-feature">
+                  <h3 className="ef-feature-title">Verified Claims</h3>
+                  <p className="ef-feature-desc">No filing without documentation</p>
+                </div>
+                <div className="ef-feature">
+                  <h3 className="ef-feature-title">Quick Process</h3>
+                  <p className="ef-feature-desc">2-minute pre-assessment</p>
+                </div>
+                <div className="ef-feature">
+                  <h3 className="ef-feature-title">No Obligation</h3>
+                  <p className="ef-feature-desc">Free estimate, your approval needed</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         {/* Industries */}
-        <section className="py-32 px-6">
-          <div className="max-w-4xl mx-auto">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground text-center mb-4">
-              Eligibility
-            </p>
-            <h2 className="text-2xl md:text-3xl font-light text-center mb-16">
-              Qualifying industries
-            </h2>
+        <section className="ef-section">
+          <div className="ef-container">
+            <div className="mb-16">
+              <p className="ef-section-label">Eligibility</p>
+              <h2 className="ef-section-title">Qualifying Industries</h2>
+            </div>
 
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
-                'Restaurants',
-                'Hotels',
-                'Healthcare',
-                'Retail',
+                'Restaurants & Food Service',
+                'Hotels & Hospitality',
+                'Healthcare Providers',
+                'Retail Operations',
                 'Manufacturing',
                 'Construction',
                 'Professional Services',
-                'Non-Profits',
+                'Non-Profit Organizations',
               ].map((industry) => (
-                <span
-                  key={industry}
-                  className="px-5 py-2 border border-border/30 rounded-full text-sm"
-                >
+                <div key={industry} className="ef-industry-tag">
                   {industry}
-                </span>
-              ))}
-            </div>
-
-            <p className="text-center text-sm text-muted-foreground mt-12">
-              Businesses with W-2 employees affected by COVID-19 or hiring from targeted groups.
-            </p>
-          </div>
-        </section>
-
-        {/* Results */}
-        <section className="py-32 px-6 border-t border-border/10">
-          <div className="max-w-4xl mx-auto">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground text-center mb-4">
-              Results
-            </p>
-            <h2 className="text-2xl md:text-3xl font-light text-center mb-16">
-              Credits recovered
-            </h2>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                { amount: '$180,000', industry: 'Restaurant', location: 'Dallas, TX' },
-                { amount: '$425,000', industry: 'Hotel', location: 'Miami, FL' },
-                { amount: '$1.2M', industry: 'Healthcare', location: 'Chicago, IL' },
-              ].map((item) => (
-                <div key={item.location} className="text-center py-8 border border-border/20 rounded-lg">
-                  <p className="text-2xl font-light text-primary">{item.amount}</p>
-                  <p className="mt-3 text-xs text-muted-foreground uppercase tracking-wider">
-                    {item.industry}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{item.location}</p>
                 </div>
               ))}
             </div>
@@ -222,37 +218,35 @@ export default function HomePage() {
         </section>
 
         {/* FAQ */}
-        <section className="py-32 px-6">
-          <div className="max-w-2xl mx-auto">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground text-center mb-4">
-              Questions
-            </p>
-            <h2 className="text-2xl md:text-3xl font-light text-center mb-16">
-              Frequently asked
-            </h2>
+        <section className="ef-section ef-section-alt">
+          <div className="ef-container max-w-3xl">
+            <div className="mb-16">
+              <p className="ef-section-label">FAQ</p>
+              <h2 className="ef-section-title">Common Questions</h2>
+            </div>
 
-            <div className="space-y-8">
+            <div className="space-y-4">
               {[
                 {
-                  q: 'Is the assessment free?',
-                  a: 'Yes. The pre-assessment is complimentary. Fees apply only upon successful credit recovery.',
+                  q: 'Is the pre-assessment free?',
+                  a: 'Yes. The pre-assessment is complimentary. No fees apply without successful credit recovery and your explicit approval.',
                 },
                 {
-                  q: 'How long does the process take?',
-                  a: 'Assessment takes 2 minutes. Verification is 1–2 weeks. IRS processing is typically 8–16 weeks.',
+                  q: 'How are estimates calculated?',
+                  a: 'Estimates use statute-defined caps and conservative assumptions. All figures are ranges, not guarantees, and require documentation verification.',
                 },
                 {
-                  q: 'Are these legitimate tax credits?',
-                  a: 'Yes. These are federal programs established by Congress. ERC alone has distributed over $230 billion.',
+                  q: 'What is the timeline?',
+                  a: 'The pre-assessment takes about 2 minutes. Verification timelines vary by program. IRS processing depends on current agency workload.',
                 },
                 {
-                  q: 'What determines eligibility?',
-                  a: 'W-2 employees, COVID-19 impact, and hiring practices. The assessment evaluates these factors.',
+                  q: 'Are these legitimate programs?',
+                  a: 'Yes. These are established federal tax credit programs created by Congress. All claims require proper documentation and are subject to IRS review.',
                 },
               ].map((faq, i) => (
-                <div key={i}>
-                  <h3 className="font-medium mb-2">{faq.q}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+                <div key={i} className="ef-faq-item">
+                  <h3 className="ef-faq-question">{faq.q}</h3>
+                  <p className="ef-faq-answer">{faq.a}</p>
                 </div>
               ))}
             </div>
@@ -260,19 +254,15 @@ export default function HomePage() {
         </section>
 
         {/* CTA */}
-        <section className="py-32 px-6 border-t border-border/10">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-light mb-6">
-              Evaluate your eligibility
-            </h2>
-            <p className="text-muted-foreground mb-10">
-              Complimentary assessment. No commitment required.
-            </p>
-            <Link href="/quiz">
-              <Button size="lg" className="px-10">
-                Begin Assessment
-                <ArrowRight className="ml-3 h-4 w-4" />
-              </Button>
+        <section className="ef-cta">
+          <div className="ef-container max-w-4xl">
+            <h2 className="ef-cta-title">Ready to Evaluate Your Credits?</h2>
+            <p className="ef-cta-subtitle">Complimentary assessment. Conservative estimates. No obligation.</p>
+            <Link href="/estimator">
+              <button className="ef-btn ef-btn-primary ef-btn-lg">
+                Begin Pre-Assessment
+                <ArrowRight className="h-4 w-4" />
+              </button>
             </Link>
           </div>
         </section>
