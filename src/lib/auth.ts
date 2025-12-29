@@ -89,6 +89,59 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         };
       },
     }),
+    // Partner password-based login
+    Credentials({
+      id: 'partner-credentials',
+      name: 'partner-credentials',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        const parsed = loginSchema.safeParse(credentials);
+        if (!parsed.success) return null;
+
+        const { email, password } = parsed.data;
+        const normalizedEmail = email.toLowerCase().trim();
+
+        // Check for account lockout
+        const lockoutKey = `lockout:partner:${normalizedEmail}`;
+        const isLockedOut = await cache.exists(lockoutKey);
+        if (isLockedOut) {
+          console.warn(`[SECURITY] Partner login attempt on locked account: ${maskEmail(normalizedEmail)}`);
+          return null;
+        }
+
+        const attemptsKey = `login-attempts:partner:${normalizedEmail}`;
+
+        const partner = await db.partner.findUnique({
+          where: { email: normalizedEmail },
+        });
+
+        if (!partner || !partner.isActive || !partner.password) {
+          await incrementFailedAttempts(attemptsKey, lockoutKey, normalizedEmail);
+          return null;
+        }
+
+        const isValid = await bcrypt.compare(password, partner.password);
+        if (!isValid) {
+          await incrementFailedAttempts(attemptsKey, lockoutKey, normalizedEmail);
+          console.warn(`[SECURITY] Failed partner login attempt for: ${maskEmail(normalizedEmail)}`);
+          return null;
+        }
+
+        // Clear failed attempts on successful login
+        await cache.del(attemptsKey);
+
+        return {
+          id: partner.id,
+          email: partner.email,
+          name: partner.name,
+          role: 'PARTNER' as const,
+          userType: 'partner' as const,
+        };
+      },
+    }),
     // Email OTP authentication (for Users and Partners)
     Credentials({
       id: 'email-otp',

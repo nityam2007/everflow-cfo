@@ -40,6 +40,23 @@ async function main() {
   });
   console.log('✅ Created staff user:', staff.email);
 
+  // Create demo partner with password
+  const partnerPassword = await bcrypt.hash('partner123', 12);
+  const partner = await prisma.partner.upsert({
+    where: { email: 'partner@payrollpro.com' },
+    update: {},
+    create: {
+      name: 'John Smith',
+      companyName: 'PayrollPro Solutions',
+      email: 'partner@payrollpro.com',
+      phone: '555-0200',
+      password: partnerPassword,
+      isActive: true,
+      notes: 'Demo partner account for testing',
+    },
+  });
+  console.log('✅ Created demo partner:', partner.email);
+
   // Create sample leads
   const sampleLeads = [
     {
@@ -274,8 +291,9 @@ async function main() {
   console.log('🎉 Seeding complete!');
   console.log('');
   console.log('📧 Login credentials:');
-  console.log('   Admin: admin@everflowcfo.com / admin123');
-  console.log('   Staff: staff@everflowcfo.com / staff123');
+  console.log('   Admin:   admin@everflowcfo.com / admin123');
+  console.log('   Staff:   staff@everflowcfo.com / staff123');
+  console.log('   Partner: partner@payrollpro.com / partner123 (or use OTP)');
 }
 
 main()

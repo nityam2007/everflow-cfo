@@ -98,6 +98,7 @@ export const PartnerScalarFieldEnum = {
   companyName: 'companyName',
   email: 'email',
   phone: 'phone',
+  password: 'password',
   isActive: 'isActive',
   notes: 'notes',
   createdAt: 'createdAt',

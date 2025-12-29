@@ -50,6 +50,7 @@ model Partner {
   companyName     String   @map("company_name")
   email           String   @unique
   phone           String?  @map("phone")
+  password        String?  @map("password") // Optional: for password-based login (alternative to OTP)
   isActive        Boolean  @default(true) @map("is_active")
   
   // Partner metadata

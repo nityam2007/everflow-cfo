@@ -19,6 +19,7 @@ interface NavItem {
   label: string;
   icon: LucideIcon;
   adminOnly?: boolean;
+  staffOnly?: boolean;
 }
 
 interface SidebarProps {
@@ -34,6 +35,7 @@ interface SidebarProps {
 const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/leads', label: 'Leads', icon: Users },
+  { href: '/dashboard/my-tasks', label: 'My Tasks', icon: Activity, staffOnly: true },
   { href: '/dashboard/audit', label: 'Audit Log', icon: Activity, adminOnly: true },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings, adminOnly: true },
 ];
@@ -60,6 +62,7 @@ export function Sidebar({ user, isAdmin, signOutAction }: SidebarProps) {
         <nav className="flex-1 space-y-1 p-4">
           {navItems.map((item) => {
             if (item.adminOnly && !isAdmin) return null;
+            if (item.staffOnly && isAdmin) return null; // Staff-only items hidden for admin
             
             const isActive = pathname === item.href || 
               (item.href !== '/dashboard' && pathname.startsWith(item.href));
