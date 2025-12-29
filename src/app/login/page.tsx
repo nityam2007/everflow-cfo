@@ -54,16 +54,27 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await signIn('credentials', {
+      // Try user credentials first (admin/staff)
+      let result = await signIn('credentials', {
         email,
         password,
         redirect: false,
       });
 
+      // If user login fails, try partner credentials
+      if (result?.error) {
+        result = await signIn('partner-credentials', {
+          email,
+          password,
+          redirect: false,
+        });
+      }
+
       if (result?.error) {
         setError('Invalid email or password');
       } else {
         router.refresh();
+        // Router will handle redirect based on userType in layout
         router.push('/dashboard');
       }
     } catch {
