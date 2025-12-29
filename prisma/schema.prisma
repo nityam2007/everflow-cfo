@@ -130,6 +130,7 @@ model Lead {
   auditLogs          AuditLog[]
   partnerAssignments PartnerAssignment[]
 
+  @@unique([email, companyName], name: "email_companyName")
   @@index([status])
   @@index([assignedStaffId])
   @@index([createdAt])

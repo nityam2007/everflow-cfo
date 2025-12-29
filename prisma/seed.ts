@@ -57,7 +57,61 @@ async function main() {
   });
   console.log('✅ Created demo partner:', partner.email);
 
-  // Create sample leads
+  // Create client accounts (form submitters with login access)
+  const clientPassword = await bcrypt.hash('client123', 12);
+  const clientPartners = [
+    {
+      name: 'Michael Chen',
+      companyName: 'Oceanview Restaurant Group',
+      email: 'mchen@oceanview.com',
+      phone: '555-0101',
+      password: clientPassword,
+    },
+    {
+      name: 'Sarah Williams', 
+      companyName: 'Harbor Hotel & Spa',
+      email: 'swilliams@harborhotel.com',
+      phone: '555-0102',
+      password: clientPassword,
+    },
+    {
+      name: 'Robert Martinez',
+      companyName: 'Sunset Diner',
+      email: 'rmartinez@sunsetdiner.com',
+      phone: '555-0103',
+      password: clientPassword,
+    },
+    {
+      name: 'Lisa Thompson',
+      companyName: 'Mountain Lodge Resort',
+      email: 'lthompson@mountainlodge.com',
+      phone: '555-0104',
+      password: clientPassword,
+    },
+    {
+      name: 'James Rodriguez',
+      companyName: 'City Bistro Group',
+      email: 'jrodriguez@citybistro.com',
+      phone: '555-0105',
+      password: clientPassword,
+    },
+  ];
+
+  const createdPartners: Record<string, string> = {};
+  for (const p of clientPartners) {
+    const created = await prisma.partner.upsert({
+      where: { email: p.email },
+      update: {},
+      create: {
+        ...p,
+        isActive: true,
+      },
+    });
+    createdPartners[p.email] = created.id;
+    console.log('✅ Created client partner:', created.email);
+  }
+
+  // Create sample leads (each linked to their partner/client)
   const sampleLeads = [
     {
       companyName: 'Oceanview Restaurant Group',
@@ -81,7 +135,10 @@ async function main() {
       estimatedMax: 275000,
       creditFlags: ['ERC', 'TIP'],
       eligibility: 'STRONG' as const,
-      source: 'cold-email-q4',
+      source: 'website',
+      status: 'IN_PROGRESS' as const,
+      assignedStaffId: staff.id,
+      partnerId: createdPartners['mchen@oceanview.com'],
     },
     {
       companyName: 'Harbor Hotel & Spa',
@@ -105,7 +162,10 @@ async function main() {
       estimatedMax: 650000,
       creditFlags: ['ERC', 'TIP', 'WOTC'],
       eligibility: 'STRONG' as const,
-      source: 'cold-email-q4',
+      source: 'website',
+      status: 'ASSIGNED' as const,
+      assignedStaffId: staff.id,
+      partnerId: createdPartners['swilliams@harborhotel.com'],
     },
     {
       companyName: 'Sunset Diner',
@@ -130,14 +190,87 @@ async function main() {
       creditFlags: ['TIP'],
       eligibility: 'LOW' as const,
       source: 'linkedin-ads',
+      status: 'NEW' as const,
+      partnerId: createdPartners['rmartinez@sunsetdiner.com'],
+    },
+    {
+      companyName: 'Mountain Lodge Resort',
+      contactName: 'Lisa Thompson',
+      email: 'lthompson@mountainlodge.com',
+      phone: '555-0104',
+      industry: 'Hospitality',
+      inputsJson: {
+        industry: 'hospitality',
+        state: 'CO',
+        yearsInOperation: 12,
+        fullTimeEmployees: '50-100',
+        partTimeEmployees: true,
+        tippedEmployees: true,
+        annualPayroll: '2000000-5000000',
+        operationalDisruption2020: true,
+        governmentMandates: true,
+        targetedHiring: true,
+      },
+      estimatedMin: 180000,
+      estimatedMax: 320000,
+      creditFlags: ['ERC', 'TIP', 'WOTC'],
+      eligibility: 'STRONG' as const,
+      source: 'referral',
+      status: 'CLOSED' as const,
+      assignedStaffId: staff.id,
+      partnerId: createdPartners['lthompson@mountainlodge.com'],
+    },
+    {
+      companyName: 'City Bistro Group',
+      contactName: 'James Rodriguez',
+      email: 'jrodriguez@citybistro.com',
+      phone: '555-0105',
+      industry: 'Restaurant',
+      inputsJson: {
+        industry: 'restaurant',
+        state: 'NY',
+        yearsInOperation: 6,
+        fullTimeEmployees: '25-50',
+        partTimeEmployees: true,
+        tippedEmployees: true,
+        annualPayroll: '1000000-2000000',
+        operationalDisruption2020: true,
+        governmentMandates: false,
+        targetedHiring: false,
+      },
+      estimatedMin: 75000,
+      estimatedMax: 150000,
+      creditFlags: ['ERC', 'TIP'],
+      eligibility: 'MODERATE' as const,
+      source: 'cold-email',
+      status: 'NEW' as const,
+      partnerId: createdPartners['jrodriguez@citybistro.com'],
     },
   ];
 
   for (const leadData of sampleLeads) {
-    const lead = await prisma.lead.create({
-      data: leadData,
+    // Check if lead exists, create if not
+    const existingLead = await prisma.lead.findFirst({
+      where: { 
+        email: leadData.email, 
+        companyName: leadData.companyName 
+      }
     });
-    console.log('✅ Created lead:', lead.companyName);
+    
+    if (existingLead) {
+      await prisma.lead.update({
+        where: { id: existingLead.id },
+        data: {
+          status: leadData.status,
+          assignedStaffId: leadData.assignedStaffId,
+          partnerId: leadData.partnerId,
+        },
+      });
+      console.log('⏭️ Updated existing lead:', leadData.companyName);
+    } else {
+      await prisma.lead.create({ data: leadData });
+      console.log('✅ Created lead:', leadData.companyName);
+    }
   }
 
   // Create default estimator rules
@@ -293,7 +426,10 @@ async function main() {
   console.log('📧 Login credentials:');
   console.log('   Admin:   admin@everflowcfo.com / admin123');
   console.log('   Staff:   staff@everflowcfo.com / staff123');
-  console.log('   Partner: partner@payrollpro.com / partner123 (or use OTP)');
+  console.log('   Client:  mchen@oceanview.com / client123');
+  console.log('   Client:  swilliams@harborhotel.com / client123');
+  console.log('   Client:  rmartinez@sunsetdiner.com / client123');
+  console.log('   (All clients use password: client123)');
 }
 
 main()

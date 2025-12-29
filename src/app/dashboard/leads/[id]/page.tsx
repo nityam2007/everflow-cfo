@@ -6,8 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { LeadActions } from './lead-actions';
 import { LeadNotes } from './lead-notes';
-import { PartnerAssignment } from './partner-assignment';
-import { Building, Mail, Phone, Calendar, DollarSign, Users, Briefcase } from 'lucide-react';
+import { Building, Mail, Phone, Calendar, DollarSign, Users, Briefcase, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 interface LeadDetailPageProps {
   params: Promise<{ id: string }>;
@@ -25,13 +26,6 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
       notes: {
         orderBy: { createdAt: 'desc' },
         include: { user: { select: { name: true } } },
-      },
-      partnerAssignments: {
-        orderBy: { assignedAt: 'desc' },
-        include: {
-          partner: { select: { id: true, name: true, companyName: true } },
-          assignedBy: { select: { name: true } },
-        },
       },
     },
   });
@@ -53,15 +47,6 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
       })
     : [];
 
-  // Fetch partners list for admin assignment
-  const partnersList = isAdmin
-    ? await db.partner.findMany({
-        where: { isActive: true },
-        select: { id: true, name: true, companyName: true },
-        orderBy: { companyName: 'asc' },
-      })
-    : [];
-
   const statusColors: Record<string, 'default' | 'secondary' | 'success' | 'warning' | 'destructive'> = {
     NEW: 'default',
     ASSIGNED: 'secondary',
@@ -80,9 +65,17 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">{lead.companyName}</h1>
-          <p className="text-[var(--color-foreground-muted)]">{lead.contactName}</p>
+        <div className="flex items-center gap-4">
+          <Link href="/dashboard/leads">
+            <Button variant="outline" size="sm">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-3xl font-bold">{lead.companyName}</h1>
+            <p className="text-[var(--color-foreground-muted)]">{lead.contactName}</p>
+          </div>
         </div>
         <Badge variant={statusColors[lead.status]} className="text-sm">
           {lead.status.replace('_', ' ')}
@@ -171,15 +164,6 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
 
           {/* Notes */}
           <LeadNotes leadId={lead.id} notes={lead.notes} />
-
-          {/* Partner Assignment (Admin only) */}
-          {isAdmin && (
-            <PartnerAssignment
-              leadId={lead.id}
-              assignments={lead.partnerAssignments}
-              partnersList={partnersList}
-            />
-          )}
         </div>
 
         {/* Sidebar */}

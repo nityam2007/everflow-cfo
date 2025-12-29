@@ -29,23 +29,18 @@ export default function LoginPage() {
     }
   }, [session, status, router]);
 
+  // Show minimal loading only during initial session check
   if (status === 'loading') {
     return (
       <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-brand" />
+        <Loader2 className="h-6 w-6 animate-spin text-[var(--brand-primary)]" />
       </div>
     );
   }
 
+  // If authenticated, show nothing while redirecting (useEffect handles it)
   if (status === 'authenticated') {
-    return (
-      <div className="min-h-screen bg-[var(--color-background)] flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-6 w-6 animate-spin text-brand mx-auto mb-4" />
-          <p className="text-[var(--color-foreground-muted)] text-[var(--text-sm)]">Redirecting...</p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   async function handleCredentialsSubmit(e: React.FormEvent) {

@@ -55,10 +55,28 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 After seeding:
 
+### Staff Portal (`/login`)
 | Role  | Email                   | Password   |
 |-------|-------------------------|------------|
 | Admin | admin@everflowcfo.com   | admin123   |
 | Staff | staff@everflowcfo.com   | staff123   |
+
+### Client Portal (`/login` → Partner Login tab)
+| Client                | Email               | Password   |
+|-----------------------|---------------------|------------|
+| Sunrise Technologies  | mchen@oceanview.com | client123  |
+| OceanView Resort      | mchen@oceanview.com | client123  |
+| Metro Dining Group    | arodriguez@metro.com | client123 |
+| Heritage Manufacturing| bwilliams@heritage.com | client123 |
+| Peak Hospitality      | ejohnson@peak.com   | client123  |
+
+## 👥 User Roles
+
+| Role   | Description                                      |
+|--------|--------------------------------------------------|
+| ADMIN  | Full access - manages staff, clients, settings   |
+| STAFF  | Manages assigned leads, updates status           |
+| CLIENT | Views own applications via partner portal        |
 
 ## 🏗️ Project Structure
 

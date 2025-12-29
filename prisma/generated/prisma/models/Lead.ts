@@ -365,6 +365,7 @@ export type LeadOrderByWithRelationInput = {
 
 export type LeadWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  email_companyName?: Prisma.LeadEmail_companyNameCompoundUniqueInput
   AND?: Prisma.LeadWhereInput | Prisma.LeadWhereInput[]
   OR?: Prisma.LeadWhereInput[]
   NOT?: Prisma.LeadWhereInput | Prisma.LeadWhereInput[]
@@ -392,7 +393,7 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.LeadNoteListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   partnerAssignments?: Prisma.PartnerAssignmentListRelationFilter
-}, "id">
+}, "id" | "email_companyName">
 
 export type LeadOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -635,6 +636,11 @@ export type StringNullableListFilter<$PrismaModel = never> = {
   hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   isEmpty?: boolean
+}
+
+export type LeadEmail_companyNameCompoundUniqueInput = {
+  email: string
+  companyName: string
 }
 
 export type LeadCountOrderByAggregateInput = {

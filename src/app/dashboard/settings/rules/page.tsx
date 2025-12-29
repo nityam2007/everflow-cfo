@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/utils';
-import { FileCode, Plus, CheckCircle2, Clock, Trash2, AlertCircle } from 'lucide-react';
+import { FileCode, Plus, CheckCircle2, Clock, Trash2, AlertCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 interface EstimatorRule {
@@ -45,11 +45,19 @@ export default async function RulesPage() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Estimator Rules</h1>
-          <p className="text-[var(--color-foreground-muted)]">
-            Manage versioned rule configurations for credit estimation
-          </p>
+        <div className="flex items-center gap-4">
+          <Link href="/dashboard/settings">
+            <Button variant="outline" size="sm">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Settings
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-3xl font-bold">Estimator Rules</h1>
+            <p className="text-[var(--color-foreground-muted)]">
+              Manage versioned rule configurations for credit estimation
+            </p>
+          </div>
         </div>
         <Link href="/dashboard/settings/rules/new">
           <Button>

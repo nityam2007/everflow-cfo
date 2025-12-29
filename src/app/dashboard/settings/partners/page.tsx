@@ -41,16 +41,16 @@ export default async function PartnersListPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold">Partner Management</h1>
+            <h1 className="text-3xl font-bold">Client Management</h1>
             <p className="text-[var(--color-foreground-muted)]">
-              Manage credit processors and their lead assignments
+              Manage clients (businesses who submitted applications)
             </p>
           </div>
         </div>
         <Link href="/dashboard/settings/partners/new">
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Add Partner
+            Add Client
           </Button>
         </Link>
       </div>
@@ -61,7 +61,7 @@ export default async function PartnersListPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[var(--color-foreground-muted)]">Total Partners</p>
+                <p className="text-sm text-[var(--color-foreground-muted)]">Total Clients</p>
                 <p className="text-2xl font-bold">{partners.length}</p>
               </div>
               <Building2 className="h-8 w-8 text-[var(--color-foreground-subtle)]" />
@@ -109,11 +109,11 @@ export default async function PartnersListPage() {
           <Card className="col-span-full">
             <CardContent className="py-12 text-center">
               <Building2 className="mx-auto h-12 w-12 text-[var(--color-foreground-subtle)]" />
-              <p className="mt-4 text-[var(--color-foreground-muted)]">No partners registered yet.</p>
+              <p className="mt-4 text-[var(--color-foreground-muted)]">No clients registered yet.</p>
               <Link href="/dashboard/settings/partners/new" className="mt-4 inline-block">
                 <Button>
                   <Plus className="mr-2 h-4 w-4" />
-                  Add First Partner
+                  Add First Client
                 </Button>
               </Link>
             </CardContent>
