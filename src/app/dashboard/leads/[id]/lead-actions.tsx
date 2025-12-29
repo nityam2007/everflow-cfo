@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
+import { Loader2, UserX } from 'lucide-react';
 
 interface LeadActionsProps {
   leadId: string;
@@ -29,6 +29,8 @@ const statusOptions = [
   { value: 'LOST', label: 'Lost' },
 ];
 
+const UNASSIGNED_VALUE = '__UNASSIGNED__';
+
 export function LeadActions({
   leadId,
   currentStatus,
@@ -39,7 +41,7 @@ export function LeadActions({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [status, setStatus] = useState(currentStatus);
-  const [staffId, setStaffId] = useState(assignedStaffId || '');
+  const [staffId, setStaffId] = useState(assignedStaffId || UNASSIGNED_VALUE);
 
   async function updateStatus(newStatus: string) {
     setStatus(newStatus);
@@ -55,11 +57,12 @@ export function LeadActions({
 
   async function assignStaff(newStaffId: string) {
     setStaffId(newStaffId);
+    const actualStaffId = newStaffId === UNASSIGNED_VALUE ? null : newStaffId;
     startTransition(async () => {
       await fetch(`/api/leads/${leadId}/assign`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ staffId: newStaffId }),
+        body: JSON.stringify({ staffId: actualStaffId }),
       });
       router.refresh();
     });
@@ -97,6 +100,12 @@ export function LeadActions({
                 <SelectValue placeholder="Select staff member" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value={UNASSIGNED_VALUE}>
+                  <span className="flex items-center gap-2 text-[var(--color-foreground-muted)]">
+                    <UserX className="h-4 w-4" />
+                    Unassigned
+                  </span>
+                </SelectItem>
                 {staffList.map((staff) => (
                   <SelectItem key={staff.id} value={staff.id}>
                     {staff.name}

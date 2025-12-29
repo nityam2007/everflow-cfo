@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { isValidId, secureJsonResponse, secureErrorResponse } from '@/lib/security';
 
 const assignSchema = z.object({
-  staffId: z.string(),
+  staffId: z.string().nullable(), // null to unassign
 });
 
 interface RouteParams {
@@ -35,8 +35,8 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 
     const { staffId } = parsed.data;
 
-    // Validate staff ID format
-    if (!isValidId(staffId)) {
+    // Validate staff ID format (if not null)
+    if (staffId !== null && !isValidId(staffId)) {
       return secureErrorResponse('Invalid staff ID format', 400);
     }
 
@@ -50,14 +50,19 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return secureErrorResponse('Lead not found', 404);
     }
 
-    // Verify staff exists
-    const staff = await db.user.findUnique({
-      where: { id: staffId },
-      select: { id: true, name: true },
-    });
+    let staffName = 'Unassigned';
 
-    if (!staff) {
-      return secureErrorResponse('Staff not found', 404);
+    // Verify staff exists (if assigning)
+    if (staffId !== null) {
+      const staff = await db.user.findUnique({
+        where: { id: staffId },
+        select: { id: true, name: true },
+      });
+
+      if (!staff) {
+        return secureErrorResponse('Staff not found', 404);
+      }
+      staffName = staff.name;
     }
 
     const oldStaffId = lead.assignedStaffId;
@@ -67,20 +72,21 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       where: { id },
       data: {
         assignedStaffId: staffId,
-        assignedAt: new Date(),
-        status: lead.assignedStaffId ? undefined : 'ASSIGNED',
+        assignedAt: staffId ? new Date() : null,
+        // Set to NEW if unassigning, ASSIGNED if assigning to new staff
+        status: staffId === null ? 'NEW' : (lead.assignedStaffId ? undefined : 'ASSIGNED'),
       },
     });
 
     // Audit log
     await db.auditLog.create({
       data: {
-        action: 'LEAD_ASSIGNED',
+        action: staffId === null ? 'LEAD_UNASSIGNED' : 'LEAD_ASSIGNED',
         entityType: 'lead',
         entityId: id,
         leadId: id,
         userId: session.user.id,
-        newValues: { oldStaffId, newStaffId: staffId, staffName: staff.name },
+        newValues: { oldStaffId, newStaffId: staffId, staffName },
       },
     });
 

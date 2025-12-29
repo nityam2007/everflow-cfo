@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { LeadActions } from './lead-actions';
 import { LeadNotes } from './lead-notes';
-import { Building, Mail, Phone, Calendar, DollarSign, Users, Briefcase, ArrowLeft } from 'lucide-react';
+import { Building, Mail, Phone, Calendar, DollarSign, Users, Briefcase, ArrowLeft, FileText, MapPin, Clock, CheckCircle, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
@@ -23,6 +23,7 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
     where: { id },
     include: {
       assignedStaff: { select: { id: true, name: true, email: true } },
+      partner: { select: { id: true, name: true, companyName: true, email: true } },
       notes: {
         orderBy: { createdAt: 'desc' },
         include: { user: { select: { name: true } } },
@@ -159,8 +160,39 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
                 <p className="text-sm text-[var(--color-foreground-muted)] mb-2">Eligibility Signal</p>
                 <Badge variant={eligibilityColors[lead.eligibility]}>{lead.eligibility}</Badge>
               </div>
+
+              {/* Explanations if available */}
+              {lead.explanations && lead.explanations.length > 0 && (
+                <div>
+                  <p className="text-sm text-[var(--color-foreground-muted)] mb-2">Why This Estimate</p>
+                  <ul className="text-sm space-y-1">
+                    {lead.explanations.map((exp, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                        <span>{exp}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </CardContent>
           </Card>
+
+          {/* Form Data (Admin view) */}
+          {isAdmin && lead.inputsJson && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Submitted Form Data
+                </CardTitle>
+                <CardDescription>All data collected from the estimator form</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FormDataDisplay data={lead.inputsJson as Record<string, unknown>} />
+              </CardContent>
+            </Card>
+          )}
 
           {/* Notes */}
           <LeadNotes leadId={lead.id} notes={lead.notes} />
@@ -208,10 +240,87 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
                   <p>{lead.assignedStaff.name}</p>
                 </div>
               )}
+              {lead.partner && (
+                <div>
+                  <p className="text-[var(--color-foreground-muted)]">Client Account</p>
+                  <p>{lead.partner.companyName}</p>
+                  <p className="text-xs text-[var(--color-foreground-subtle)]">{lead.partner.email}</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
       </div>
+    </div>
+  );
+}
+
+// Helper component to display form data in a readable format
+function FormDataDisplay({ data }: { data: Record<string, unknown> }) {
+  const fieldLabels: Record<string, string> = {
+    industry: 'Industry',
+    state: 'State',
+    yearsInOperation: 'Years in Operation',
+    fullTimeEmployees: 'Full-Time Employees',
+    partTimeEmployees: 'Has Part-Time Employees',
+    tippedEmployees: 'Has Tipped Employees',
+    annualPayroll: 'Annual Payroll Range',
+    operationalDisruption2020: 'COVID-19 Operational Disruption',
+    governmentMandates: 'Affected by Government Mandates',
+    targetedHiring: 'Participates in Targeted Hiring',
+    revenueReduction: 'Revenue Reduction (2020)',
+    suspendedOperations: 'Operations Suspended',
+    w2Employees2020: 'W-2 Employees (2020)',
+    w2Employees2021: 'W-2 Employees (2021)',
+    pppLoan: 'Received PPP Loan',
+    employeeRetention: 'Employee Retention Focus',
+  };
+
+  const formatValue = (key: string, value: unknown): string => {
+    if (typeof value === 'boolean') {
+      return value ? 'Yes' : 'No';
+    }
+    if (typeof value === 'number') {
+      return value.toString();
+    }
+    if (typeof value === 'string') {
+      // Format ranges like "50-100" or "2000000-5000000"
+      if (value.includes('-') && /^\d/.test(value)) {
+        const parts = value.split('-');
+        if (parts.length === 2 && !isNaN(Number(parts[0]))) {
+          const num1 = Number(parts[0]);
+          const num2 = Number(parts[1]);
+          if (num1 >= 100000) {
+            return `$${(num1 / 1000000).toFixed(1)}M - $${(num2 / 1000000).toFixed(1)}M`;
+          }
+        }
+      }
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+    return JSON.stringify(value);
+  };
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {Object.entries(data).map(([key, value]) => (
+        <div key={key} className="flex items-start gap-3">
+          {typeof value === 'boolean' ? (
+            value ? (
+              <CheckCircle className="h-4 w-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+            ) : (
+              <XCircle className="h-4 w-4 text-[var(--color-foreground-subtle)] mt-0.5 flex-shrink-0" />
+            )
+          ) : (
+            <FileText className="h-4 w-4 text-[var(--color-foreground-muted)] mt-0.5 flex-shrink-0" />
+          )}
+          <div>
+            <p className="text-sm text-[var(--color-foreground-muted)]">
+              {fieldLabels[key] || key.replace(/([A-Z])/g, ' $1').trim()}
+            </p>
+            <p className="font-medium">{formatValue(key, value)}</p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
