@@ -9,6 +9,10 @@ import {
   Settings,
   Download,
   LogOut,
+  Building2,
+  UserCog,
+  FileCode,
+  ClipboardList,
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,6 +24,7 @@ interface NavItem {
   icon: LucideIcon;
   adminOnly?: boolean;
   staffOnly?: boolean;
+  exactMatch?: boolean;
 }
 
 interface SidebarProps {
@@ -33,11 +38,14 @@ interface SidebarProps {
 }
 
 const navItems: NavItem[] = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, exactMatch: true },
   { href: '/dashboard/leads', label: 'Leads', icon: Users },
-  { href: '/dashboard/my-tasks', label: 'My Tasks', icon: Activity, staffOnly: true },
+  { href: '/dashboard/my-tasks', label: 'My Tasks', icon: ClipboardList, staffOnly: true },
+  { href: '/dashboard/settings/users', label: 'Users', icon: UserCog, adminOnly: true },
+  { href: '/dashboard/settings/partners', label: 'Partners', icon: Building2, adminOnly: true },
+  { href: '/dashboard/settings/rules', label: 'Rules', icon: FileCode, adminOnly: true },
   { href: '/dashboard/audit', label: 'Audit Log', icon: Activity, adminOnly: true },
-  { href: '/dashboard/settings', label: 'Settings', icon: Settings, adminOnly: true },
+  { href: '/dashboard/settings/site', label: 'Site Settings', icon: Settings, adminOnly: true },
 ];
 
 export function Sidebar({ user, isAdmin, signOutAction }: SidebarProps) {
@@ -64,8 +72,9 @@ export function Sidebar({ user, isAdmin, signOutAction }: SidebarProps) {
             if (item.adminOnly && !isAdmin) return null;
             if (item.staffOnly && isAdmin) return null; // Staff-only items hidden for admin
             
-            const isActive = pathname === item.href || 
-              (item.href !== '/dashboard' && pathname.startsWith(item.href));
+            const isActive = item.exactMatch 
+              ? pathname === item.href
+              : pathname === item.href || pathname.startsWith(item.href + '/');
             
             return (
               <Link key={item.href} href={item.href}>
