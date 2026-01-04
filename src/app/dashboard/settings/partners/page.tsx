@@ -31,9 +31,9 @@ export default async function PartnersListPage() {
   const totalAssignments = partners.reduce((acc, p) => acc + p._count.assignments, 0);
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <div className="space-y-6 lg:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
           <Link href="/dashboard/settings">
             <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -41,14 +41,14 @@ export default async function PartnersListPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold">Client Management</h1>
-            <p className="text-[var(--color-foreground-muted)]">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">Client Management</h1>
+            <p className="text-sm text-[var(--color-foreground-muted)]">
               Manage clients (businesses who submitted applications)
             </p>
           </div>
         </div>
         <Link href="/dashboard/settings/partners/new">
-          <Button>
+          <Button className="w-full sm:w-auto">
             <Plus className="mr-2 h-4 w-4" />
             Add Client
           </Button>
@@ -56,26 +56,26 @@ export default async function PartnersListPage() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-3 sm:p-4 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[var(--color-foreground-muted)]">Total Clients</p>
-                <p className="text-2xl font-bold">{partners.length}</p>
+                <p className="text-xs sm:text-sm text-[var(--color-foreground-muted)]">Total Clients</p>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold">{partners.length}</p>
               </div>
-              <Building2 className="h-8 w-8 text-[var(--color-foreground-subtle)]" />
+              <Building2 className="h-6 w-6 sm:h-8 sm:w-8 text-[var(--color-foreground-subtle)]" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-3 sm:p-4 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[var(--color-foreground-muted)]">Active</p>
-                <p className="text-2xl font-bold text-emerald-600">{activePartners.length}</p>
+                <p className="text-xs sm:text-sm text-[var(--color-foreground-muted)]">Active</p>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-600">{activePartners.length}</p>
               </div>
-              <CheckCircle2 className="h-8 w-8 text-emerald-500/50" />
+              <CheckCircle2 className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-500/50" />
             </div>
           </CardContent>
         </Card>

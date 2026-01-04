@@ -120,28 +120,28 @@ export default function CalculatorPage() {
     <div className="min-h-screen bg-[var(--color-background)]">
       <Header />
       <main className="pt-20 pb-24">
-        <div className="ef-container max-w-5xl">
-          <div className="mb-12">
+        <div className="ef-container">
+          <div className="mb-8 md:mb-12">
             <p className="ef-section-label">Credit Calculator</p>
-            <h1 className="ef-section-title mb-4">Estimate Your Tax Credits</h1>
+            <h1 className="ef-section-title">Estimate Your Tax Credits</h1>
             <p className="ef-section-subtitle">
               Enter your business data to calculate potential credits. All estimates are conservative and require verification.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-5 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12">
             {/* Form */}
-            <div className="lg:col-span-3 space-y-8">
+            <div className="lg:col-span-3 space-y-6 lg:space-y-8">
               {/* TIP Credit */}
-              <div className="ef-card ef-card-tip">
-                <div className="flex items-center justify-between mb-4">
+              <div className="ef-card">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                   <p className="ef-feature-title">FICA Tip Credit</p>
-                  <span className="ef-badge ef-badge-tip">Ongoing Annual</span>
+                  <span className="ef-badge ef-badge-tip w-fit">Ongoing Annual</span>
                 </div>
                 <p className="ef-feature-desc mb-4">
                   Section 45B credit for employers of tipped employees in restaurants, bars, and hospitality.
                 </p>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="ef-label">Tipped Employees</label>
                     <input
@@ -166,13 +166,13 @@ export default function CalculatorPage() {
               </div>
 
               {/* WOTC */}
-              <div className="ef-card ef-card-wotc">
+              <div className="ef-card">
                 <p className="ef-feature-title mb-4">Work Opportunity Tax Credit</p>
                 <p className="ef-feature-desc mb-4">
                   Credits for hiring veterans, SNAP recipients, and long-term unemployed.
                 </p>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="ef-label">Veterans</label>
                       <input
@@ -218,16 +218,16 @@ export default function CalculatorPage() {
               </div>
 
               {/* ERC */}
-              <div className="ef-card ef-card-erc">
-                <div className="flex items-center justify-between mb-4">
+              <div className="ef-card">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                   <p className="ef-feature-title" style={{ color: 'var(--color-foreground-muted)' }}>Employee Retention Credit</p>
-                  <span className="ef-badge ef-badge-erc">May Apply</span>
+                  <span className="ef-badge ef-badge-erc w-fit">May Apply</span>
                 </div>
                 <div className="ef-alert ef-alert-warning mb-4">
                   ERC eligibility requires specific 2020–2021 qualifying criteria and is subject to IRS verification.
                 </div>
                 <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="ef-label">Employees (2020)</label>
                       <input
@@ -249,7 +249,7 @@ export default function CalculatorPage() {
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="ef-label">Employees (2021)</label>
                       <input

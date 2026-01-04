@@ -38,9 +38,9 @@ export default async function DashboardLayout({
         signOutAction={handleSignOut}
       />
 
-      {/* Main content */}
-      <main className="pl-64">
-        <div className="p-8">{children}</div>
+      {/* Main content - responsive left padding for sidebar */}
+      <main className="lg:pl-64">
+        <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
     </div>
   );

@@ -90,25 +90,25 @@ export default async function MyTasksPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 lg:space-y-8">
       <PageHeader
         title="My Tasks"
         description="Your assigned leads and current workload"
       />
 
       {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.title}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 sm:p-4 lg:p-6 lg:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium">
                 {stat.title}
               </CardTitle>
               <stat.icon className={`h-4 w-4 ${stat.color}`} />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-light text-[var(--color-foreground)]">{stat.value}</div>
-              <p className="text-xs text-[var(--color-foreground-muted)]">{stat.description}</p>
+            <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+              <div className="text-lg sm:text-xl lg:text-2xl font-light text-[var(--color-foreground)]">{stat.value}</div>
+              <p className="text-xs text-[var(--color-foreground-muted)] hidden sm:block">{stat.description}</p>
             </CardContent>
           </Card>
         ))}
@@ -131,16 +131,16 @@ export default async function MyTasksPage() {
               No new leads requiring attention. Great work! 🎉
             </p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {newLeads.map((lead) => (
                 <Link
                   key={lead.id}
                   href={`/dashboard/leads/${lead.id}`}
-                  className="flex items-center justify-between border border-[var(--color-border)] p-4 hover:bg-[var(--color-background-alt)] transition-colors rounded-lg"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between border border-[var(--color-border)] p-3 sm:p-4 hover:bg-[var(--color-background-alt)] transition-colors gap-2 sm:gap-4"
                 >
                   <div className="space-y-1">
-                    <p className="font-medium text-[var(--color-foreground)]">{lead.companyName}</p>
-                    <div className="flex items-center gap-2">
+                    <p className="font-medium text-[var(--color-foreground)] text-sm sm:text-base">{lead.companyName}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant={LEAD_STATUS_COLORS[lead.status]} className="text-xs">
                         {lead.status.replace('_', ' ')}
                       </Badge>
@@ -152,8 +152,8 @@ export default async function MyTasksPage() {
                       </span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-medium text-[var(--color-foreground)]">
+                  <div className="text-left sm:text-right flex sm:flex-col items-center sm:items-end gap-2 sm:gap-0">
+                    <p className="font-medium text-[var(--color-foreground)] text-sm sm:text-base">
                       {formatCurrency(lead.estimatedMin)} - {formatCurrency(lead.estimatedMax)}
                     </p>
                     <p className="text-xs text-[var(--color-foreground-muted)]">
@@ -184,16 +184,16 @@ export default async function MyTasksPage() {
               No leads in progress. Start working on pending leads above.
             </p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {inProgressLeads.map((lead) => (
                 <Link
                   key={lead.id}
                   href={`/dashboard/leads/${lead.id}`}
-                  className="flex items-center justify-between border border-[var(--color-border)] p-4 hover:bg-[var(--color-background-alt)] transition-colors rounded-lg"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between border border-[var(--color-border)] p-3 sm:p-4 hover:bg-[var(--color-background-alt)] transition-colors gap-2 sm:gap-4"
                 >
                   <div className="space-y-1">
-                    <p className="font-medium text-[var(--color-foreground)]">{lead.companyName}</p>
-                    <div className="flex items-center gap-2">
+                    <p className="font-medium text-[var(--color-foreground)] text-sm sm:text-base">{lead.companyName}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant={ELIGIBILITY_COLORS[lead.eligibility]} className="text-xs">
                         {lead.eligibility}
                       </Badge>

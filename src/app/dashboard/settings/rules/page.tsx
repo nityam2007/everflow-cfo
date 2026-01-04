@@ -43,9 +43,9 @@ export default async function RulesPage() {
   const activeRules = rules.find((r: EstimatorRule) => r.isActive);
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <div className="space-y-6 lg:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
           <Link href="/dashboard/settings">
             <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -53,14 +53,14 @@ export default async function RulesPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold">Estimator Rules</h1>
-            <p className="text-[var(--color-foreground-muted)]">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">Estimator Rules</h1>
+            <p className="text-sm text-[var(--color-foreground-muted)]">
               Manage versioned rule configurations for credit estimation
             </p>
           </div>
         </div>
         <Link href="/dashboard/settings/rules/new">
-          <Button>
+          <Button className="w-full sm:w-auto">
             <Plus className="mr-2 h-4 w-4" />
             New Version
           </Button>

@@ -6,9 +6,9 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, children }: PageHeaderProps) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
       <div>
-        <h1 className="text-2xl font-semibold text-[var(--color-foreground)]">
+        <h1 className="text-xl sm:text-2xl font-semibold text-[var(--color-foreground)]">
           {title}
         </h1>
         {description && (
@@ -17,7 +17,7 @@ export function PageHeader({ title, description, children }: PageHeaderProps) {
           </p>
         )}
       </div>
-      {children && <div className="flex items-center gap-3">{children}</div>}
+      {children && <div className="flex items-center gap-2 sm:gap-3">{children}</div>}
     </div>
   );
 }

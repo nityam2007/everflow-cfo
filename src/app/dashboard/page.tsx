@@ -130,25 +130,25 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 lg:space-y-8">
       <PageHeader
         title="Dashboard"
         description={`Welcome back, ${session?.user?.name}`}
       />
 
       {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {statCards.map((stat) => (
           <Card key={stat.title}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 p-3 sm:p-4 lg:p-6 lg:pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium">
                 {stat.title}
               </CardTitle>
               <stat.icon className="h-4 w-4 text-[var(--color-foreground-muted)]" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-light text-[var(--color-foreground)]">{stat.value}</div>
-              <p className="text-xs text-[var(--color-foreground-muted)]">{stat.description}</p>
+            <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+              <div className="text-lg sm:text-xl lg:text-2xl font-light text-[var(--color-foreground)]">{stat.value}</div>
+              <p className="text-xs text-[var(--color-foreground-muted)] hidden sm:block">{stat.description}</p>
             </CardContent>
           </Card>
         ))}
@@ -156,7 +156,7 @@ export default async function DashboardPage() {
 
       {/* Admin-only Partner Stats */}
       {isAdmin && (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">
@@ -203,16 +203,16 @@ export default async function DashboardPage() {
               No leads yet. They will appear here once created.
             </p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {recentLeads.map((lead) => (
                 <Link
                   key={lead.id}
                   href={`/dashboard/leads/${lead.id}`}
-                  className="flex items-center justify-between border border-[var(--color-border)] p-4 hover:bg-[var(--color-background-alt)] transition-colors"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between border border-[var(--color-border)] p-3 sm:p-4 hover:bg-[var(--color-background-alt)] transition-colors gap-2 sm:gap-4"
                 >
                   <div className="space-y-1">
-                    <p className="font-medium text-[var(--color-foreground)]">{lead.companyName}</p>
-                    <div className="flex items-center gap-2">
+                    <p className="font-medium text-[var(--color-foreground)] text-sm sm:text-base">{lead.companyName}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant={LEAD_STATUS_COLORS[lead.status]} className="text-xs">
                         {lead.status.replace('_', ' ')}
                       </Badge>
@@ -221,8 +221,8 @@ export default async function DashboardPage() {
                       </Badge>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-medium text-[var(--color-foreground)]">{formatCurrency(lead.estimatedMax)}</p>
+                  <div className="text-left sm:text-right flex sm:flex-col items-center sm:items-end gap-2 sm:gap-0">
+                    <p className="font-medium text-[var(--color-foreground)] text-sm sm:text-base">{formatCurrency(lead.estimatedMax)}</p>
                     <p className="text-xs text-[var(--color-foreground-muted)]">
                       {formatDate(lead.createdAt)}
                     </p>
@@ -242,17 +242,17 @@ export default async function DashboardPage() {
             <CardDescription>Latest leads sent to partners</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {recentAssignments.map((assignment) => (
                 <div
                   key={assignment.id}
-                  className="flex items-center justify-between border border-[var(--color-border)] p-4"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between border border-[var(--color-border)] p-3 sm:p-4 gap-2 sm:gap-4"
                 >
                   <div className="flex items-center gap-3">
-                    <Building2 className="h-5 w-5 text-[var(--color-foreground-muted)]" />
+                    <Building2 className="h-5 w-5 text-[var(--color-foreground-muted)] hidden sm:block" />
                     <div>
-                      <p className="font-medium text-[var(--color-foreground)]">{assignment.partner.companyName}</p>
-                      <p className="text-sm text-[var(--color-foreground-muted)]">
+                      <p className="font-medium text-[var(--color-foreground)] text-sm sm:text-base">{assignment.partner.companyName}</p>
+                      <p className="text-xs sm:text-sm text-[var(--color-foreground-muted)]">
                         {assignment.lead.companyName}
                       </p>
                     </div>

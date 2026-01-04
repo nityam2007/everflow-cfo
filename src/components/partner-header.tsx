@@ -19,9 +19,9 @@ export function PartnerHeader({ user }: PartnerHeaderProps) {
     <header className="border-b border-[var(--color-border)] bg-[var(--color-background)]">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 flex items-center justify-center bg-[var(--brand-primary)]">
+          {/* <div className="h-8 w-8 flex items-center justify-center bg-[var(--brand-primary)]">
             <span className="text-white font-bold text-sm">EF</span>
-          </div>
+          </div> */}
           <span className="text-base font-semibold text-[var(--color-foreground)]">
             My Portal
           </span>

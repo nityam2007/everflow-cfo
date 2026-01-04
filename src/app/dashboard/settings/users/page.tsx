@@ -27,9 +27,9 @@ export default async function UsersListPage() {
   const staffCount = users.filter(u => u.role === 'STAFF').length;
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <div className="space-y-6 lg:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
           <Link href="/dashboard/settings">
             <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -37,14 +37,14 @@ export default async function UsersListPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold">User Management</h1>
-            <p className="text-[var(--color-foreground-muted)]">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">User Management</h1>
+            <p className="text-sm text-[var(--color-foreground-muted)]">
               Manage internal team members and their access levels
             </p>
           </div>
         </div>
         <Link href="/dashboard/settings/users/new">
-          <Button>
+          <Button className="w-full sm:w-auto">
             <UserPlus className="mr-2 h-4 w-4" />
             Add User
           </Button>
@@ -52,31 +52,31 @@ export default async function UsersListPage() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-3 sm:p-4 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[var(--color-foreground-muted)]">Total Users</p>
-                <p className="text-2xl font-bold">{users.length}</p>
+                <p className="text-xs sm:text-sm text-[var(--color-foreground-muted)]">Total Users</p>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold">{users.length}</p>
               </div>
-              <Users2 className="h-8 w-8 text-[var(--color-foreground-subtle)]" />
+              <Users2 className="h-6 w-6 sm:h-8 sm:w-8 text-[var(--color-foreground-subtle)]" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-3 sm:p-4 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[var(--color-foreground-muted)]">Active</p>
-                <p className="text-2xl font-bold text-emerald-600">{activeUsers.length}</p>
+                <p className="text-xs sm:text-sm text-[var(--color-foreground-muted)]">Active</p>
+                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-600">{activeUsers.length}</p>
               </div>
-              <CheckCircle2 className="h-8 w-8 text-emerald-500/50" />
+              <CheckCircle2 className="h-6 w-6 sm:h-8 sm:w-8 text-emerald-500/50" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-3 sm:p-4 lg:p-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-[var(--color-foreground-muted)]">Admins</p>

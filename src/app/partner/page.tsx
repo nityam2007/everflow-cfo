@@ -88,7 +88,7 @@ export default async function PartnerDashboardPage() {
   const declined = leads.filter((l) => l.status === 'LOST').length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 lg:space-y-8">
       <PageHeader
         title={`Welcome, ${partner.name || partner.companyName}`}
         description="Track your tax credit applications"
@@ -97,49 +97,49 @@ export default async function PartnerDashboardPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
+          <CardHeader className="pb-2 p-3 sm:p-4 lg:p-6 lg:pb-2">
+            <CardTitle className="text-xs sm:text-sm font-medium">
               Total Applications
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-light text-[var(--color-foreground)]">{totalApplications}</p>
+          <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-light text-[var(--color-foreground)]">{totalApplications}</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <Loader2 className="h-4 w-4 text-[var(--color-warning)]" />
+          <CardHeader className="pb-2 p-3 sm:p-4 lg:p-6 lg:pb-2">
+            <CardTitle className="text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-2">
+              <Loader2 className="h-3 w-3 sm:h-4 sm:w-4 text-[var(--color-warning)]" />
               In Review
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-light text-[var(--color-warning)]">{inReview}</p>
+          <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-light text-[var(--color-warning)]">{inReview}</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-[var(--color-success)]" />
+          <CardHeader className="pb-2 p-3 sm:p-4 lg:p-6 lg:pb-2">
+            <CardTitle className="text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-2">
+              <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-[var(--color-success)]" />
               Approved
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-light text-[var(--color-success)]">{approved}</p>
+          <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-light text-[var(--color-success)]">{approved}</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <XCircle className="h-4 w-4 text-[var(--color-error)]" />
+          <CardHeader className="pb-2 p-3 sm:p-4 lg:p-6 lg:pb-2">
+            <CardTitle className="text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-2">
+              <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-[var(--color-error)]" />
               Declined
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-light text-[var(--color-error)]">{declined}</p>
+          <CardContent className="p-3 sm:p-4 lg:p-6 pt-0">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-light text-[var(--color-error)]">{declined}</p>
           </CardContent>
         </Card>
       </div>

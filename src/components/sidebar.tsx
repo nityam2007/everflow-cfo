@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -13,6 +14,8 @@ import {
   UserCog,
   FileCode,
   ClipboardList,
+  Menu,
+  X,
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -50,16 +53,49 @@ const navItems: NavItem[] = [
 
 export function Sidebar({ user, isAdmin, signOutAction }: SidebarProps) {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-50 w-64 border-r border-[var(--color-border)] bg-[var(--color-background)]">
+    <>
+      {/* Mobile menu button */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 h-14 flex items-center justify-between px-4 bg-[var(--color-background)] border-b border-[var(--color-border)]">
+        <Link href="/dashboard" className="flex items-center gap-2">
+          {/* <div className="h-8 w-8 flex items-center justify-center bg-[var(--brand-primary)]">
+            <span className="text-white font-bold text-sm">EF</span>
+          </div> */}
+          <span className="text-base font-semibold text-[var(--color-foreground)]">
+            EverflowCFO
+          </span>
+        </Link>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="p-2 text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)]"
+        >
+          {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      </div>
+
+      {/* Mobile menu overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 z-40 bg-black/50"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - hidden on mobile unless menu is open */}
+      <aside className={cn(
+        "fixed inset-y-0 left-0 z-50 w-64 border-r border-[var(--color-border)] bg-[var(--color-background)] transition-transform duration-300 ease-in-out",
+        "lg:translate-x-0",
+        mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
       <div className="flex h-full flex-col">
         {/* Logo */}
         <div className="flex h-16 items-center border-b border-[var(--color-border)] px-6">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="h-8 w-8 flex items-center justify-center bg-[var(--brand-primary)]">
+            {/* <div className="h-8 w-8 flex items-center justify-center bg-[var(--brand-primary)]">
               <span className="text-white font-bold text-sm">EF</span>
-            </div>
+            </div> */}
             <span className="text-base font-semibold text-[var(--color-foreground)]">
               EverflowCFO
             </span>
@@ -77,7 +113,7 @@ export function Sidebar({ user, isAdmin, signOutAction }: SidebarProps) {
               : pathname === item.href || pathname.startsWith(item.href + '/');
             
             return (
-              <Link key={item.href} href={item.href}>
+              <Link key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)}>
                 <Button
                   variant="ghost"
                   className={cn(
@@ -133,5 +169,9 @@ export function Sidebar({ user, isAdmin, signOutAction }: SidebarProps) {
         </div>
       </div>
     </aside>
+    
+    {/* Spacer for mobile header */}
+    <div className="lg:hidden h-14" />
+    </>
   );
 }

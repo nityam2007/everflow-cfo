@@ -23,8 +23,8 @@ export default async function PartnerLayout({
     <div className="min-h-screen bg-[var(--color-background-alt)]">
       <PartnerHeader user={{ name: session.user.name }} />
 
-      {/* Main content */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">{children}</main>
+      {/* Main content - responsive padding */}
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">{children}</main>
     </div>
   );
 }

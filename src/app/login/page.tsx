@@ -126,24 +126,24 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[var(--color-background-alt)]">
       <Header />
-      <main className="pt-14 flex items-center justify-center min-h-screen">
-        <div className="w-full max-w-sm px-6">
-          <div className="ef-card p-8">
-            <div className="text-center mb-8">
-              <div className="ef-logo-icon mx-auto mb-4 w-10 h-10">
+      <main className="pt-14 flex items-center justify-center min-h-screen px-4">
+        <div className="w-full max-w-sm">
+          <div className="ef-card p-6 sm:p-8">
+            <div className="text-center mb-6 sm:mb-8">
+              {/* <div className="ef-logo-icon mx-auto mb-3 sm:mb-4 w-10 h-10">
                 EF
-              </div>
+              </div> */}
               <p className="ef-section-label mb-2">STAFF & PARTNER PORTAL</p>
-              <h1 className="ef-section-title text-2xl">Sign in</h1>
+              <h1 className="ef-section-title text-xl sm:text-2xl">Sign in</h1>
             </div>
 
             {/* Auth Mode Toggle */}
-            <div className="flex gap-2 mb-8">
+            <div className="flex gap-2 mb-6 sm:mb-8">
               <button
                 type="button"
-                className={`flex-1 py-2 text-[var(--text-sm)] font-medium border ${
+                className={`flex-1 py-2 text-sm font-medium border transition-colors ${
                   authMode === 'credentials' 
-                    ? 'bg-brand text-white border-[var(--brand-primary)]' 
+                    ? 'bg-[var(--brand-primary)] text-white border-[var(--brand-primary)]' 
                     : 'bg-[var(--color-background)] text-[var(--color-foreground-muted)] border-[var(--color-border)] hover:bg-[var(--color-background-alt)]'
                 }`}
                 onClick={() => { setAuthMode('credentials'); setError(''); }}
@@ -152,9 +152,9 @@ export default function LoginPage() {
               </button>
               <button
                 type="button"
-                className={`flex-1 py-2 text-[var(--text-sm)] font-medium border ${
+                className={`flex-1 py-2 text-sm font-medium border transition-colors ${
                   authMode === 'email-otp' 
-                    ? 'bg-brand text-white border-[var(--brand-primary)]' 
+                    ? 'bg-[var(--brand-primary)] text-white border-[var(--brand-primary)]' 
                     : 'bg-[var(--color-background)] text-[var(--color-foreground-muted)] border-[var(--color-border)] hover:bg-[var(--color-background-alt)]'
                 }`}
                 onClick={() => { setAuthMode('email-otp'); setError(''); setOtpSent(false); }}

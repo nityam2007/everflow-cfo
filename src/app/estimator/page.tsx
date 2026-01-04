@@ -84,33 +84,33 @@ export default function EstimatorPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[var(--color-background)]">
       <Header />
 
       {/* Progress bar */}
-      <div className="fixed top-16 left-0 right-0 h-0.5 bg-border/30 z-40">
+      <div className="fixed top-16 left-0 right-0 h-1 bg-[var(--color-border)] z-40">
         <div
-          className="h-full bg-primary transition-all duration-500"
+          className="h-full bg-[var(--brand-primary)] transition-all duration-500"
           style={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
         />
       </div>
 
       {/* Content */}
-      <main className="pt-24 pb-12 px-6">
+      <main className="pt-20 pb-12 px-4 sm:px-6">
         <div className="max-w-xl mx-auto">
           {/* Step indicator */}
-          <div className="mb-8 text-center">
-            <p className="text-xs uppercase tracking-[0.2em] text-[var(--color-foreground-muted)]">
+          <div className="mb-6 md:mb-8 text-center">
+            <p className="ef-section-label">
               Step {step} of {TOTAL_STEPS}
             </p>
           </div>
 
           {/* Step 1: Business Profile */}
           {step === 1 && (
-            <div className="space-y-8">
-              <div className="text-center mb-12">
-                <h1 className="text-2xl font-light mb-3">Business Profile</h1>
-                <p className="text-sm text-[var(--color-foreground-muted)]">
+            <div className="space-y-6 md:space-y-8">
+              <div className="text-center mb-8 md:mb-12">
+                <h1 className="ef-section-title text-xl md:text-2xl">Business Profile</h1>
+                <p className="ef-section-subtitle text-sm mx-auto">
                   Used to determine statutory eligibility windows.
                 </p>
               </div>
@@ -172,10 +172,10 @@ export default function EstimatorPage() {
 
           {/* Step 2: Workforce Composition */}
           {step === 2 && (
-                <div className="space-y-8">
-              <div className="text-center mb-12">
-                <h1 className="text-2xl font-light mb-3">Workforce Composition</h1>
-                <p className="text-sm text-[var(--color-foreground-muted)]">
+                <div className="space-y-6 md:space-y-8">
+              <div className="text-center mb-8 md:mb-12">
+                <h1 className="ef-section-title text-xl md:text-2xl">Workforce Composition</h1>
+                <p className="ef-section-subtitle text-sm mx-auto">
                   Certain credits apply per employee class.
                 </p>
               </div>
@@ -249,10 +249,10 @@ export default function EstimatorPage() {
 
           {/* Step 3: Payroll Scale */}
           {step === 3 && (
-            <div className="space-y-8">
-              <div className="text-center mb-12">
-                <h1 className="text-2xl font-light mb-3">Payroll Scale</h1>
-                <p className="text-sm text-[var(--color-foreground-muted)]">
+            <div className="space-y-6 md:space-y-8">
+              <div className="text-center mb-8 md:mb-12">
+                <h1 className="ef-section-title text-xl md:text-2xl">Payroll Scale</h1>
+                <p className="ef-section-subtitle text-sm mx-auto">
                   Credit caps are tied directly to payroll exposure.
                 </p>
               </div>
@@ -282,10 +282,10 @@ export default function EstimatorPage() {
 
           {/* Step 4: Impact & Hiring Signals */}
           {step === 4 && (
-            <div className="space-y-8">
-              <div className="text-center mb-12">
-                <h1 className="text-2xl font-light mb-3">Impact & Hiring Signals</h1>
-                <p className="text-sm text-[var(--color-foreground-muted)]">
+            <div className="space-y-6 md:space-y-8">
+              <div className="text-center mb-8 md:mb-12">
+                <h1 className="ef-section-title text-xl md:text-2xl">Impact & Hiring Signals</h1>
+                <p className="ef-section-subtitle text-sm mx-auto">
                   Used to model eligibility thresholds under federal statutes.
                 </p>
               </div>
@@ -362,10 +362,10 @@ export default function EstimatorPage() {
 
           {/* Step 5: Identity Gate */}
           {step === 5 && (
-            <div className="space-y-8">
-              <div className="text-center mb-12">
-                <h1 className="text-2xl font-light mb-3">Identity Confirmation</h1>
-                <p className="text-sm text-[var(--color-foreground-muted)]">
+            <div className="space-y-6 md:space-y-8">
+              <div className="text-center mb-8 md:mb-12">
+                <h1 className="ef-section-title text-xl md:text-2xl">Identity Confirmation</h1>
+                <p className="ef-section-subtitle text-sm mx-auto">
                   Identity confirmation required to view employer-specific estimates.
                 </p>
                 <p className="text-xs text-[var(--color-foreground-muted)] mt-2">
