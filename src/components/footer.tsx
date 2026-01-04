@@ -2,63 +2,55 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="ef-footer">
+    <footer className="ef-footer-light">
       <div className="ef-container">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="ef-footer-grid">
           {/* Brand */}
-          <div className="md:col-span-2">
+          <div className="ef-footer-brand">
             <div className="ef-logo mb-4">
-              <div className="ef-logo-icon">EF</div>
-              <span className="text-lg font-semibold text-white">EverflowCFO</span>
+              <span className="text-lg font-bold text-gray-900">EverflowCFO</span>
             </div>
-            <p className="ef-footer-muted text-[var(--text-sm)] max-w-md leading-relaxed">
-              Professional payroll credit pre-assessment services for restaurants, hospitality, 
+            <p className="ef-footer-brand-text-light">
+              Professional payroll credit recovery services for restaurants, hospitality, 
               and businesses. We identify federal tax credits you may be eligible for.
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-[var(--text-sm)] font-semibold mb-4">
-              Resources
-            </h4>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/calculator" className="ef-footer-link">
-                  Credit Calculator
-                </Link>
-              </li>
-              <li>
-                <Link href="/estimator" className="ef-footer-link">
-                  Pre-Assessment
-                </Link>
-              </li>
-            </ul>
+          {/* Programs */}
+          <div className="ef-footer-col">
+            <h4 className="ef-footer-title-light">Programs</h4>
+            <div className="ef-footer-links">
+              <Link href="/#programs" className="ef-footer-link-light">FICA Tip Credit</Link>
+              <Link href="/#programs" className="ef-footer-link-light">WOTC</Link>
+              <Link href="/#programs" className="ef-footer-link-light">ERC</Link>
+            </div>
+          </div>
+
+          {/* Resources */}
+          <div className="ef-footer-col">
+            <h4 className="ef-footer-title-light">Resources</h4>
+            <div className="ef-footer-links">
+              <Link href="/calculator" className="ef-footer-link-light">Credit Calculator</Link>
+              <Link href="/estimator" className="ef-footer-link-light">Start Quiz</Link>
+              <Link href="/#about" className="ef-footer-link-light">How It Works</Link>
+            </div>
           </div>
 
           {/* Partners */}
-          <div>
-            <h4 className="text-[var(--text-sm)] font-semibold mb-4">
-              Partners
-            </h4>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/login" className="ef-footer-link">
-                  Partner Login
-                </Link>
-              </li>
-            </ul>
+          <div className="ef-footer-col">
+            <h4 className="ef-footer-title-light">Partners</h4>
+            <div className="ef-footer-links">
+              <Link href="/login" className="ef-footer-link-light">Partner Login</Link>
+              <Link href="/partner" className="ef-footer-link-light">Partner Portal</Link>
+            </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <p className="text-gray-500 text-[var(--text-xs)] leading-relaxed max-w-4xl">
-            <strong className="text-gray-400">Disclaimer:</strong> Estimates provided are preliminary and based on self-reported information. 
-            Final eligibility and credit amounts require payroll and tax documentation verification. 
-            This platform does not provide tax, legal, or financial advice. All claims are subject to IRS review.
-          </p>
-          <p className="text-gray-500 text-[var(--text-xs)] mt-4">
-            © {new Date().getFullYear()} EverflowCFO. All rights reserved.
+        <div className="ef-footer-bottom-light">
+          <p>© {new Date().getFullYear()} EverflowCFO. All rights reserved.</p>
+          <p className="ef-footer-disclaimer-light">
+            <span className="text-gray-500">Disclaimer:</span> Estimates are preliminary. 
+            Final eligibility requires documentation verification. Not tax or legal advice.
           </p>
         </div>
       </div>
