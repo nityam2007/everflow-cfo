@@ -26,7 +26,10 @@ import {
   ShoppingBag,
   Factory,
   Briefcase,
-  Heart
+  Heart,
+  AlertTriangle,
+  CheckCircle2,
+  TrendingUp as TrendUp
 } from 'lucide-react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -171,6 +174,87 @@ export default function HomePage() {
                     {/* Home Indicator */}
                     <div className="ef-iphone-home-indicator"></div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* What We Do Section - Asymmetrical Bento Grid */}
+        <section className="ef-section ef-section-alt">
+          <div className="ef-container">
+            <div className="text-center mb-8 md:mb-12 animate-on-scroll">
+              <p className="ef-section-label">What We Do</p>
+              <h2 className="ef-section-title mx-auto" style={{ maxWidth: '700px' }}>
+                Billions in tax credits go unclaimed every year
+              </h2>
+            </div>
+
+            {/* Asymmetrical Bento Grid */}
+            <div className="ef-bento-grid">
+              {/* Left Column - Impact Card (Tall Dark Card) */}
+              <div className="ef-bento-impact animate-on-scroll">
+                {/* Background trend graphic */}
+                <div className="ef-bento-impact-bg">
+                  <svg viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 280 L50 250 L100 260 L150 200 L200 180 L250 120 L300 80 L350 40 L400 20" 
+                          stroke="url(#trendGradient)" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.3"/>
+                    <path d="M0 280 L50 250 L100 260 L150 200 L200 180 L250 120 L300 80 L350 40 L400 20 L400 300 L0 300 Z" 
+                          fill="url(#areaGradient)" opacity="0.1"/>
+                    <defs>
+                      <linearGradient id="trendGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#60a5fa"/>
+                        <stop offset="100%" stopColor="#22d3ee"/>
+                      </linearGradient>
+                      <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.3"/>
+                        <stop offset="100%" stopColor="#60a5fa" stopOpacity="0"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+                <div className="ef-bento-impact-content">
+                  <div className="ef-bento-impact-icon">
+                    <TrendingUp className="w-8 h-8" />
+                  </div>
+                  <p className="ef-bento-impact-label">Unclaimed Government Credits</p>
+                  <h3 className="ef-bento-impact-billions">BILLIONS</h3>
+                  <p className="ef-bento-impact-subtitle">left on the table every year</p>
+                  <p className="ef-bento-impact-desc">
+                    Government-run programs designed to help business owners often go unused. 
+                    That&apos;s money your business could be claiming.
+                  </p>
+                </div>
+              </div>
+
+              {/* Right Column - Two Stacked Cards */}
+              <div className="ef-bento-stack">
+                {/* Problem Card (Top Right) */}
+                <div className="ef-bento-problem animate-on-scroll animation-delay-100">
+                  <div className="ef-bento-problem-icon">
+                    <AlertTriangle className="w-6 h-6" />
+                  </div>
+                  <h3 className="ef-bento-problem-title">Most Owners Don&apos;t Know</h3>
+                  <p className="ef-bento-problem-desc">
+                    Most business owners don&apos;t even realize these programs exist—or they assume they don&apos;t qualify. 
+                    Without expert guidance, credits slip through the cracks.
+                  </p>
+                </div>
+
+                {/* Solution Card (Bottom Right) */}
+                <div className="ef-bento-solution animate-on-scroll animation-delay-200">
+                  <div className="ef-bento-solution-icon">
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                  <h3 className="ef-bento-solution-title">We Get You What You&apos;re Owed</h3>
+                  <p className="ef-bento-solution-desc">
+                    Our goal is simple: help business owners recover the credits they&apos;re legally entitled to. 
+                    If you have employees, you may qualify.
+                  </p>
+                  <Link href="/estimator" className="ef-bento-solution-cta">
+                    See If You Qualify
+                    <ArrowRight className="w-5 h-5" />
+                  </Link>
                 </div>
               </div>
             </div>
