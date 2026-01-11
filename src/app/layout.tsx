@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   description: 'Restaurants, hotels, and small businesses—federal programs return billions annually. Take our 2-minute quiz to find your potential refund.',
   keywords: ['payroll credits', 'ERC', 'employee retention credit', 'WOTC', 'FICA tip credit', 'tax credits', 'IRS refund'],
   authors: [{ name: 'EverflowCFO' }],
+  icons: {
+    icon: '/favicon.svg',
+  },
   openGraph: {
     title: 'EverflowCFO | Recover the Payroll Credits You\'re Owed',
     description: 'Federal programs return billions annually. Take our 2-minute quiz to find your potential refund.',

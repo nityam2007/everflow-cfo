@@ -839,114 +839,94 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* How It Works */}
+        {/* How It Works - Clean 2-Column Layout */}
         <section id="about" className="ef-section">
           <div className="ef-container">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
-              {/* Features Grid - Sticky Sidebar (shown first on mobile for trust signals) */}
-              <div className="order-first lg:order-last lg:sticky lg:top-24 lg:self-start">
-                {/* Mobile: Grid for quick trust signals */}
-                <div className="grid grid-cols-2 gap-3 lg:hidden">
-                  <div className="ef-feature ef-feature-mobile-grid">
-                    <div className="ef-feature-icon">
-                      <Zap className="h-5 w-5" />
+            {/* Section Header - Centered */}
+            <div className="text-center mb-12 lg:mb-16 animate-on-scroll">
+              <p className="ef-section-label">How It Works</p>
+              <h2 className="ef-section-title mx-auto" style={{ maxWidth: '600px' }}>
+                From Quiz to Recovery
+              </h2>
+              <p className="ef-section-subtitle max-w-2xl mx-auto">
+                Our statute-based methodology ensures conservative, defensible estimates.
+                Every claim is verified before filing.
+              </p>
+            </div>
+
+            {/* 2-Column Grid: Steps + Features */}
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
+              {/* Left Column - Steps */}
+              <div className="space-y-4">
+                {[
+                  { num: '01', title: 'Take the 2-Minute Quiz', desc: 'Answer simple questions about your business and workforce.', icon: Clock },
+                  { num: '02', title: 'Get Your Estimate', desc: 'Receive a conservative credit range instantly—no obligation.', icon: DollarSign },
+                  { num: '03', title: 'Documentation Review', desc: 'Our team verifies eligibility with your payroll records.', icon: FileCheck },
+                  { num: '04', title: 'Credit Recovery', desc: 'Claims filed with IRS. Funds deposited to your account.', icon: Landmark },
+                ].map((step, index) => (
+                  <div 
+                    key={step.num} 
+                    className="flex gap-4 p-4 sm:p-5 bg-white border border-[var(--color-border)] hover:border-[var(--brand-primary)] hover:shadow-md transition-all duration-300 animate-on-scroll"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[var(--brand-primary)]/10 flex items-center justify-center">
+                      <step.icon className="h-5 w-5 text-[var(--brand-primary)]" />
                     </div>
-                    <h3 className="ef-feature-title">Quick Process</h3>
-                    <p className="ef-feature-desc">2-minute quiz</p>
-                  </div>
-                  <div className="ef-feature ef-feature-mobile-grid">
-                    <div className="ef-feature-icon">
-                      <Sparkles className="h-5 w-5" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-sm font-bold text-[var(--brand-primary)]">{step.num}</span>
+                        <h3 className="font-semibold text-[var(--color-foreground)]">{step.title}</h3>
+                      </div>
+                      <p className="text-sm text-[var(--color-foreground-muted)]">{step.desc}</p>
                     </div>
-                    <h3 className="ef-feature-title">No Obligation</h3>
-                    <p className="ef-feature-desc">Free estimate</p>
                   </div>
-                  <div className="ef-feature ef-feature-mobile-grid">
-                    <div className="ef-feature-icon">
-                      <Landmark className="h-5 w-5" />
-                    </div>
-                    <h3 className="ef-feature-title">Statute-Based</h3>
-                    <p className="ef-feature-desc">IRS guidelines</p>
-                  </div>
-                  <div className="ef-feature ef-feature-mobile-grid">
-                    <div className="ef-feature-icon">
-                      <BadgeCheck className="h-5 w-5" />
-                    </div>
-                    <h3 className="ef-feature-title">Verified Claims</h3>
-                    <p className="ef-feature-desc">Verified before filing</p>
-                  </div>
-                </div>
-                
-                {/* Desktop: 2x2 Grid wrapped in Trust Panel */}
-                <div className="ef-trust-panel hidden lg:block">
-                  <div className="grid grid-cols-2 gap-3 content-start">
-                  <div className="ef-feature animate-on-scroll">
-                    <div className="ef-feature-icon">
-                      <Landmark className="h-5 w-5" />
-                    </div>
-                    <h3 className="ef-feature-title">Statute-Based</h3>
-                    <p className="ef-feature-desc">IRS guidelines & conservative assumptions</p>
-                  </div>
-                  <div className="ef-feature animate-on-scroll animation-delay-100">
-                    <div className="ef-feature-icon">
-                      <BadgeCheck className="h-5 w-5" />
-                    </div>
-                    <h3 className="ef-feature-title">Verified Claims</h3>
-                    <p className="ef-feature-desc">No filing without documentation</p>
-                  </div>
-                  <div className="ef-feature animate-on-scroll animation-delay-200">
-                    <div className="ef-feature-icon">
-                      <Zap className="h-5 w-5" />
-                    </div>
-                    <h3 className="ef-feature-title">Quick Process</h3>
-                    <p className="ef-feature-desc">2-minute quiz, fast turnaround</p>
-                  </div>
-                  <div className="ef-feature animate-on-scroll animation-delay-300">
-                    <div className="ef-feature-icon">
-                      <Sparkles className="h-5 w-5" />
-                    </div>
-                    <h3 className="ef-feature-title">No Obligation</h3>
-                    <p className="ef-feature-desc">Free estimate, your approval needed</p>
-                  </div>
-                  </div>
-                </div>
+                ))}
               </div>
 
-              {/* Steps Column */}
-              <div className="order-last lg:order-first animate-on-scroll">
-                <p className="ef-section-label">How It Works</p>
-                <h2 className="ef-section-title mb-6">From Quiz to Recovery</h2>
-                <p className="ef-section-subtitle mb-10">
-                  Our statute-based methodology ensures conservative, defensible estimates.
-                  Every claim is verified before filing.
-                </p>
+              {/* Right Column - Trust Features 2x2 Grid */}
+              <div className="grid grid-cols-2 gap-4 content-start">
+                <div className="p-5 bg-white border border-[var(--color-border)] hover:border-[var(--brand-primary)] hover:shadow-md transition-all duration-300 animate-on-scroll">
+                  <div className="w-10 h-10 rounded-lg bg-[var(--brand-primary)]/10 flex items-center justify-center mb-3">
+                    <Landmark className="h-5 w-5 text-[var(--brand-primary)]" />
+                  </div>
+                  <h3 className="font-semibold text-[var(--color-foreground)] mb-1">Statute-Based</h3>
+                  <p className="text-sm text-[var(--color-foreground-muted)]">IRS guidelines & conservative assumptions</p>
+                </div>
 
-                <div className="ef-steps-container">
-                  {/* Timeline line (hidden on mobile for Bento style) */}
-                  <div className="ef-timeline-line" aria-hidden="true"></div>
-                  
-                  {[
-                    { num: '01', title: 'Take the 2-Minute Quiz', desc: 'Answer simple questions about your business and workforce.', icon: Clock, isLast: false, isActive: true },
-                    { num: '02', title: 'Get Your Estimate', desc: 'Receive a conservative credit range instantly—no obligation.', icon: DollarSign, isLast: false, isActive: false },
-                    { num: '03', title: 'Documentation Review', desc: 'Our team verifies eligibility with your payroll records.', icon: FileCheck, isLast: false, isActive: false },
-                    { num: '04', title: 'Credit Recovery', desc: 'Claims filed with IRS. Funds deposited to your account.', icon: Landmark, isLast: true, isActive: false },
-                  ].map((step, index) => (
-                    <div 
-                      key={step.num} 
-                      className={`ef-step ${step.isLast ? 'ef-step-success' : ''} ${step.isActive ? 'ef-step-active' : ''} animate-on-scroll animation-delay-${index * 100}`}
-                    >
-                      <div className={`ef-step-icon ${step.isLast ? 'ef-step-icon-success' : ''}`}>
-                        <step.icon className="h-5 w-5" />
-                      </div>
-                      <div className="ef-step-content">
-                        <span className="ef-step-number">{step.num}</span>
-                        <h3 className="ef-step-title">{step.title}</h3>
-                        <p className="ef-step-desc">{step.desc}</p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="p-5 bg-white border border-[var(--color-border)] hover:border-[var(--brand-primary)] hover:shadow-md transition-all duration-300 animate-on-scroll" style={{ animationDelay: '100ms' }}>
+                  <div className="w-10 h-10 rounded-lg bg-[var(--brand-primary)]/10 flex items-center justify-center mb-3">
+                    <BadgeCheck className="h-5 w-5 text-[var(--brand-primary)]" />
+                  </div>
+                  <h3 className="font-semibold text-[var(--color-foreground)] mb-1">Verified Claims</h3>
+                  <p className="text-sm text-[var(--color-foreground-muted)]">No filing without documentation</p>
+                </div>
+
+                <div className="p-5 bg-white border border-[var(--color-border)] hover:border-[var(--brand-primary)] hover:shadow-md transition-all duration-300 animate-on-scroll" style={{ animationDelay: '200ms' }}>
+                  <div className="w-10 h-10 rounded-lg bg-[var(--brand-primary)]/10 flex items-center justify-center mb-3">
+                    <Zap className="h-5 w-5 text-[var(--brand-primary)]" />
+                  </div>
+                  <h3 className="font-semibold text-[var(--color-foreground)] mb-1">Quick Process</h3>
+                  <p className="text-sm text-[var(--color-foreground-muted)]">2-minute quiz, fast turnaround</p>
+                </div>
+
+                <div className="p-5 bg-white border border-[var(--color-border)] hover:border-[var(--brand-primary)] hover:shadow-md transition-all duration-300 animate-on-scroll" style={{ animationDelay: '300ms' }}>
+                  <div className="w-10 h-10 rounded-lg bg-[var(--brand-primary)]/10 flex items-center justify-center mb-3">
+                    <Sparkles className="h-5 w-5 text-[var(--brand-primary)]" />
+                  </div>
+                  <h3 className="font-semibold text-[var(--color-foreground)] mb-1">No Obligation</h3>
+                  <p className="text-sm text-[var(--color-foreground-muted)]">Free estimate, your approval needed</p>
                 </div>
               </div>
+            </div>
+
+            {/* CTA */}
+            <div className="text-center mt-12">
+              <Link href="/estimator">
+                <button className="ef-btn ef-btn-primary ef-btn-lg">
+                  Start Your Free Assessment
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </Link>
             </div>
           </div>
         </section>
