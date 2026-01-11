@@ -201,3 +201,42 @@ This is **NOT**:
 ## 📄 License
 
 Private - All rights reserved.
+
+
+
+
+BTN to stripe workflow  
+-- 
+so btn click : form for name email and phone (make lead as unpaid )- > go to stripe -> make account() -> thankyou
+
+User clicks "Buy Now" on Pricing Card
+         ↓
+┌─────────────────────────────────────┐
+│   Customer Info Modal               │
+│   ┌─────────────────────────────┐   │
+│   │ Full Name *                 │   │
+│   │ Email Address *             │   │
+│   │ Phone Number *              │   │
+│   │ Company Name (optional)     │   │
+│   └─────────────────────────────┘   │
+│   [Continue to Payment →]           │
+└─────────────────────────────────────┘
+         ↓
+POST /api/leads/checkout
+  → Creates Partner (client account)
+  → Creates Lead with status=NEW, source="Checkout - {Product}"
+  → Returns leadId
+         ↓
+POST /api/create-checkout-session
+  → Passes customer email, name, phone, leadId in metadata
+  → Stripe collects billing address + card
+         ↓
+Stripe Checkout Page
+  → Card info only (customer details pre-filled)
+         ↓
+Payment Success → Webhook called
+  → Updates Partner with Stripe data
+  → Creates Payment record with all customer info
+  → Updates Lead status to IN_PROGRESS
+         ↓
+/payment/success - Thank You Page

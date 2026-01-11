@@ -14,24 +14,27 @@ export async function POST(request: NextRequest) {
   const signature = request.headers.get('stripe-signature');
 
   if (!signature) {
+    console.error('Webhook: Missing stripe-signature header');
     return NextResponse.json(
       { error: 'Missing signature' },
       { status: 400 }
     );
   }
 
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  
+  if (!webhookSecret || !webhookSecret.startsWith('whsec_')) {
+    console.error('Webhook: STRIPE_WEBHOOK_SECRET not configured properly');
+    return NextResponse.json(
+      { error: 'Webhook not configured' },
+      { status: 500 }
+    );
+  }
+
   let event: Stripe.Event;
 
   try {
-    // In production, use your webhook secret
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    
-    if (webhookSecret && webhookSecret.startsWith('whsec_')) {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    } else {
-      // For development without webhook secret
-      event = JSON.parse(body) as Stripe.Event;
-    }
+    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
     return NextResponse.json(
@@ -46,12 +49,14 @@ export async function POST(request: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session;
         console.log('Checkout completed:', session.id);
         
-        // Extract customer details
+        // Extract customer details - prefer metadata (from our form) over Stripe's collected data
         const customerEmail = session.customer_details?.email || session.customer_email || '';
-        const customerName = session.customer_details?.name || customerEmail.split('@')[0] || 'Customer';
-        const customerPhone = session.customer_details?.phone || null;
+        const customerName = session.metadata?.customerName || session.customer_details?.name || customerEmail.split('@')[0] || 'Customer';
+        const customerPhone = session.metadata?.customerPhone || session.customer_details?.phone || null;
+        const companyName = session.metadata?.companyName || customerName;
         const billingAddress = session.customer_details?.address;
         const productKey = session.metadata?.productKey || 'UNKNOWN';
+        const leadId = session.metadata?.leadId;
         const customerId = typeof session.customer === 'string' ? session.customer : session.customer?.id || null;
         
         if (customerEmail) {
@@ -59,6 +64,8 @@ export async function POST(request: NextRequest) {
           const partner = await db.partner.upsert({
             where: { email: customerEmail },
             update: {
+              name: customerName,
+              companyName: companyName,
               stripeCustomerId: customerId,
               stripePaymentStatus: session.payment_status,
               stripeProductKey: productKey,
@@ -71,7 +78,7 @@ export async function POST(request: NextRequest) {
             create: {
               email: customerEmail,
               name: customerName,
-              companyName: customerName, // Can be updated later
+              companyName: companyName,
               phone: customerPhone,
               stripeCustomerId: customerId,
               stripePaymentStatus: session.payment_status,
@@ -111,6 +118,26 @@ export async function POST(request: NextRequest) {
               paidAt: new Date(),
             },
           });
+          
+          // Update lead status if leadId is in metadata
+          const leadId = session.metadata?.leadId;
+          if (leadId) {
+            await db.lead.update({
+              where: { id: leadId },
+              data: {
+                status: 'IN_PROGRESS',
+                partnerId: partner.id,
+                inputsJson: {
+                  ...((await db.lead.findUnique({ where: { id: leadId } }))?.inputsJson as object || {}),
+                  paymentStatus: 'paid',
+                  paidAt: new Date().toISOString(),
+                  stripeSessionId: session.id,
+                  amount: session.amount_total,
+                },
+              },
+            });
+            console.log(`Updated lead ${leadId} to IN_PROGRESS after payment`);
+          }
           
           console.log(`Created/updated partner ${partner.id} for ${customerEmail}`);
         }

@@ -6,8 +6,17 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
+  // Use direct postgres URL for connection
+  const connectionString = process.env.prisma_main_POSTGRES_URL || 
+                           process.env.prisma_main_PRISMA_DATABASE_URL || 
+                           process.env.prisma_main_DATABASE_URL;
+  
+  if (!connectionString) {
+    throw new Error('Database URL not found in environment variables');
+  }
+
   const adapter = new PrismaPg({
-    connectionString: process.env.prisma_main_DATABASE_URL,
+    connectionString,
     // Connection pool settings for better performance
     max: 10, // Max connections in pool
   });

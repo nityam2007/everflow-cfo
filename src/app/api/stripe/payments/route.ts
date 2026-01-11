@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+import { stripe, PRODUCTS } from '@/lib/stripe';
 import { db } from '@/lib/db';
 import { auth } from '@/lib/auth';
+
+// Helper to get product name from product key
+function getProductName(productKey: string): string {
+  const product = PRODUCTS[productKey as keyof typeof PRODUCTS];
+  return product?.name || productKey || 'Unknown Product';
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -80,47 +86,67 @@ export async function GET(request: NextRequest) {
 
     // Also fetch from Stripe for real-time data
     try {
-      if (customerId) {
-        // Get payments for specific customer
-        const paymentIntents = await stripe.paymentIntents.list({
-          customer: customerId,
+      if (isAdmin) {
+        // Admin: get checkout sessions (has customer info) instead of payment intents
+        const checkoutSessions = await stripe.checkout.sessions.list({
           limit,
+          expand: ['data.customer'],
         });
 
-        const customerSubscriptions = await stripe.subscriptions.list({
-          customer: customerId,
-          limit: 10,
-        });
-
-        payments = paymentIntents.data.map(pi => ({
-          ...pi,
-          source: 'stripe',
-        }));
-        subscriptions = customerSubscriptions.data;
-      } else if (isAdmin) {
-        // Admin: get all recent payments from Stripe
-        const paymentIntents = await stripe.paymentIntents.list({
-          limit,
-        });
-
-        payments = paymentIntents.data.map(pi => ({
-          id: pi.id,
-          amount: pi.amount,
-          currency: pi.currency,
-          status: pi.status,
-          created: pi.created,
-          customer: pi.customer,
-          description: pi.description,
-          metadata: pi.metadata,
-          receipt_email: pi.receipt_email,
-          source: 'stripe',
-        }));
+        payments = checkoutSessions.data
+          .filter(cs => cs.payment_status === 'paid')
+          .map(cs => ({
+            id: cs.id,
+            amount: cs.amount_total || 0,
+            currency: cs.currency || 'usd',
+            status: cs.payment_status === 'paid' ? 'succeeded' : cs.payment_status,
+            created: cs.created,
+            customer: typeof cs.customer === 'string' ? cs.customer : cs.customer?.id || null,
+            description: getProductName(cs.metadata?.productKey || ''),
+            productKey: cs.metadata?.productKey,
+            metadata: cs.metadata,
+            receipt_email: cs.customer_details?.email || cs.customer_email,
+            customerName: cs.metadata?.customerName || cs.customer_details?.name,
+            customerPhone: cs.metadata?.customerPhone || cs.customer_details?.phone,
+            billingAddress: cs.customer_details?.address,
+            source: 'stripe',
+          }));
 
         // Get all subscriptions
         const allSubscriptions = await stripe.subscriptions.list({
           limit: 50,
         });
         subscriptions = allSubscriptions.data;
+      } else if (customerId) {
+        // Get payments for specific customer
+        const customerSessions = await stripe.checkout.sessions.list({
+          customer: customerId,
+          limit,
+        });
+
+        payments = customerSessions.data
+          .filter(cs => cs.payment_status === 'paid')
+          .map(cs => ({
+            id: cs.id,
+            amount: cs.amount_total || 0,
+            currency: cs.currency || 'usd',
+            status: cs.payment_status === 'paid' ? 'succeeded' : cs.payment_status,
+            created: cs.created,
+            customer: customerId,
+            description: getProductName(cs.metadata?.productKey || ''),
+            productKey: cs.metadata?.productKey,
+            metadata: cs.metadata,
+            receipt_email: cs.customer_details?.email,
+            customerName: cs.metadata?.customerName || cs.customer_details?.name,
+            customerPhone: cs.metadata?.customerPhone || cs.customer_details?.phone,
+            source: 'stripe',
+          }));
+
+        const customerSubscriptions = await stripe.subscriptions.list({
+          customer: customerId,
+          limit: 10,
+        });
+        subscriptions = customerSubscriptions.data;
       }
     } catch (stripeError) {
       console.error('Stripe fetch error:', stripeError);

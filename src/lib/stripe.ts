@@ -98,7 +98,8 @@ export async function createCheckoutSession(
   productKey: ProductKey,
   successUrl: string,
   cancelUrl: string,
-  customerEmail?: string
+  customerEmail?: string,
+  metadata?: Record<string, string>
 ) {
   const product = PRODUCTS[productKey];
   
@@ -126,8 +127,13 @@ export async function createCheckoutSession(
     customer_email: customerEmail,
     success_url: successUrl,
     cancel_url: cancelUrl,
+    // We collect phone in our form, no need for Stripe to collect again
+    // phone_number_collection: { enabled: true },
+    // Collect billing address
+    billing_address_collection: 'required',
     metadata: {
       productKey,
+      ...metadata,
     },
   });
 

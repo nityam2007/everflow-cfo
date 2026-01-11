@@ -27,6 +27,26 @@ interface Payment {
   description?: string;
   metadata?: Record<string, string>;
   receipt_email?: string;
+  // New fields from database
+  customerName?: string;
+  customerPhone?: string;
+  productKey?: string;
+  source?: string;
+  partner?: {
+    id: string;
+    name: string;
+    email: string;
+    phone?: string;
+    companyName: string;
+  };
+  billingAddress?: {
+    city?: string;
+    country?: string;
+    line1?: string;
+    line2?: string;
+    postal_code?: string;
+    state?: string;
+  };
 }
 
 interface Subscription {
@@ -147,7 +167,11 @@ export default function AdminPaymentsPage() {
     const matchesSearch = 
       p.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (p.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (p.receipt_email || '').toLowerCase().includes(searchTerm.toLowerCase());
+      (p.receipt_email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.customerName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.customerPhone || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.partner?.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.partner?.companyName || '').toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
     
@@ -315,13 +339,10 @@ export default function AdminPaymentsPage() {
                       Date
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      ID
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Customer
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Description
+                      Product
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Amount
@@ -337,14 +358,31 @@ export default function AdminPaymentsPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {formatDate(payment.created)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
-                        {payment.id.slice(0, 20)}...
+                      <td className="px-6 py-4 text-sm">
+                        <div className="space-y-0.5">
+                          <p className="font-medium text-gray-900">
+                            {payment.customerName || payment.partner?.name || 'N/A'}
+                          </p>
+                          <p className="text-gray-500 text-xs">
+                            {payment.receipt_email || payment.partner?.email || ''}
+                          </p>
+                          {(payment.customerPhone || payment.partner?.phone) && (
+                            <p className="text-gray-400 text-xs">
+                              📞 {payment.customerPhone || payment.partner?.phone}
+                            </p>
+                          )}
+                          {payment.partner?.companyName && payment.partner.companyName !== payment.partner.name && (
+                            <p className="text-gray-400 text-xs">
+                              🏢 {payment.partner.companyName}
+                            </p>
+                          )}
+                        </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {payment.receipt_email || payment.customer || 'N/A'}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
-                        {payment.description || payment.metadata?.productKey || '-'}
+                      <td className="px-6 py-4 text-sm text-gray-500 max-w-xs">
+                        <p className="font-medium">{payment.description || payment.productKey || '-'}</p>
+                        {payment.source === 'database' && (
+                          <span className="text-xs text-green-600">● Verified</span>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
                         {formatCurrency(payment.amount, payment.currency)}
