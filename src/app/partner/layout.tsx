@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/auth-utils';
 import { PartnerHeader } from '@/components/partner-header';
+import { PartnerSidebar } from '@/components/partner-sidebar';
 
 export default async function PartnerLayout({
   children,
@@ -20,11 +21,21 @@ export default async function PartnerLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[var(--color-background-alt)]">
-      <PartnerHeader user={{ name: session.user.name }} />
+    <div className="min-h-screen bg-[var(--color-background-alt)] flex">
+      {/* Sidebar - Desktop only */}
+      <PartnerSidebar userName={session.user.name} />
 
-      {/* Main content - responsive padding */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">{children}</main>
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <PartnerHeader user={{ name: session.user.name, email: session.user.email }} />
+
+        {/* Main content */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
+          <div className="max-w-6xl mx-auto">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

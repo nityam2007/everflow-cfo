@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/redis';
+import { sendOTPEmail } from '@/lib/resend';
 import { 
   generateSecureOTP, 
   sanitizeEmail, 
@@ -95,18 +96,17 @@ export async function POST(request: NextRequest) {
     });
     await cache.set(otpKey, otpData, OTP_EXPIRY_SECONDS);
 
-    // In production, send email here
-    // For development, log it securely
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[DEV OTP] Code for ${maskEmail(normalizedEmail)}: ${otp}`);
-    }
+    // Send OTP email via Resend
+    const emailResult = await sendOTPEmail({
+      to: normalizedEmail,
+      code: otp,
+      expiresInMinutes: OTP_EXPIRY_SECONDS / 60,
+    });
 
-    // TODO: Integrate with email service (SendGrid, Resend, etc.)
-    // await sendEmail({
-    //   to: normalizedEmail,
-    //   subject: 'Your EverflowCFO Verification Code',
-    //   text: `Your verification code is: ${otp}\n\nThis code expires in 10 minutes.\n\nIf you didn't request this code, please ignore this email.`,
-    // });
+    if (!emailResult.success) {
+      console.error(`[ERROR] Failed to send OTP email to ${maskEmail(normalizedEmail)}: ${emailResult.error}`);
+      // Still return success to prevent enumeration, but log the error
+    }
 
     return successResponse;
   } catch (error) {
