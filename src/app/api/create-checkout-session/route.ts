@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const successUrl = `${baseUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${baseUrl}/#${productKey.toLowerCase().replace(/_/g, '-')}`;
+    const cancelUrl = `${baseUrl}/payment/cancel`;
 
     const session = await createCheckoutSession(
       productKey as ProductKey,

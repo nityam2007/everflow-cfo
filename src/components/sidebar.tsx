@@ -16,6 +16,8 @@ import {
   ClipboardList,
   Menu,
   X,
+  CreditCard,
+  DollarSign,
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -44,6 +46,8 @@ const navItems: NavItem[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, exactMatch: true },
   { href: '/dashboard/leads', label: 'Leads', icon: Users },
   { href: '/dashboard/my-tasks', label: 'My Tasks', icon: ClipboardList, staffOnly: true },
+  { href: '/dashboard/billing', label: 'Billing', icon: CreditCard, staffOnly: true },
+  { href: '/dashboard/payments', label: 'Payments', icon: DollarSign, adminOnly: true },
   { href: '/dashboard/settings/users', label: 'Users', icon: UserCog, adminOnly: true },
   { href: '/dashboard/settings/partners', label: 'Partners', icon: Building2, adminOnly: true },
   { href: '/dashboard/settings/rules', label: 'Rules', icon: FileCode, adminOnly: true },
