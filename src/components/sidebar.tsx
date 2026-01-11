@@ -54,7 +54,7 @@ const navItems: NavItem[] = [
 export function Sidebar({ user, isAdmin, signOutAction }: SidebarProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  
   return (
     <>
       {/* Mobile menu button */}

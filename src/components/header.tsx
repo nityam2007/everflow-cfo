@@ -49,9 +49,10 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="ef-nav">
+            <Link href="/#capital" className="ef-nav-link">Capital Advisory</Link>
+            <Link href="/#cfo-tax" className="ef-nav-link">CFO & Tax</Link>
             <Link href="/#programs" className="ef-nav-link">Payroll Credits</Link>
-            <Link href="/calculator" className="ef-nav-link">Calculator</Link>
-            <Link href="/#about" className="ef-nav-link">About Us</Link>
+            <Link href="/#contact" className="ef-nav-link">Contact</Link>
             <Link href="/login">
               <button className="ef-btn ef-btn-secondary">Login</button>
             </Link>
@@ -74,14 +75,17 @@ export function Header() {
       {/* Mobile Menu Overlay */}
       <div className={`ef-mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
         <nav className="ef-mobile-nav">
+          <Link href="/#capital" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
+            Capital Advisory
+          </Link>
+          <Link href="/#cfo-tax" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
+            CFO & Tax
+          </Link>
           <Link href="/#programs" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
             Payroll Credits
           </Link>
-          <Link href="/calculator" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
-            Calculator
-          </Link>
-          <Link href="/#about" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
-            About Us
+          <Link href="/#contact" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
+            Contact
           </Link>
           <div className="ef-mobile-nav-buttons">
             <Link href="/login" className="w-full" onClick={() => setMobileMenuOpen(false)}>

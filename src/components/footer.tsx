@@ -52,6 +52,11 @@ export function Footer() {
             <span className="text-gray-500">Disclaimer:</span> Estimates are preliminary. 
             Final eligibility requires documentation verification. Not tax or legal advice.
           </p>
+          <p className="text-xs text-gray-500 mt-4 max-w-3xl mx-auto">
+            EverflowCFO is a capital advisory firm focused on financial architecture and deal
+            preparation. Services are limited to consulting, modeling, and documentation. We do not
+            facilitate the sale of securities or manage third-party funds.
+          </p>
         </div>
       </div>
     </footer>

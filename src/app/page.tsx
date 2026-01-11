@@ -34,6 +34,7 @@ import {
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ScrollAnimations } from '@/components/scroll-animations';
+import { PricingCard } from '@/components/pricing-card';
 
 export default function HomePage() {
   return (
@@ -44,7 +45,7 @@ export default function HomePage() {
       <main>
         {/* Hero Section - Revolut Style */}
         <section className="ef-hero">
-          <div className="ef-container">
+          <div className="ef-container-wide">
             <div className="ef-hero-grid">
               {/* Left Content - Premium Restructured */}
               <div className="ef-hero-content animate-fade-in-up">
@@ -55,43 +56,27 @@ export default function HomePage() {
                 </div>
 
                 <h1 className="ef-hero-title">
-                  Recover the <span className="ef-hero-title-accent">payroll credits</span> you're owed.
+                  Financial Architecture for <span className="ef-hero-title-accent">High-Growth Companies</span>
                 </h1>
 
-                {/* Feature Checklist (replaces paragraph) */}
-                <ul className="ef-hero-checklist">
-                  <li className="ef-hero-check-item">
-                    <div className="ef-hero-check-icon">
-                      <Check className="h-4 w-4" />
-                    </div>
-                    <span>Recovers FICA, WOTC & ERC Credits</span>
-                  </li>
-                  <li className="ef-hero-check-item">
-                    <div className="ef-hero-check-icon">
-                      <Check className="h-4 w-4" />
-                    </div>
-                    <span>Average Refund: <strong className="text-[var(--brand-success)]">$42,500</strong> per business</span>
-                  </li>
-                  <li className="ef-hero-check-item">
-                    <div className="ef-hero-check-icon">
-                      <Check className="h-4 w-4" />
-                    </div>
-                    <span>No Upfront Cost (Contingency Based)</span>
-                  </li>
-                </ul>
+                <p className="ef-hero-subtitle">
+                  From Series A Fundraising to Tax Compliance & Credit Recovery. We build the financial infrastructure that powers your scale.
+                </p>
 
                 {/* CTA Cluster */}
                 <div className="ef-hero-cta-cluster">
-                  <Link href="/estimator">
+                  <Link href="#capital">
                     <button className="ef-btn ef-btn-accent ef-btn-lg">
-                      Check My Eligibility
+                      View Capital Solutions
                       <ArrowRight className="h-4 w-4" />
                     </button>
                   </Link>
-                  <p className="ef-hero-cta-subtext">
-                    <Lock className="h-3 w-3" />
-                    Free & Confidential · 2 min quiz
-                  </p>
+                  <Link href="/estimator">
+                    <button className="ef-btn ef-btn-secondary ef-btn-lg">
+                      Check Credit Eligibility
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </Link>
                 </div>
 
                 {/* Clean Trust Footer */}
@@ -180,6 +165,115 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* NEW: Capital Advisory Section */}
+        <section id="capital" className="ef-section">
+          <div className="ef-container">
+            <div className="text-center mb-12 lg:mb-16 animate-on-scroll">
+              <p className="ef-section-label">Capital Advisory</p>
+              <h2 className="ef-section-title mx-auto" style={{ maxWidth: '700px' }}>
+                Deal Architecture & Capital Preparation
+              </h2>
+              <p className="ef-section-subtitle">
+                Institutional-Grade Pitch Decks & Financial Models.
+              </p>
+            </div>
+
+            <div className="max-w-4xl mx-auto mb-12 animate-on-scroll">
+              <p className="text-lg text-center text-gray-700 leading-relaxed mb-8">
+                Founders fail because their narrative doesn't match their numbers. We fix that. Our team
+                of Investment Banking Analysts builds the Financial Model, Valuation, and Pitch Deck you
+                need to close your Series A/B round.
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-6 text-sm">
+                <div className="flex items-start gap-3">
+                  <Check className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
+                  <span>The Series A Stack: 15-Slide Investor Deck + Dynamic Financial Model.</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
+                  <span>Financial Modeling: DCF, 3-Statement Forecasts, & Burn Rate Analysis.</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
+                  <span>Due Diligence Prep: Data Room organization & Investor Q&A support.</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Pricing Grid */}
+            <div className="ef-program-grid">
+              <PricingCard
+                productKey="FINANCIAL_MODELING"
+                title="Financial Modeling Core"
+                price={3500}
+                badge="The Math"
+                badgeColor="tip"
+                icon={<TrendingUp className="h-5 w-5" />}
+                iconColor="tip"
+                description="Best for: Founders who have a deck but need institutional numbers."
+                features={[
+                  '3-Statement Financial Model (Excel)',
+                  '5-Year Dynamic Forecast',
+                  'Unit Economics & KPI Dashboard',
+                  'Valuation Analysis (DCF/Comps)',
+                ]}
+                ctaText="Start Model Build"
+                turnaround="Fixed · 4 Days Turnaround"
+                animationDelay={0}
+              />
+
+              <PricingCard
+                productKey="SERIES_A_STACK"
+                title="The Series A Stack"
+                price={9500}
+                badge="The Full Package"
+                badgeColor="erc"
+                icon={<Briefcase className="h-5 w-5" />}
+                iconColor="erc"
+                description="Best for: Founders raising Seed/Series A who need the full narrative."
+                features={[
+                  'Everything in Financial Modeling',
+                  '15-Slide Institutional Pitch Deck',
+                  'Narrative Strategy Session',
+                  'Investor Teaser One-Pager',
+                ]}
+                ctaText="Build My Stack"
+                turnaround="Fixed · 7 Days Turnaround"
+                highlighted={true}
+                animationDelay={100}
+              />
+
+              <PricingCard
+                productKey="DUE_DILIGENCE"
+                title="Due Diligence & Deal Room"
+                price={5000}
+                pricePrefix="From"
+                badge="The Support"
+                badgeColor="wotc"
+                icon={<Shield className="h-5 w-5" />}
+                iconColor="wotc"
+                description="Best for: Founders with a Term Sheet entering the audit phase."
+                features={[
+                  'Virtual Data Room (VDR) Structure',
+                  'Historical Financial cleanup (Reconciliation)',
+                  'Cap Table Management',
+                  'Investor Q&A Support',
+                ]}
+                ctaText="Prepare Data Room"
+                turnaround="Custom · 5 Days Turnaround"
+                animationDelay={200}
+              />
+            </div>
+
+            <div className="text-center mt-8">
+              <Link href="#contact" className="text-[var(--brand-primary)] font-semibold hover:underline">
+                Need a custom package? Contact us →
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* What We Do Section - Asymmetrical Bento Grid */}
         <section className="ef-section ef-section-alt">
           <div className="ef-container">
@@ -261,15 +355,127 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* NEW: CFO & Tax Section */}
+        <section id="cfo-tax" className="ef-section ef-section-alt">
+          <div className="ef-container">
+            <div className="text-center mb-12 lg:mb-16 animate-on-scroll">
+              <p className="ef-section-label">CFO & Tax</p>
+              <h2 className="ef-section-title mx-auto" style={{ maxWidth: '700px' }}>
+                CPA-Level Tax, Payroll & Accounting
+              </h2>
+              <p className="ef-section-subtitle">
+                Stop overpaying. Start strategizing.
+              </p>
+            </div>
+
+            <div className="max-w-4xl mx-auto mb-12 animate-on-scroll">
+              <p className="text-lg text-center text-gray-700 leading-relaxed mb-8">
+                Your back-office shouldn't be a liability. We provide full-stack accounting, from daily
+                bookkeeping cleanup to payroll management and tax filings.
+              </p>
+              
+              <div className="grid md:grid-cols-3 gap-6 text-sm">
+                <div className="flex items-start gap-3">
+                  <Check className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
+                  <span>Tax Preparation: Federal & State filings for S-Corps (1120S) and Partnerships (1065).</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
+                  <span>Payroll Management: Full-service payroll processing & compliance.</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
+                  <span>Fractional CFO: Monthly financial reporting, burn-rate analysis, and board decks.</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Pricing Grid */}
+            <div className="ef-program-grid">
+              <PricingCard
+                productKey="TAX_COMPLIANCE"
+                title="Tax Compliance"
+                price={1500}
+                priceSuffix="/ Filing"
+                badge="The Annual"
+                badgeColor="tip"
+                icon={<FileCheck className="h-5 w-5" />}
+                iconColor="tip"
+                description="Best for: Businesses needing year-end filings (1120S, 1065) and clean books."
+                features={[
+                  'Federal & State Corporate Tax Return',
+                  'Year-End Bookkeeping Review & Adjustments',
+                  'K-1 Distribution to Partners',
+                  'Extension Filing (if needed)',
+                ]}
+                ctaText="Start Tax Filing"
+                animationDelay={0}
+              />
+
+              <PricingCard
+                productKey="MANAGED_BACK_OFFICE"
+                title="Managed Back-Office"
+                price={750}
+                priceSuffix="/ Month"
+                badge="The Monthly"
+                badgeColor="wotc"
+                icon={<Clock className="h-5 w-5" />}
+                iconColor="wotc"
+                description="Best for: Growing teams that need payroll and clean books every month."
+                features={[
+                  'Monthly Bookkeeping & Reconciliation',
+                  'Full-Service Payroll Processing (Gusto/ADP)',
+                  'Sales Tax Filing (State Nexus)',
+                  'Monthly P&L and Balance Sheet',
+                ]}
+                ctaText="Automate My Books"
+                recurring={true}
+                animationDelay={100}
+              />
+
+              <PricingCard
+                productKey="FRACTIONAL_CFO"
+                title="Fractional CFO"
+                price={3000}
+                priceSuffix="/ Month"
+                badge="The Strategic"
+                badgeColor="erc"
+                icon={<Zap className="h-5 w-5" />}
+                iconColor="erc"
+                description="Best for: Funded startups needing burn management and board reporting."
+                features={[
+                  'Everything in Managed Back-Office',
+                  'Custom Financial Modeling & Forecasting',
+                  'Monthly Burn Rate & Runway Analysis',
+                  'Board Deck Preparation & Presentation',
+                ]}
+                ctaText="Hire Fractional CFO"
+                recurring={true}
+                highlighted={true}
+                animationDelay={200}
+              />
+            </div>
+
+            <div className="text-center mt-8">
+              <Link href="#contact" className="text-[var(--brand-primary)] font-semibold hover:underline">
+                Talk to a CPA →
+              </Link>
+            </div>
+          </div>
+        </section>
+
 
         {/* Programs Section - "Credit Cards" Style */}
         <section id="programs" className="ef-section">
           <div className="ef-container">
             <div className="text-center mb-12 lg:mb-16 animate-on-scroll">
-              <p className="ef-section-label">Credit Programs</p>
+              <p className="ef-section-label">Payroll Credits</p>
               <h2 className="ef-section-title mx-auto" style={{ maxWidth: '600px' }}>
-                Targeted programs. Maximum recovery.
+                Non-Dilutive Capital Recovery
               </h2>
+              <p className="ef-section-subtitle">
+                We recover overpaid payroll taxes through FICA, WOTC, and ERC programs.
+              </p>
             </div>
 
             <div className="ef-program-grid">
@@ -867,6 +1073,53 @@ export default function HomePage() {
                   <ArrowRight className="h-5 w-5" />
                 </button>
               </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Contact Section */}
+        <section id="contact" className="ef-section ef-section-alt">
+          <div className="ef-container">
+            <div className="text-center mb-12">
+              <p className="ef-section-label">Get In Touch</p>
+              <h2 className="ef-section-title">Ready to Get Started?</h2>
+              <p className="ef-section-subtitle max-w-2xl mx-auto">
+                Whether you need capital advisory, accounting services, or payroll credit recovery, 
+                our team is here to help. Reach out to discuss your needs.
+              </p>
+            </div>
+
+            <div className="max-w-2xl mx-auto">
+              <div className="ef-bento-solution">
+                <div className="grid md:grid-cols-2 gap-6 mb-8">
+                  <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+                    <div className="inline-flex items-center justify-center w-12 h-12 bg-[var(--brand-primary-light)] text-[var(--brand-primary)] mb-4">
+                      <Award className="w-6 h-6" />
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">Capital Advisory</h3>
+                    <p className="text-sm text-gray-600">Schedule a strategy session for your Series A/B prep</p>
+                  </div>
+                  <div className="text-center p-6 bg-white rounded-lg shadow-sm">
+                    <div className="inline-flex items-center justify-center w-12 h-12 bg-[var(--brand-primary-light)] text-[var(--brand-primary)] mb-4">
+                      <FileCheck className="w-6 h-6" />
+                    </div>
+                    <h3 className="font-bold text-lg mb-2">CFO & Tax Services</h3>
+                    <p className="text-sm text-gray-600">Talk to a CPA about your accounting needs</p>
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <Link href="/estimator">
+                    <button className="ef-btn ef-btn-accent ef-btn-xl">
+                      Start Your Free Assessment
+                      <ArrowRight className="h-5 w-5" />
+                    </button>
+                  </Link>
+                  <p className="text-sm text-gray-500 mt-4">
+                    Or email us at <a href="mailto:hello@everflowcfo.com" className="text-[var(--brand-primary)] font-semibold">hello@everflowcfo.com</a>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
