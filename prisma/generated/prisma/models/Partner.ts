@@ -20,8 +20,18 @@ export type PartnerModel = runtime.Types.Result.DefaultSelection<Prisma.$Partner
 
 export type AggregatePartner = {
   _count: PartnerCountAggregateOutputType | null
+  _avg: PartnerAvgAggregateOutputType | null
+  _sum: PartnerSumAggregateOutputType | null
   _min: PartnerMinAggregateOutputType | null
   _max: PartnerMaxAggregateOutputType | null
+}
+
+export type PartnerAvgAggregateOutputType = {
+  stripeAmount: number | null
+}
+
+export type PartnerSumAggregateOutputType = {
+  stripeAmount: number | null
 }
 
 export type PartnerMinAggregateOutputType = {
@@ -33,6 +43,13 @@ export type PartnerMinAggregateOutputType = {
   password: string | null
   isActive: boolean | null
   notes: string | null
+  stripeCustomerId: string | null
+  stripePaymentStatus: string | null
+  stripeProductKey: string | null
+  stripeAmount: number | null
+  stripeCurrency: string | null
+  stripeSessionId: string | null
+  stripePaidAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +63,13 @@ export type PartnerMaxAggregateOutputType = {
   password: string | null
   isActive: boolean | null
   notes: string | null
+  stripeCustomerId: string | null
+  stripePaymentStatus: string | null
+  stripeProductKey: string | null
+  stripeAmount: number | null
+  stripeCurrency: string | null
+  stripeSessionId: string | null
+  stripePaidAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,11 +83,26 @@ export type PartnerCountAggregateOutputType = {
   password: number
   isActive: number
   notes: number
+  stripeCustomerId: number
+  stripePaymentStatus: number
+  stripeProductKey: number
+  stripeAmount: number
+  stripeCurrency: number
+  stripeSessionId: number
+  stripePaidAt: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type PartnerAvgAggregateInputType = {
+  stripeAmount?: true
+}
+
+export type PartnerSumAggregateInputType = {
+  stripeAmount?: true
+}
 
 export type PartnerMinAggregateInputType = {
   id?: true
@@ -74,6 +113,13 @@ export type PartnerMinAggregateInputType = {
   password?: true
   isActive?: true
   notes?: true
+  stripeCustomerId?: true
+  stripePaymentStatus?: true
+  stripeProductKey?: true
+  stripeAmount?: true
+  stripeCurrency?: true
+  stripeSessionId?: true
+  stripePaidAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -87,6 +133,13 @@ export type PartnerMaxAggregateInputType = {
   password?: true
   isActive?: true
   notes?: true
+  stripeCustomerId?: true
+  stripePaymentStatus?: true
+  stripeProductKey?: true
+  stripeAmount?: true
+  stripeCurrency?: true
+  stripeSessionId?: true
+  stripePaidAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +153,13 @@ export type PartnerCountAggregateInputType = {
   password?: true
   isActive?: true
   notes?: true
+  stripeCustomerId?: true
+  stripePaymentStatus?: true
+  stripeProductKey?: true
+  stripeAmount?: true
+  stripeCurrency?: true
+  stripeSessionId?: true
+  stripePaidAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -143,6 +203,18 @@ export type PartnerAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: PartnerAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: PartnerSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: PartnerMinAggregateInputType
@@ -173,6 +245,8 @@ export type PartnerGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: PartnerCountAggregateInputType | true
+  _avg?: PartnerAvgAggregateInputType
+  _sum?: PartnerSumAggregateInputType
   _min?: PartnerMinAggregateInputType
   _max?: PartnerMaxAggregateInputType
 }
@@ -186,9 +260,18 @@ export type PartnerGroupByOutputType = {
   password: string | null
   isActive: boolean
   notes: string | null
+  stripeCustomerId: string | null
+  stripePaymentStatus: string | null
+  stripeProductKey: string | null
+  stripeAmount: number | null
+  stripeCurrency: string | null
+  stripeSessionId: string | null
+  stripePaidAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: PartnerCountAggregateOutputType | null
+  _avg: PartnerAvgAggregateOutputType | null
+  _sum: PartnerSumAggregateOutputType | null
   _min: PartnerMinAggregateOutputType | null
   _max: PartnerMaxAggregateOutputType | null
 }
@@ -220,11 +303,19 @@ export type PartnerWhereInput = {
   password?: Prisma.StringNullableFilter<"Partner"> | string | null
   isActive?: Prisma.BoolFilter<"Partner"> | boolean
   notes?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripeCustomerId?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripePaymentStatus?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripeProductKey?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripeAmount?: Prisma.IntNullableFilter<"Partner"> | number | null
+  stripeCurrency?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripeSessionId?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripePaidAt?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   leads?: Prisma.LeadListRelationFilter
   assignments?: Prisma.PartnerAssignmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }
 
 export type PartnerOrderByWithRelationInput = {
@@ -236,16 +327,25 @@ export type PartnerOrderByWithRelationInput = {
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripePaymentStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeProductKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeCurrency?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripePaidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   leads?: Prisma.LeadOrderByRelationAggregateInput
   assignments?: Prisma.PartnerAssignmentOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
 
 export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  stripeCustomerId?: string
   AND?: Prisma.PartnerWhereInput | Prisma.PartnerWhereInput[]
   OR?: Prisma.PartnerWhereInput[]
   NOT?: Prisma.PartnerWhereInput | Prisma.PartnerWhereInput[]
@@ -255,12 +355,19 @@ export type PartnerWhereUniqueInput = Prisma.AtLeast<{
   password?: Prisma.StringNullableFilter<"Partner"> | string | null
   isActive?: Prisma.BoolFilter<"Partner"> | boolean
   notes?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripePaymentStatus?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripeProductKey?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripeAmount?: Prisma.IntNullableFilter<"Partner"> | number | null
+  stripeCurrency?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripeSessionId?: Prisma.StringNullableFilter<"Partner"> | string | null
+  stripePaidAt?: Prisma.DateTimeNullableFilter<"Partner"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Partner"> | Date | string
   leads?: Prisma.LeadListRelationFilter
   assignments?: Prisma.PartnerAssignmentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
-}, "id" | "email">
+  payments?: Prisma.PaymentListRelationFilter
+}, "id" | "email" | "stripeCustomerId">
 
 export type PartnerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -271,11 +378,20 @@ export type PartnerOrderByWithAggregationInput = {
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeCustomerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripePaymentStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeProductKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeCurrency?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripeSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
+  stripePaidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PartnerCountOrderByAggregateInput
+  _avg?: Prisma.PartnerAvgOrderByAggregateInput
   _max?: Prisma.PartnerMaxOrderByAggregateInput
   _min?: Prisma.PartnerMinOrderByAggregateInput
+  _sum?: Prisma.PartnerSumOrderByAggregateInput
 }
 
 export type PartnerScalarWhereWithAggregatesInput = {
@@ -290,6 +406,13 @@ export type PartnerScalarWhereWithAggregatesInput = {
   password?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Partner"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  stripeCustomerId?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  stripePaymentStatus?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  stripeProductKey?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  stripeAmount?: Prisma.IntNullableWithAggregatesFilter<"Partner"> | number | null
+  stripeCurrency?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  stripeSessionId?: Prisma.StringNullableWithAggregatesFilter<"Partner"> | string | null
+  stripePaidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Partner"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Partner"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Partner"> | Date | string
 }
@@ -303,11 +426,19 @@ export type PartnerCreateInput = {
   password?: string | null
   isActive?: boolean
   notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadCreateNestedManyWithoutPartnerInput
   assignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutPartnerInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPartnerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerUncheckedCreateInput = {
@@ -319,11 +450,19 @@ export type PartnerUncheckedCreateInput = {
   password?: string | null
   isActive?: boolean
   notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutPartnerInput
   assignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutPartnerInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPartnerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerUpdateInput = {
@@ -335,11 +474,19 @@ export type PartnerUpdateInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUpdateManyWithoutPartnerNestedInput
   assignments?: Prisma.PartnerAssignmentUpdateManyWithoutPartnerNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPartnerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerUncheckedUpdateInput = {
@@ -351,11 +498,19 @@ export type PartnerUncheckedUpdateInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUncheckedUpdateManyWithoutPartnerNestedInput
   assignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutPartnerNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPartnerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerCreateManyInput = {
@@ -367,6 +522,13 @@ export type PartnerCreateManyInput = {
   password?: string | null
   isActive?: boolean
   notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -380,6 +542,13 @@ export type PartnerUpdateManyMutationInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -393,6 +562,13 @@ export type PartnerUncheckedUpdateManyInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -406,8 +582,19 @@ export type PartnerCountOrderByAggregateInput = {
   password?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  stripeCustomerId?: Prisma.SortOrder
+  stripePaymentStatus?: Prisma.SortOrder
+  stripeProductKey?: Prisma.SortOrder
+  stripeAmount?: Prisma.SortOrder
+  stripeCurrency?: Prisma.SortOrder
+  stripeSessionId?: Prisma.SortOrder
+  stripePaidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type PartnerAvgOrderByAggregateInput = {
+  stripeAmount?: Prisma.SortOrder
 }
 
 export type PartnerMaxOrderByAggregateInput = {
@@ -419,6 +606,13 @@ export type PartnerMaxOrderByAggregateInput = {
   password?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  stripeCustomerId?: Prisma.SortOrder
+  stripePaymentStatus?: Prisma.SortOrder
+  stripeProductKey?: Prisma.SortOrder
+  stripeAmount?: Prisma.SortOrder
+  stripeCurrency?: Prisma.SortOrder
+  stripeSessionId?: Prisma.SortOrder
+  stripePaidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -432,8 +626,19 @@ export type PartnerMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  stripeCustomerId?: Prisma.SortOrder
+  stripePaymentStatus?: Prisma.SortOrder
+  stripeProductKey?: Prisma.SortOrder
+  stripeAmount?: Prisma.SortOrder
+  stripeCurrency?: Prisma.SortOrder
+  stripeSessionId?: Prisma.SortOrder
+  stripePaidAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type PartnerSumOrderByAggregateInput = {
+  stripeAmount?: Prisma.SortOrder
 }
 
 export type PartnerNullableScalarRelationFilter = {
@@ -448,6 +653,34 @@ export type PartnerScalarRelationFilter = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type PartnerCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.PartnerCreateWithoutPaymentsInput, Prisma.PartnerUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.PartnerCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.PartnerWhereUniqueInput
+}
+
+export type PartnerUpdateOneWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.PartnerCreateWithoutPaymentsInput, Prisma.PartnerUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.PartnerCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.PartnerUpsertWithoutPaymentsInput
+  disconnect?: Prisma.PartnerWhereInput | boolean
+  delete?: Prisma.PartnerWhereInput | boolean
+  connect?: Prisma.PartnerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PartnerUpdateToOneWithWhereWithoutPaymentsInput, Prisma.PartnerUpdateWithoutPaymentsInput>, Prisma.PartnerUncheckedUpdateWithoutPaymentsInput>
 }
 
 export type PartnerCreateNestedOneWithoutLeadsInput = {
@@ -496,6 +729,114 @@ export type PartnerUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PartnerUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.PartnerUpdateWithoutAuditLogsInput>, Prisma.PartnerUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type PartnerCreateWithoutPaymentsInput = {
+  id?: string
+  name: string
+  companyName: string
+  email: string
+  phone?: string | null
+  password?: string | null
+  isActive?: boolean
+  notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leads?: Prisma.LeadCreateNestedManyWithoutPartnerInput
+  assignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutPartnerInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPartnerInput
+}
+
+export type PartnerUncheckedCreateWithoutPaymentsInput = {
+  id?: string
+  name: string
+  companyName: string
+  email: string
+  phone?: string | null
+  password?: string | null
+  isActive?: boolean
+  notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutPartnerInput
+  assignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutPartnerInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPartnerInput
+}
+
+export type PartnerCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.PartnerWhereUniqueInput
+  create: Prisma.XOR<Prisma.PartnerCreateWithoutPaymentsInput, Prisma.PartnerUncheckedCreateWithoutPaymentsInput>
+}
+
+export type PartnerUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.PartnerUpdateWithoutPaymentsInput, Prisma.PartnerUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.PartnerCreateWithoutPaymentsInput, Prisma.PartnerUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.PartnerWhereInput
+}
+
+export type PartnerUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.PartnerWhereInput
+  data: Prisma.XOR<Prisma.PartnerUpdateWithoutPaymentsInput, Prisma.PartnerUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type PartnerUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leads?: Prisma.LeadUpdateManyWithoutPartnerNestedInput
+  assignments?: Prisma.PartnerAssignmentUpdateManyWithoutPartnerNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutPartnerNestedInput
+}
+
+export type PartnerUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutPartnerNestedInput
+  assignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutPartnerNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPartnerNestedInput
+}
+
 export type PartnerCreateWithoutLeadsInput = {
   id?: string
   name: string
@@ -505,10 +846,18 @@ export type PartnerCreateWithoutLeadsInput = {
   password?: string | null
   isActive?: boolean
   notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutPartnerInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPartnerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerUncheckedCreateWithoutLeadsInput = {
@@ -520,10 +869,18 @@ export type PartnerUncheckedCreateWithoutLeadsInput = {
   password?: string | null
   isActive?: boolean
   notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutPartnerInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPartnerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerCreateOrConnectWithoutLeadsInput = {
@@ -551,10 +908,18 @@ export type PartnerUpdateWithoutLeadsInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.PartnerAssignmentUpdateManyWithoutPartnerNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPartnerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerUncheckedUpdateWithoutLeadsInput = {
@@ -566,10 +931,18 @@ export type PartnerUncheckedUpdateWithoutLeadsInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutPartnerNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPartnerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerCreateWithoutAssignmentsInput = {
@@ -581,10 +954,18 @@ export type PartnerCreateWithoutAssignmentsInput = {
   password?: string | null
   isActive?: boolean
   notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadCreateNestedManyWithoutPartnerInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutPartnerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerUncheckedCreateWithoutAssignmentsInput = {
@@ -596,10 +977,18 @@ export type PartnerUncheckedCreateWithoutAssignmentsInput = {
   password?: string | null
   isActive?: boolean
   notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutPartnerInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutPartnerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerCreateOrConnectWithoutAssignmentsInput = {
@@ -627,10 +1016,18 @@ export type PartnerUpdateWithoutAssignmentsInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUpdateManyWithoutPartnerNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutPartnerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerUncheckedUpdateWithoutAssignmentsInput = {
@@ -642,10 +1039,18 @@ export type PartnerUncheckedUpdateWithoutAssignmentsInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUncheckedUpdateManyWithoutPartnerNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutPartnerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerCreateWithoutAuditLogsInput = {
@@ -657,10 +1062,18 @@ export type PartnerCreateWithoutAuditLogsInput = {
   password?: string | null
   isActive?: boolean
   notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadCreateNestedManyWithoutPartnerInput
   assignments?: Prisma.PartnerAssignmentCreateNestedManyWithoutPartnerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerUncheckedCreateWithoutAuditLogsInput = {
@@ -672,10 +1085,18 @@ export type PartnerUncheckedCreateWithoutAuditLogsInput = {
   password?: string | null
   isActive?: boolean
   notes?: string | null
+  stripeCustomerId?: string | null
+  stripePaymentStatus?: string | null
+  stripeProductKey?: string | null
+  stripeAmount?: number | null
+  stripeCurrency?: string | null
+  stripeSessionId?: string | null
+  stripePaidAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutPartnerInput
   assignments?: Prisma.PartnerAssignmentUncheckedCreateNestedManyWithoutPartnerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutPartnerInput
 }
 
 export type PartnerCreateOrConnectWithoutAuditLogsInput = {
@@ -703,10 +1124,18 @@ export type PartnerUpdateWithoutAuditLogsInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUpdateManyWithoutPartnerNestedInput
   assignments?: Prisma.PartnerAssignmentUpdateManyWithoutPartnerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutPartnerNestedInput
 }
 
 export type PartnerUncheckedUpdateWithoutAuditLogsInput = {
@@ -718,10 +1147,18 @@ export type PartnerUncheckedUpdateWithoutAuditLogsInput = {
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeCustomerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaymentStatus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeProductKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  stripeCurrency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripePaidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUncheckedUpdateManyWithoutPartnerNestedInput
   assignments?: Prisma.PartnerAssignmentUncheckedUpdateManyWithoutPartnerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutPartnerNestedInput
 }
 
 
@@ -733,12 +1170,14 @@ export type PartnerCountOutputType = {
   leads: number
   assignments: number
   auditLogs: number
+  payments: number
 }
 
 export type PartnerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leads?: boolean | PartnerCountOutputTypeCountLeadsArgs
   assignments?: boolean | PartnerCountOutputTypeCountAssignmentsArgs
   auditLogs?: boolean | PartnerCountOutputTypeCountAuditLogsArgs
+  payments?: boolean | PartnerCountOutputTypeCountPaymentsArgs
 }
 
 /**
@@ -772,6 +1211,13 @@ export type PartnerCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * PartnerCountOutputType without action
+ */
+export type PartnerCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentWhereInput
+}
+
 
 export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -782,11 +1228,19 @@ export type PartnerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   password?: boolean
   isActive?: boolean
   notes?: boolean
+  stripeCustomerId?: boolean
+  stripePaymentStatus?: boolean
+  stripeProductKey?: boolean
+  stripeAmount?: boolean
+  stripeCurrency?: boolean
+  stripeSessionId?: boolean
+  stripePaidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   leads?: boolean | Prisma.Partner$leadsArgs<ExtArgs>
   assignments?: boolean | Prisma.Partner$assignmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Partner$auditLogsArgs<ExtArgs>
+  payments?: boolean | Prisma.Partner$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.PartnerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["partner"]>
 
@@ -799,6 +1253,13 @@ export type PartnerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   password?: boolean
   isActive?: boolean
   notes?: boolean
+  stripeCustomerId?: boolean
+  stripePaymentStatus?: boolean
+  stripeProductKey?: boolean
+  stripeAmount?: boolean
+  stripeCurrency?: boolean
+  stripeSessionId?: boolean
+  stripePaidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["partner"]>
@@ -812,6 +1273,13 @@ export type PartnerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   password?: boolean
   isActive?: boolean
   notes?: boolean
+  stripeCustomerId?: boolean
+  stripePaymentStatus?: boolean
+  stripeProductKey?: boolean
+  stripeAmount?: boolean
+  stripeCurrency?: boolean
+  stripeSessionId?: boolean
+  stripePaidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["partner"]>
@@ -825,15 +1293,23 @@ export type PartnerSelectScalar = {
   password?: boolean
   isActive?: boolean
   notes?: boolean
+  stripeCustomerId?: boolean
+  stripePaymentStatus?: boolean
+  stripeProductKey?: boolean
+  stripeAmount?: boolean
+  stripeCurrency?: boolean
+  stripeSessionId?: boolean
+  stripePaidAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "companyName" | "email" | "phone" | "password" | "isActive" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["partner"]>
+export type PartnerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "companyName" | "email" | "phone" | "password" | "isActive" | "notes" | "stripeCustomerId" | "stripePaymentStatus" | "stripeProductKey" | "stripeAmount" | "stripeCurrency" | "stripeSessionId" | "stripePaidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["partner"]>
 export type PartnerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leads?: boolean | Prisma.Partner$leadsArgs<ExtArgs>
   assignments?: boolean | Prisma.Partner$assignmentsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Partner$auditLogsArgs<ExtArgs>
+  payments?: boolean | Prisma.Partner$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.PartnerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PartnerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -845,6 +1321,7 @@ export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     leads: Prisma.$LeadPayload<ExtArgs>[]
     assignments: Prisma.$PartnerAssignmentPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -855,6 +1332,13 @@ export type $PartnerPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     password: string | null
     isActive: boolean
     notes: string | null
+    stripeCustomerId: string | null
+    stripePaymentStatus: string | null
+    stripeProductKey: string | null
+    stripeAmount: number | null
+    stripeCurrency: string | null
+    stripeSessionId: string | null
+    stripePaidAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["partner"]>
@@ -1254,6 +1738,7 @@ export interface Prisma__PartnerClient<T, Null = never, ExtArgs extends runtime.
   leads<T extends Prisma.Partner$leadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Partner$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignments<T extends Prisma.Partner$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Partner$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PartnerAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Partner$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Partner$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.Partner$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Partner$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1291,6 +1776,13 @@ export interface PartnerFieldRefs {
   readonly password: Prisma.FieldRef<"Partner", 'String'>
   readonly isActive: Prisma.FieldRef<"Partner", 'Boolean'>
   readonly notes: Prisma.FieldRef<"Partner", 'String'>
+  readonly stripeCustomerId: Prisma.FieldRef<"Partner", 'String'>
+  readonly stripePaymentStatus: Prisma.FieldRef<"Partner", 'String'>
+  readonly stripeProductKey: Prisma.FieldRef<"Partner", 'String'>
+  readonly stripeAmount: Prisma.FieldRef<"Partner", 'Int'>
+  readonly stripeCurrency: Prisma.FieldRef<"Partner", 'String'>
+  readonly stripeSessionId: Prisma.FieldRef<"Partner", 'String'>
+  readonly stripePaidAt: Prisma.FieldRef<"Partner", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Partner", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Partner", 'DateTime'>
 }
@@ -1750,6 +2242,30 @@ export type Partner$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * Partner.payments
+ */
+export type Partner$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
+  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
 }
 
 /**

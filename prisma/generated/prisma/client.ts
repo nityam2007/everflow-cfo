@@ -50,6 +50,11 @@ export type User = Prisma.UserModel
  */
 export type Partner = Prisma.PartnerModel
 /**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
  * Model Lead
  * 
  */

@@ -57,6 +57,15 @@ model Partner {
   // Partner metadata
   notes           String?  @db.Text
   
+  // Stripe customer data
+  stripeCustomerId    String?  @unique @map("stripe_customer_id")
+  stripePaymentStatus String?  @map("stripe_payment_status") // succeeded, pending, failed
+  stripeProductKey    String?  @map("stripe_product_key") // Which product they purchased
+  stripeAmount        Int?     @map("stripe_amount") // Amount in cents
+  stripeCurrency      String?  @map("stripe_currency")
+  stripeSessionId     String?  @map("stripe_session_id")
+  stripePaidAt        DateTime? @map("stripe_paid_at")
+  
   // Timestamps
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
@@ -65,8 +74,60 @@ model Partner {
   leads           Lead[]   @relation("ClientLeads")
   assignments     PartnerAssignment[] // Legacy: for external processor assignments
   auditLogs       AuditLog[] @relation("PartnerAudit")
+  payments        Payment[] // All payment records
   
   @@map("partners")
+}
+
+// ============================================
+// PAYMENT RECORDS
+// Track all Stripe payments for admin visibility
+// ============================================
+
+model Payment {
+  id              String   @id @default(cuid())
+  
+  // Partner who made payment
+  partnerId       String?  @map("partner_id")
+  partner         Partner? @relation(fields: [partnerId], references: [id])
+  
+  // Stripe data
+  stripeSessionId     String   @unique @map("stripe_session_id")
+  stripeCustomerId    String?  @map("stripe_customer_id")
+  stripePaymentIntent String?  @map("stripe_payment_intent")
+  
+  // Customer info from Stripe
+  customerEmail       String   @map("customer_email")
+  customerName        String?  @map("customer_name")
+  customerPhone       String?  @map("customer_phone")
+  
+  // Payment details
+  productKey          String   @map("product_key")
+  productName         String?  @map("product_name")
+  amount              Int      // Amount in cents
+  currency            String   @default("usd")
+  status              String   // succeeded, pending, failed
+  
+  // Billing address (if collected)
+  billingCity         String?  @map("billing_city")
+  billingCountry      String?  @map("billing_country")
+  billingLine1        String?  @map("billing_line1")
+  billingLine2        String?  @map("billing_line2")
+  billingPostalCode   String?  @map("billing_postal_code")
+  billingState        String?  @map("billing_state")
+  
+  // Metadata
+  metadata            Json?
+  
+  // Timestamps
+  paidAt              DateTime? @map("paid_at")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+  
+  @@index([customerEmail])
+  @@index([status])
+  @@index([createdAt])
+  @@map("payments")
 }
 
 // ============================================

@@ -10,6 +10,7 @@
  */
 export type * from './models/User'
 export type * from './models/Partner'
+export type * from './models/Payment'
 export type * from './models/Lead'
 export type * from './models/LeadNote'
 export type * from './models/PartnerAssignment'

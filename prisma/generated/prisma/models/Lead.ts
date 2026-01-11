@@ -818,14 +818,6 @@ export type LeadCreateexplanationsInput = {
   set: string[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type LeadUpdatecreditFlagsInput = {
   set?: string[]
   push?: string | string[]
@@ -842,10 +834,6 @@ export type LeadUpdateexplanationsInput = {
 
 export type EnumLeadStatusFieldUpdateOperationsInput = {
   set?: $Enums.LeadStatus
-}
-
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
 }
 
 export type LeadCreateNestedOneWithoutNotesInput = {
