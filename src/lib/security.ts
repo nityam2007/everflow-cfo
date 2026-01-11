@@ -193,8 +193,8 @@ export interface RateLimitConfig {
 export const rateLimits = {
   // Strict limits for auth endpoints
   login: { windowMs: 15 * 60 * 1000, maxRequests: 5 }, // 5 attempts per 15 min
-  otp: { windowMs: 60 * 60 * 1000, maxRequests: 3 }, // 3 OTP requests per hour
-  passwordReset: { windowMs: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour
+  otp: { windowMs: 60 * 60 * 1000, maxRequests: 10 }, // 10 OTP requests per hour (was 3)
+  passwordReset: { windowMs: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
   
   // Moderate limits for API
   apiRead: { windowMs: 60 * 1000, maxRequests: 100 }, // 100 per minute

@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/auth-utils';
-import { signOut } from '@/lib/auth';
 import { Sidebar } from '@/components/sidebar';
 
 export default async function DashboardLayout({
@@ -21,11 +20,6 @@ export default async function DashboardLayout({
 
   const isAdmin = session.user.role === 'ADMIN';
 
-  async function handleSignOut() {
-    'use server';
-    await signOut({ redirectTo: '/login' });
-  }
-
   return (
     <div className="min-h-screen bg-[var(--color-background-alt)]">
       <Sidebar
@@ -35,7 +29,6 @@ export default async function DashboardLayout({
           role: session.user.role,
         }}
         isAdmin={isAdmin}
-        signOutAction={handleSignOut}
       />
 
       {/* Main content - responsive left padding for sidebar */}

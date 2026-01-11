@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { FileText, LogOut, Menu, X, Home, CreditCard, User, Bell } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { FileText, LogOut, Menu, X, Home, CreditCard, User, Bell, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'next-auth/react';
 
@@ -23,11 +23,19 @@ const mobileNavItems = [
 
 export function PartnerHeader({ user }: PartnerHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const isActive = (href: string) => {
     if (href === '/partner') return pathname === '/partner';
     return pathname.startsWith(href);
+  };
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
+    await signOut({ redirect: false });
+    router.push('/login');
   };
 
   return (
@@ -78,11 +86,16 @@ export function PartnerHeader({ user }: PartnerHeaderProps) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => signOut({ callbackUrl: '/login' })}
+            onClick={handleSignOut}
+            disabled={signingOut}
             className="hidden md:flex text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)]"
           >
-            <LogOut className="mr-2 h-4 w-4" />
-            Sign out
+            {signingOut ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <LogOut className="mr-2 h-4 w-4" />
+            )}
+            {signingOut ? 'Signing out...' : 'Sign out'}
           </Button>
         </div>
       </div>
@@ -128,11 +141,16 @@ export function PartnerHeader({ user }: PartnerHeaderProps) {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => signOut({ callbackUrl: '/login' })}
+              onClick={handleSignOut}
+              disabled={signingOut}
               className="w-full"
             >
-              <LogOut className="mr-2 h-4 w-4" />
-              Sign out
+              {signingOut ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <LogOut className="mr-2 h-4 w-4" />
+              )}
+              {signingOut ? 'Signing out...' : 'Sign out'}
             </Button>
           </div>
         </div>

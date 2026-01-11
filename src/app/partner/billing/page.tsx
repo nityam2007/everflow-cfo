@@ -1,17 +1,97 @@
 import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/auth-utils';
 import { db } from '@/lib/db';
+import { stripe, PRODUCTS } from '@/lib/stripe';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CreditCard, DollarSign, Calendar, CheckCircle, Clock, FileText } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
-async function getPartnerPayments(partnerId: string) {
-  const payments = await db.payment.findMany({
-    where: { partnerId },
-    orderBy: { createdAt: 'desc' },
-  });
+// Helper to get product name
+function getProductName(productKey: string): string {
+  const product = PRODUCTS[productKey as keyof typeof PRODUCTS];
+  return product?.name || productKey || 'Service Payment';
+}
+
+interface PaymentData {
+  id: string;
+  amount: number;
+  currency: string;
+  status: string;
+  productName: string;
+  productKey: string;
+  paidAt: Date | null;
+  createdAt: Date;
+  source: 'database' | 'stripe';
+}
+
+async function getPartnerPayments(partnerId: string, partnerEmail: string): Promise<PaymentData[]> {
+  const payments: PaymentData[] = [];
+
+  // First, get payments from database
+  try {
+    const dbPayments = await db.payment.findMany({
+      where: { partnerId },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    for (const p of dbPayments) {
+      payments.push({
+        id: p.id,
+        amount: p.amount,
+        currency: p.currency,
+        status: p.status,
+        productName: p.productName || 'Service Payment',
+        productKey: p.productKey,
+        paidAt: p.paidAt,
+        createdAt: p.createdAt,
+        source: 'database',
+      });
+    }
+  } catch (e) {
+    console.error('Error fetching DB payments:', e);
+  }
+
+  // Also fetch from Stripe checkout sessions by email
+  try {
+    // Get all recent checkout sessions and filter by email
+    const sessions = await stripe.checkout.sessions.list({
+      limit: 100,
+      expand: ['data.customer'],
+    });
+
+    // Filter to paid sessions matching this email, not already in DB
+    const dbSessionIds = new Set(payments.map(p => p.id));
+    
+    for (const session of sessions.data) {
+      const sessionEmail = session.customer_details?.email || session.customer_email;
+      
+      if (
+        session.payment_status === 'paid' && 
+        sessionEmail?.toLowerCase() === partnerEmail.toLowerCase() &&
+        !dbSessionIds.has(session.id)
+      ) {
+        payments.push({
+          id: session.id,
+          amount: session.amount_total || 0,
+          currency: session.currency || 'usd',
+          status: 'succeeded',
+          productName: getProductName(session.metadata?.productKey || ''),
+          productKey: session.metadata?.productKey || '',
+          paidAt: session.created ? new Date(session.created * 1000) : null,
+          createdAt: new Date(session.created * 1000),
+          source: 'stripe',
+        });
+      }
+    }
+  } catch (e) {
+    console.error('Error fetching Stripe payments:', e);
+  }
+
+  // Sort by date descending
+  payments.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
   return payments;
 }
 
@@ -59,7 +139,7 @@ export default async function PartnerBillingPage() {
   }
 
   const [payments, partner] = await Promise.all([
-    getPartnerPayments(session.user.id),
+    getPartnerPayments(session.user.id, session.user.email),
     getPartnerInfo(session.user.id),
   ]);
 

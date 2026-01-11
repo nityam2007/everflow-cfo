@@ -13,7 +13,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
   
-  const [authMode, setAuthMode] = useState<AuthMode>('credentials');
+  const [authMode, setAuthMode] = useState<AuthMode>('email-otp');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [otpEmail, setOtpEmail] = useState('');

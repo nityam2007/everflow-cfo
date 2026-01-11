@@ -194,6 +194,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // Delete used OTP immediately
         await cache.del(otpKey);
 
+        // Clear OTP rate limit after successful verification
+        const otpRateKey = `otp-rate:${normalizedEmail}`;
+        await cache.del(otpRateKey);
+
         // Try to find user first
         const user = await db.user.findUnique({
           where: { email: normalizedEmail },

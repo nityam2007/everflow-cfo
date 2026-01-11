@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import {
   LayoutDashboard,
   Users,
@@ -18,6 +19,7 @@ import {
   X,
   CreditCard,
   DollarSign,
+  Loader2,
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -39,7 +41,6 @@ interface SidebarProps {
     role?: string;
   };
   isAdmin: boolean;
-  signOutAction: () => Promise<void>;
 }
 
 const navItems: NavItem[] = [
@@ -55,9 +56,17 @@ const navItems: NavItem[] = [
   { href: '/dashboard/settings/site', label: 'Site Settings', icon: Settings, adminOnly: true },
 ];
 
-export function Sidebar({ user, isAdmin, signOutAction }: SidebarProps) {
+export function Sidebar({ user, isAdmin }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
+    await signOut({ redirect: false });
+    router.push('/login');
+  };
   
   return (
     <>
@@ -160,16 +169,20 @@ export function Sidebar({ user, isAdmin, signOutAction }: SidebarProps) {
               </span>
             </p>
           </div>
-          <form action={signOutAction}>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)]"
-            >
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleSignOut}
+            disabled={signingOut}
+            className="w-full justify-start text-[var(--color-foreground-muted)] hover:text-[var(--color-foreground)]"
+          >
+            {signingOut ? (
+              <Loader2 className="mr-3 h-4 w-4 animate-spin" />
+            ) : (
               <LogOut className="mr-3 h-4 w-4" />
-              Sign out
-            </Button>
-          </form>
+            )}
+            {signingOut ? 'Signing out...' : 'Sign out'}
+          </Button>
         </div>
       </div>
     </aside>
