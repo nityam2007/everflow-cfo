@@ -845,35 +845,35 @@ export default function HomePage() {
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
               {/* Features Grid - Sticky Sidebar (shown first on mobile for trust signals) */}
               <div className="order-first lg:order-last lg:sticky lg:top-24 lg:self-start">
-                {/* Mobile: Horizontal scroll for quick trust signals */}
-                <div className="flex gap-3 overflow-x-auto pb-4 lg:hidden snap-x snap-mandatory -mx-4 px-4">
-                  <div className="ef-feature ef-feature-mobile snap-start">
+                {/* Mobile: Grid for quick trust signals */}
+                <div className="grid grid-cols-2 gap-3 lg:hidden">
+                  <div className="ef-feature ef-feature-mobile-grid">
                     <div className="ef-feature-icon">
                       <Zap className="h-5 w-5" />
                     </div>
                     <h3 className="ef-feature-title">Quick Process</h3>
-                    <p className="ef-feature-desc">2-minute quiz, fast turnaround</p>
+                    <p className="ef-feature-desc">2-minute quiz</p>
                   </div>
-                  <div className="ef-feature ef-feature-mobile snap-start">
+                  <div className="ef-feature ef-feature-mobile-grid">
                     <div className="ef-feature-icon">
                       <Sparkles className="h-5 w-5" />
                     </div>
                     <h3 className="ef-feature-title">No Obligation</h3>
-                    <p className="ef-feature-desc">Free estimate, your approval needed</p>
+                    <p className="ef-feature-desc">Free estimate</p>
                   </div>
-                  <div className="ef-feature ef-feature-mobile snap-start">
+                  <div className="ef-feature ef-feature-mobile-grid">
                     <div className="ef-feature-icon">
                       <Landmark className="h-5 w-5" />
                     </div>
                     <h3 className="ef-feature-title">Statute-Based</h3>
-                    <p className="ef-feature-desc">IRS guidelines & conservative assumptions</p>
+                    <p className="ef-feature-desc">IRS guidelines</p>
                   </div>
-                  <div className="ef-feature ef-feature-mobile snap-start">
+                  <div className="ef-feature ef-feature-mobile-grid">
                     <div className="ef-feature-icon">
                       <BadgeCheck className="h-5 w-5" />
                     </div>
                     <h3 className="ef-feature-title">Verified Claims</h3>
-                    <p className="ef-feature-desc">No filing without documentation</p>
+                    <p className="ef-feature-desc">Verified before filing</p>
                   </div>
                 </div>
                 
@@ -959,7 +959,7 @@ export default function HomePage() {
               <h2 className="ef-section-title">Qualifying Industries</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {[
                 { name: 'Restaurants & Food Service', icon: Utensils },
                 { name: 'Hotels & Hospitality', icon: Hotel },

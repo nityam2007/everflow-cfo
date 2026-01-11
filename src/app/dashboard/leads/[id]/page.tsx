@@ -63,10 +63,10 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
   } as const;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
           <Link href="/dashboard/leads">
             <Button variant="outline" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -74,16 +74,16 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold">{lead.companyName}</h1>
-            <p className="text-[var(--color-foreground-muted)]">{lead.contactName}</p>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">{lead.companyName}</h1>
+            <p className="text-sm text-[var(--color-foreground-muted)]">{lead.contactName}</p>
           </div>
         </div>
-        <Badge variant={statusColors[lead.status]} className="text-sm">
+        <Badge variant={statusColors[lead.status]} className="text-sm w-fit">
           {lead.status.replace('_', ' ')}
         </Badge>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
         {/* Main info */}
         <div className="lg:col-span-2 space-y-6">
           {/* Contact Info */}

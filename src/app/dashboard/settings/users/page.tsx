@@ -120,39 +120,28 @@ export default async function UsersListPage() {
               </Link>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b text-left text-sm text-[var(--color-foreground-muted)]">
-                    <th className="pb-3 font-medium">User</th>
-                    <th className="pb-3 font-medium">Role</th>
-                    <th className="pb-3 font-medium">Status</th>
-                    <th className="pb-3 font-medium">Leads</th>
-                    <th className="pb-3 font-medium">Created</th>
-                    <th className="pb-3 font-medium">Updated</th>
-                    <th className="pb-3 font-medium text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {users.map((user) => (
-                    <tr key={user.id} className={`text-sm ${!user.isActive ? 'opacity-60' : ''}`}>
-                      <td className="py-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium ${
-                            user.role === 'ADMIN' ? 'bg-blue-600' : 'bg-purple-600'
-                          }`}>
-                            {user.name.charAt(0).toUpperCase()}
-                          </div>
-                          <div>
-                            <p className="font-medium">{user.name}</p>
-                            <p className="text-xs text-[var(--color-foreground-muted)] flex items-center gap-1">
-                              <Mail className="h-3 w-3" />
-                              {user.email}
-                            </p>
-                          </div>
+            <>
+              {/* Mobile Card Layout */}
+              <div className="lg:hidden space-y-3">
+                {users.map((user) => (
+                  <Link
+                    key={user.id}
+                    href={`/dashboard/settings/users/${user.id}`}
+                    className={`block border border-[var(--color-border)] p-3 sm:p-4 hover:border-[var(--brand-primary)] transition-colors ${!user.isActive ? 'opacity-60' : ''}`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium shrink-0 ${
+                          user.role === 'ADMIN' ? 'bg-blue-600' : 'bg-purple-600'
+                        }`}>
+                          {user.name.charAt(0).toUpperCase()}
                         </div>
-                      </td>
-                      <td className="py-4">
+                        <div className="min-w-0">
+                          <p className="font-medium text-[var(--color-foreground)] truncate">{user.name}</p>
+                          <p className="text-xs text-[var(--color-foreground-muted)] truncate">{user.email}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-1 shrink-0">
                         <Badge className={
                           user.role === 'ADMIN'
                             ? 'bg-blue-100 text-blue-700 border-blue-200'
@@ -160,43 +149,100 @@ export default async function UsersListPage() {
                         }>
                           {user.role}
                         </Badge>
-                      </td>
-                      <td className="py-4">
                         {user.isActive ? (
-                          <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
-                            <CheckCircle2 className="mr-1 h-3 w-3" />
-                            Active
-                          </Badge>
+                          <span className="text-xs text-emerald-600">Active</span>
                         ) : (
-                          <Badge variant="outline" className="text-[var(--color-foreground-muted)]">
-                            <Ban className="mr-1 h-3 w-3" />
-                            Inactive
-                          </Badge>
+                          <span className="text-xs text-[var(--color-foreground-muted)]">Inactive</span>
                         )}
-                      </td>
-                      <td className="py-4">
-                        <span className="text-[var(--color-foreground-muted)]">
-                          {user._count.assignedLeads}
-                        </span>
-                      </td>
-                      <td className="py-4 text-[var(--color-foreground-muted)]">
-                        {formatDate(user.createdAt)}
-                      </td>
-                      <td className="py-4 text-[var(--color-foreground-muted)]">
-                        {formatDate(user.updatedAt)}
-                      </td>
-                      <td className="py-4 text-right">
-                        <Link href={`/dashboard/settings/users/${user.id}`}>
-                          <Button variant="outline" size="sm">
-                            Edit
-                          </Button>
-                        </Link>
-                      </td>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mt-2 text-xs text-[var(--color-foreground-muted)]">
+                      <span>{user._count.assignedLeads} leads</span>
+                      <span>{formatDate(user.createdAt)}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Desktop Table */}
+              <div className="hidden lg:block overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b text-left text-sm text-[var(--color-foreground-muted)]">
+                      <th className="pb-3 font-medium">User</th>
+                      <th className="pb-3 font-medium">Role</th>
+                      <th className="pb-3 font-medium">Status</th>
+                      <th className="pb-3 font-medium">Leads</th>
+                      <th className="pb-3 font-medium">Created</th>
+                      <th className="pb-3 font-medium">Updated</th>
+                      <th className="pb-3 font-medium text-right">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody className="divide-y">
+                    {users.map((user) => (
+                      <tr key={user.id} className={`text-sm ${!user.isActive ? 'opacity-60' : ''}`}>
+                        <td className="py-4">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium ${
+                              user.role === 'ADMIN' ? 'bg-blue-600' : 'bg-purple-600'
+                            }`}>
+                              {user.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <p className="font-medium">{user.name}</p>
+                              <p className="text-xs text-[var(--color-foreground-muted)] flex items-center gap-1">
+                                <Mail className="h-3 w-3" />
+                                {user.email}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-4">
+                          <Badge className={
+                            user.role === 'ADMIN'
+                              ? 'bg-blue-100 text-blue-700 border-blue-200'
+                              : 'bg-purple-100 text-purple-700 border-purple-200'
+                          }>
+                            {user.role}
+                          </Badge>
+                        </td>
+                        <td className="py-4">
+                          {user.isActive ? (
+                            <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
+                              <CheckCircle2 className="mr-1 h-3 w-3" />
+                              Active
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-[var(--color-foreground-muted)]">
+                              <Ban className="mr-1 h-3 w-3" />
+                              Inactive
+                            </Badge>
+                          )}
+                        </td>
+                        <td className="py-4">
+                          <span className="text-[var(--color-foreground-muted)]">
+                            {user._count.assignedLeads}
+                          </span>
+                        </td>
+                        <td className="py-4 text-[var(--color-foreground-muted)]">
+                          {formatDate(user.createdAt)}
+                        </td>
+                        <td className="py-4 text-[var(--color-foreground-muted)]">
+                          {formatDate(user.updatedAt)}
+                        </td>
+                        <td className="py-4 text-right">
+                          <Link href={`/dashboard/settings/users/${user.id}`}>
+                            <Button variant="outline" size="sm">
+                              Edit
+                            </Button>
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
