@@ -4,9 +4,9 @@ import { db } from '@/lib/db';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { LEAD_STATUS_COLORS } from '@/lib/constants';
+import { LEAD_STATUS_COLORS, PRODUCT_TYPES } from '@/lib/constants';
 import Link from 'next/link';
-import { FileText, Building, Calendar, DollarSign, ArrowRight, Search } from 'lucide-react';
+import { FileText, Building, Calendar, DollarSign, ArrowRight, Search, CreditCard, Tag } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
 async function getPartnerLeads(partnerId: string) {
@@ -24,10 +24,21 @@ async function getPartnerLeads(partnerId: string) {
       status: true,
       createdAt: true,
       industry: true,
+      productType: true,
+      isPaid: true,
+      paidAmount: true,
+      isLeadOnly: true,
     },
   });
   return leads;
 }
+
+// Helper to get product label
+const getProductLabel = (productType: string | null) => {
+  if (!productType) return 'Estimator';
+  const product = PRODUCT_TYPES[productType as keyof typeof PRODUCT_TYPES];
+  return product?.label || productType;
+};
 
 export default async function PartnerLeadsPage() {
   const session = await getSession();
@@ -72,8 +83,9 @@ export default async function PartnerLeadsPage() {
               <table className="w-full">
                 <thead>
                   <tr className="text-left text-sm text-[var(--color-foreground-muted)] border-b border-[var(--color-border)]">
-                    <th className="p-4 font-medium">Company</th>
-                    <th className="p-4 font-medium">Estimated Credit</th>
+                    <th className="p-4 font-medium">Service</th>
+                    <th className="p-4 font-medium">Value</th>
+                    <th className="p-4 font-medium">Type</th>
                     <th className="p-4 font-medium">Status</th>
                     <th className="p-4 font-medium">Date</th>
                     <th className="p-4 font-medium"></th>
@@ -88,14 +100,18 @@ export default async function PartnerLeadsPage() {
                         <td className="p-4">
                           <div className="flex items-center gap-3">
                             <div className="h-10 w-10 rounded-lg bg-[var(--brand-primary)]/10 flex items-center justify-center">
-                              <Building className="h-5 w-5 text-[var(--brand-primary)]" />
+                              {lead.isPaid ? (
+                                <CreditCard className="h-5 w-5 text-green-600" />
+                              ) : (
+                                <Tag className="h-5 w-5 text-[var(--brand-primary)]" />
+                              )}
                             </div>
                             <div>
                               <p className="font-medium text-[var(--color-foreground)]">
-                                {lead.companyName}
+                                {getProductLabel(lead.productType)}
                               </p>
                               <p className="text-sm text-[var(--color-foreground-muted)]">
-                                {lead.contactName}
+                                {lead.companyName}
                               </p>
                             </div>
                           </div>
@@ -104,9 +120,17 @@ export default async function PartnerLeadsPage() {
                           <div className="flex items-center gap-1">
                             <DollarSign className="h-4 w-4 text-green-600" />
                             <span className="font-medium text-[var(--color-foreground)]">
-                              {formatCurrency(lead.estimatedMin)} - {formatCurrency(lead.estimatedMax)}
+                              {lead.isPaid && lead.paidAmount 
+                                ? formatCurrency(lead.paidAmount / 100)
+                                : `${formatCurrency(lead.estimatedMin)} - ${formatCurrency(lead.estimatedMax)}`
+                              }
                             </span>
                           </div>
+                        </td>
+                        <td className="p-4">
+                          <Badge variant={lead.isLeadOnly ? 'outline' : 'success'}>
+                            {lead.isLeadOnly ? 'Inquiry' : 'Paid'}
+                          </Badge>
                         </td>
                         <td className="p-4">
                           <Badge variant={statusVariant}>
@@ -144,14 +168,18 @@ export default async function PartnerLeadsPage() {
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex items-center gap-3">
                           <div className="h-10 w-10 rounded-lg bg-[var(--brand-primary)]/10 flex items-center justify-center">
-                            <Building className="h-5 w-5 text-[var(--brand-primary)]" />
+                            {lead.isPaid ? (
+                              <CreditCard className="h-5 w-5 text-green-600" />
+                            ) : (
+                              <Tag className="h-5 w-5 text-[var(--brand-primary)]" />
+                            )}
                           </div>
                           <div>
                             <p className="font-medium text-[var(--color-foreground)]">
-                              {lead.companyName}
+                              {getProductLabel(lead.productType)}
                             </p>
                             <p className="text-sm text-[var(--color-foreground-muted)]">
-                              {lead.contactName}
+                              {lead.companyName}
                             </p>
                           </div>
                         </div>
@@ -160,10 +188,15 @@ export default async function PartnerLeadsPage() {
                         </Badge>
                       </div>
                       <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-1 text-green-600">
-                          <DollarSign className="h-4 w-4" />
-                          <span className="font-medium">
-                            {formatCurrency(lead.estimatedMin)} - {formatCurrency(lead.estimatedMax)}
+                        <div className="flex items-center gap-2">
+                          <Badge variant={lead.isLeadOnly ? 'outline' : 'success'} className="text-xs">
+                            {lead.isLeadOnly ? 'Inquiry' : 'Paid'}
+                          </Badge>
+                          <span className="font-medium text-green-600">
+                            {lead.isPaid && lead.paidAmount 
+                              ? formatCurrency(lead.paidAmount / 100)
+                              : formatCurrency(lead.estimatedMax)
+                            }
                           </span>
                         </div>
                         <span className="text-sm text-[var(--color-foreground-muted)]">

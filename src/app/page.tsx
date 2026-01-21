@@ -65,15 +65,15 @@ export default function HomePage() {
 
                 {/* CTA Cluster */}
                 <div className="ef-hero-cta-cluster">
-                  <Link href="#capital">
+                  <Link href="/tax">
                     <button className="ef-btn ef-btn-accent ef-btn-lg">
-                      View Capital Solutions
+                      Get Tax Filing Done
                       <ArrowRight className="h-4 w-4" />
                     </button>
                   </Link>
-                  <Link href="/estimator">
+                  <Link href="#capital">
                     <button className="ef-btn ef-btn-secondary ef-btn-lg">
-                      Check Credit Eligibility
+                      View Capital Solutions
                       <ArrowRight className="h-4 w-4" />
                     </button>
                   </Link>
@@ -142,7 +142,7 @@ export default function HomePage() {
                         <p className="ef-ios-notification-body">IRS TREAS 310 TAX REF +$42,500.00</p>
                       </div>
 
-                      {/* ERC Credit Notification */}
+                      {/* R&D Credit Notification */}
                       <div className="ef-ios-notification animate-slide-in-right animation-delay-600">
                         <div className="ef-ios-notification-header">
                           <div className="ef-ios-notification-app-icon ef-ios-icon-blue">
@@ -151,8 +151,8 @@ export default function HomePage() {
                           <span className="ef-ios-notification-app">EverflowCFO</span>
                           <span className="ef-ios-notification-time">2m ago</span>
                         </div>
-                        <p className="ef-ios-notification-title">ERC Claim Approved ✓</p>
-                        <p className="ef-ios-notification-body">$26,000 per employee credited</p>
+                        <p className="ef-ios-notification-title">R&D Credit Approved ✓</p>
+                        <p className="ef-ios-notification-body">Your R&D credit claim is approved</p>
                       </div>
                     </div>
                     
@@ -219,7 +219,7 @@ export default function HomePage() {
                   'Valuation Analysis (DCF/Comps)',
                 ]}
                 ctaText="Start Model Build"
-                turnaround="Fixed · 4 Days Turnaround"
+                turnaround="Fixed · 7 Days Turnaround"
                 animationDelay={0}
               />
 
@@ -235,11 +235,11 @@ export default function HomePage() {
                 features={[
                   'Everything in Financial Modeling',
                   '15-Slide Institutional Pitch Deck',
-                  'Narrative Strategy Session',
+                  'Async Narrative Intake + Review',
                   'Investor Teaser One-Pager',
                 ]}
                 ctaText="Build My Stack"
-                turnaround="Fixed · 7 Days Turnaround"
+                turnaround="Fixed · 14 Days Turnaround"
                 highlighted={true}
                 animationDelay={100}
               />
@@ -258,10 +258,10 @@ export default function HomePage() {
                   'Virtual Data Room (VDR) Structure',
                   'Historical Financial cleanup (Reconciliation)',
                   'Cap Table Management',
-                  'Investor Q&A Support',
+                  'Async Q&A Support',
                 ]}
                 ctaText="Prepare Data Room"
-                turnaround="Custom · 5 Days Turnaround"
+                turnaround="Custom Scope"
                 animationDelay={200}
               />
             </div>
@@ -355,16 +355,16 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* NEW: CFO & Tax Section */}
-        <section id="cfo-tax" className="ef-section ef-section-alt">
+        {/* Tax & Finance Section */}
+        <section id="tax-finance" className="ef-section ef-section-alt">
           <div className="ef-container">
             <div className="text-center mb-12 lg:mb-16 animate-on-scroll">
-              <p className="ef-section-label">CFO & Tax</p>
+              <p className="ef-section-label">Tax & Finance</p>
               <h2 className="ef-section-title mx-auto" style={{ maxWidth: '700px' }}>
                 CPA-Level Tax, Payroll & Accounting
               </h2>
               <p className="ef-section-subtitle">
-                Stop overpaying. Start strategizing.
+                Async delivery. No meetings required.
               </p>
             </div>
 
@@ -457,30 +457,52 @@ export default function HomePage() {
             </div>
 
             <div className="text-center mt-8">
-              <Link href="#contact" className="text-[var(--brand-primary)] font-semibold hover:underline">
-                Talk to a CPA →
+              <Link href="/tax" className="text-[var(--brand-primary)] font-semibold hover:underline">
+                View All Tax Services →
               </Link>
             </div>
           </div>
         </section>
 
 
-        {/* Programs Section - "Credit Cards" Style */}
-        <section id="programs" className="ef-section">
+        {/* Tax Credits & Incentives Section */}
+        <section id="credits" className="ef-section">
           <div className="ef-container">
             <div className="text-center mb-12 lg:mb-16 animate-on-scroll">
-              <p className="ef-section-label">Payroll Credits</p>
+              <p className="ef-section-label">Tax Credits & Incentives</p>
               <h2 className="ef-section-title mx-auto" style={{ maxWidth: '600px' }}>
                 Non-Dilutive Capital Recovery
               </h2>
               <p className="ef-section-subtitle">
-                We recover overpaid payroll taxes through FICA, WOTC, and ERC programs.
+                We help you claim R&D credits and other tax incentives you're entitled to.
               </p>
             </div>
 
             <div className="ef-program-grid">
+              {/* R&D Tax Credit - Flagship */}
+              <div className="ef-program-card ef-program-card-erc group animate-on-scroll">
+                <div className="ef-program-header">
+                  <div className="ef-program-icon ef-program-icon-erc">
+                    <Sparkles className="h-5 w-5" />
+                  </div>
+                  <span className="ef-program-badge ef-program-badge-erc">Flagship Program</span>
+                </div>
+                <h3 className="ef-program-title">R&D Tax Credit</h3>
+                <div className="ef-program-amount-hero">
+                  <span className="ef-program-amount-prefix">Up to</span>
+                  <span className="ef-program-amount-value">$250K+</span>
+                </div>
+                <p className="ef-program-desc">
+                  Federal & state R&D credits for companies investing in innovation, 
+                  software development, and product improvements.
+                </p>
+                <a href="/credits/rd" className="ef-program-link">
+                  Check Eligibility <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+
               {/* FICA Tip Credit */}
-              <div className="ef-program-card ef-program-card-tip group animate-on-scroll">
+              <div className="ef-program-card ef-program-card-tip group animate-on-scroll animation-delay-100">
                 <div className="ef-program-header">
                   <div className="ef-program-icon ef-program-icon-tip">
                     <Utensils className="h-5 w-5" />
@@ -496,13 +518,13 @@ export default function HomePage() {
                   Section 45B credit for restaurants, bars, and hospitality employers.
                   Recover 7.65% of tips above minimum wage—every year.
                 </p>
-                <a href="/estimator" className="ef-program-link">
+                <a href="/credits" className="ef-program-link">
                   Check Eligibility <ArrowRight className="h-4 w-4" />
                 </a>
               </div>
 
               {/* WOTC */}
-              <div className="ef-program-card ef-program-card-wotc group animate-on-scroll animation-delay-100">
+              <div className="ef-program-card ef-program-card-wotc group animate-on-scroll animation-delay-200">
                 <div className="ef-program-header">
                   <div className="ef-program-icon ef-program-icon-wotc">
                     <Users className="h-5 w-5" />
@@ -518,12 +540,12 @@ export default function HomePage() {
                   Work Opportunity Tax Credit for hiring veterans, SNAP recipients,
                   and other targeted groups. Per qualified hire.
                 </p>
-                <a href="/estimator" className="ef-program-link">
+                <a href="/credits" className="ef-program-link">
                   Check Eligibility <ArrowRight className="h-4 w-4" />
                 </a>
               </div>
 
-              {/* ERC */}
+              {/* ERC - REMOVED per planv5: ERC should not exist on the site at all
               <div className="ef-program-card ef-program-card-erc group animate-on-scroll animation-delay-200">
                 <div className="ef-program-header">
                   <div className="ef-program-icon ef-program-icon-erc">
@@ -544,6 +566,7 @@ export default function HomePage() {
                   Check Eligibility <ArrowRight className="h-4 w-4" />
                 </a>
               </div>
+              */}
             </div>
           </div>
         </section>
@@ -648,7 +671,7 @@ export default function HomePage() {
                   </span>
                 </div>
                 <p className="ef-testimonial-text">
-                  "Their conservative approach gave us confidence. <strong>Every claim was documented and IRS-ready.</strong> We received $215,000 in ERC refunds."
+                  "Their conservative approach gave us confidence. <strong>Every claim was documented and IRS-ready.</strong> We received $215,000 in R&D tax credits."
                 </p>
                 <div className="ef-testimonial-divider"></div>
                 <div className="ef-testimonial-footer">
@@ -779,8 +802,8 @@ export default function HomePage() {
                     <p className="ef-stat-value-big">$9,600</p>
                   </div>
                   <div className="ef-stat-cell">
-                    <p className="ef-stat-label-top">Max ERC Per Employee</p>
-                    <p className="ef-stat-value-big">$26K</p>
+                    <p className="ef-stat-label-top">Avg R&D Credit</p>
+                    <p className="ef-stat-value-big">$250K</p>
                   </div>
                 </div>
               </div>
@@ -840,17 +863,16 @@ export default function HomePage() {
         </section>
 
         {/* How It Works - Clean 2-Column Layout */}
-        <section id="about" className="ef-section">
+        <section id="how-it-works" className="ef-section">
           <div className="ef-container">
             {/* Section Header - Centered */}
             <div className="text-center mb-12 lg:mb-16 animate-on-scroll">
               <p className="ef-section-label">How It Works</p>
               <h2 className="ef-section-title mx-auto" style={{ maxWidth: '600px' }}>
-                From Quiz to Recovery
+                Async-First Delivery
               </h2>
               <p className="ef-section-subtitle max-w-2xl mx-auto">
-                Our statute-based methodology ensures conservative, defensible estimates.
-                Every claim is verified before filing.
+                No meetings required. Choose your product, complete intake, and receive delivery on schedule.
               </p>
             </div>
 
@@ -859,10 +881,10 @@ export default function HomePage() {
               {/* Left Column - Steps */}
               <div className="space-y-4">
                 {[
-                  { num: '01', title: 'Take the 2-Minute Quiz', desc: 'Answer simple questions about your business and workforce.', icon: Clock },
-                  { num: '02', title: 'Get Your Estimate', desc: 'Receive a conservative credit range instantly—no obligation.', icon: DollarSign },
-                  { num: '03', title: 'Documentation Review', desc: 'Our team verifies eligibility with your payroll records.', icon: FileCheck },
-                  { num: '04', title: 'Credit Recovery', desc: 'Claims filed with IRS. Funds deposited to your account.', icon: Landmark },
+                  { num: '01', title: 'Choose Product', desc: 'Select the service that fits your needs from our product lineup.', icon: Briefcase },
+                  { num: '02', title: 'Complete Intake + Upload Docs', desc: 'Fill out intake form and upload required documentation.', icon: FileCheck },
+                  { num: '03', title: 'Checkout (if paid)', desc: 'Complete payment for paid products via secure checkout.', icon: DollarSign },
+                  { num: '04', title: 'Delivery (7/14 days)', desc: 'Receive your deliverables on schedule. Async revisions available.', icon: Clock },
                 ].map((step, index) => (
                   <div 
                     key={step.num} 
@@ -1064,8 +1086,8 @@ export default function HomePage() {
               <p className="ef-section-label">Get In Touch</p>
               <h2 className="ef-section-title">Ready to Get Started?</h2>
               <p className="ef-section-subtitle max-w-2xl mx-auto">
-                Whether you need capital advisory, accounting services, or payroll credit recovery, 
-                our team is here to help. Reach out to discuss your needs.
+                Choose your product, complete intake, and receive delivery on schedule. 
+                All services are async-first—no meetings required.
               </p>
             </div>
 
@@ -1077,21 +1099,21 @@ export default function HomePage() {
                       <Award className="w-6 h-6" />
                     </div>
                     <h3 className="font-bold text-lg mb-2">Capital Advisory</h3>
-                    <p className="text-sm text-gray-600">Schedule a strategy session for your Series A/B prep</p>
+                    <p className="text-sm text-gray-600">Start your intake for Series A/B prep materials</p>
                   </div>
                   <div className="text-center p-6 bg-white rounded-lg shadow-sm">
                     <div className="inline-flex items-center justify-center w-12 h-12 bg-[var(--brand-primary-light)] text-[var(--brand-primary)] mb-4">
                       <FileCheck className="w-6 h-6" />
                     </div>
-                    <h3 className="font-bold text-lg mb-2">CFO & Tax Services</h3>
-                    <p className="text-sm text-gray-600">Talk to a CPA about your accounting needs</p>
+                    <h3 className="font-bold text-lg mb-2">Tax & Finance</h3>
+                    <p className="text-sm text-gray-600">Complete your tax filing intake async</p>
                   </div>
                 </div>
                 
                 <div className="text-center">
-                  <Link href="/estimator">
+                  <Link href="/tax">
                     <button className="ef-btn ef-btn-accent ef-btn-xl">
-                      Start Your Free Assessment
+                      Get Tax Filing Done
                       <ArrowRight className="h-5 w-5" />
                     </button>
                   </Link>

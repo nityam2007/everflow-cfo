@@ -1265,6 +1265,12 @@ export const LeadScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   industry: 'industry',
+  productType: 'productType',
+  leadSource: 'leadSource',
+  isLeadOnly: 'isLeadOnly',
+  isPaid: 'isPaid',
+  paidAmount: 'paidAmount',
+  paidAt: 'paidAt',
   inputsJson: 'inputsJson',
   estimatedMin: 'estimatedMin',
   estimatedMax: 'estimatedMax',
@@ -1274,6 +1280,7 @@ export const LeadScalarFieldEnum = {
   explanations: 'explanations',
   status: 'status',
   source: 'source',
+  priority: 'priority',
   partnerId: 'partnerId',
   assignedStaffId: 'assignedStaffId',
   assignedAt: 'assignedAt',
@@ -1492,6 +1499,34 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'ProductType'
+ */
+export type EnumProductTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductType'>
+    
+
+
+/**
+ * Reference to a field of type 'ProductType[]'
+ */
+export type ListEnumProductTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProductType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadSource'
+ */
+export type EnumLeadSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadSource'>
+    
+
+
+/**
+ * Reference to a field of type 'LeadSource[]'
+ */
+export type ListEnumLeadSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadSource[]'>
     
 
 

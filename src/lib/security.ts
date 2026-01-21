@@ -203,6 +203,9 @@ export const rateLimits = {
   // Lead submission (public)
   leadSubmission: { windowMs: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
   
+  // Checkout (payment flow)
+  checkout: { windowMs: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
+  
   // Export (heavy operation)
   export: { windowMs: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
 };

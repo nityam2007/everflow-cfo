@@ -10,14 +10,17 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   typescript: true,
 });
 
-// Product configurations for pricing
+// Product configurations for pricing (v5.0.1 - updated for planv5)
 export const PRODUCTS = {
-  // Capital Advisory Products
+  // ============================================
+  // Capital Advisory Products (Paid)
+  // ============================================
   FINANCIAL_MODELING: {
     name: 'Financial Modeling Core',
     price: 3500,
-    description: 'The Math - 3-Statement Financial Model, 5-Year Forecast, Unit Economics & Valuation Analysis',
+    description: 'The Math - 3-Statement Financial Model, 5-Year Forecast, Unit Economics & Valuation Analysis. 7 Days Turnaround.',
     recurring: false,
+    turnaround: '7 days',
     features: [
       '3-Statement Financial Model (Excel)',
       '5-Year Dynamic Forecast',
@@ -28,34 +31,39 @@ export const PRODUCTS = {
   SERIES_A_STACK: {
     name: 'The Series A Stack',
     price: 9500,
-    description: 'The Full Package - Everything in Financial Modeling + 15-Slide Pitch Deck & Strategy Session',
+    description: 'The Full Package - Everything in Financial Modeling + 15-Slide Pitch Deck & Async Narrative Intake. 14 Days Turnaround.',
     recurring: false,
+    turnaround: '14 days',
     features: [
       'Everything in Financial Modeling',
       '15-Slide Institutional Pitch Deck',
-      'Narrative Strategy Session',
+      'Async Narrative Intake + Review',
       'Investor Teaser One-Pager',
     ],
   },
   DUE_DILIGENCE: {
     name: 'Due Diligence & Deal Room',
     price: 5000,
-    description: 'The Support - Virtual Data Room, Financial Cleanup, Cap Table & Investor Q&A',
+    description: 'The Support - Virtual Data Room, Financial Cleanup, Cap Table & Async Q&A Support.',
     recurring: false,
+    turnaround: 'Custom',
     features: [
       'Virtual Data Room (VDR) Structure',
       'Historical Financial cleanup (Reconciliation)',
       'Cap Table Management',
-      'Investor Q&A Support',
+      'Async Q&A Support',
     ],
   },
   
-  // CFO & Tax Products
+  // ============================================
+  // Tax & Finance Products (Paid)
+  // ============================================
   TAX_COMPLIANCE: {
-    name: 'Tax Compliance',
+    name: 'Business Tax Filing',
     price: 1500,
-    description: 'The Annual - Federal & State Tax Returns, Bookkeeping Review & K-1 Distribution',
+    description: 'Complete Business Tax Filing - Federal & State Returns, Bookkeeping Review & K-1 Distribution.',
     recurring: false,
+    turnaround: '7-14 days',
     features: [
       'Federal & State Corporate Tax Return',
       'Year-End Bookkeeping Review & Adjustments',
@@ -63,11 +71,29 @@ export const PRODUCTS = {
       'Extension Filing (if needed)',
     ],
   },
+  INDIVIDUAL_TAX: {
+    name: 'Individual/Freelancer Tax Filing',
+    price: 500,
+    description: 'Personal Tax Filing - Federal & State Returns, Schedule C, Freelance Income & Deductions.',
+    recurring: false,
+    turnaround: '5-7 days',
+    features: [
+      'Federal & State Personal Tax Return',
+      'Schedule C for Self-Employment Income',
+      'Freelance / 1099 Income Reporting',
+      'Deduction Optimization',
+    ],
+  },
+  
+  // ============================================
+  // Tax & Finance Products (Lead-Only - for display)
+  // ============================================
   MANAGED_BACK_OFFICE: {
     name: 'Managed Back-Office',
     price: 750,
-    description: 'The Monthly - Bookkeeping, Payroll Processing, Sales Tax Filing & Financial Statements',
+    description: 'The Monthly - Bookkeeping, Payroll Processing, Sales Tax Filing & Financial Statements.',
     recurring: true,
+    turnaround: 'Ongoing',
     features: [
       'Monthly Bookkeeping & Reconciliation',
       'Full-Service Payroll Processing (Gusto/ADP)',
@@ -78,8 +104,9 @@ export const PRODUCTS = {
   FRACTIONAL_CFO: {
     name: 'Fractional CFO',
     price: 3000,
-    description: 'The Strategic - Everything in Back-Office + Financial Modeling, Burn Analysis & Board Decks',
+    description: 'The Strategic - Everything in Back-Office + Financial Modeling, Burn Analysis & Board Decks.',
     recurring: true,
+    turnaround: 'Ongoing',
     features: [
       'Everything in Managed Back-Office',
       'Custom Financial Modeling & Forecasting',
@@ -87,9 +114,77 @@ export const PRODUCTS = {
       'Board Deck Preparation & Presentation',
     ],
   },
+  
+  // ============================================
+  // Tax Credit Products (Lead-Only)
+  // ============================================
+  RD_CREDIT: {
+    name: 'R&D Tax Credit',
+    price: 0, // Success-based pricing
+    description: 'Research & Development Tax Credit - Claim credits for qualifying R&D activities. Success-based pricing.',
+    recurring: false,
+    turnaround: '60-90 days',
+    features: [
+      'Eligibility Assessment',
+      'Documentation & Study',
+      'IRS Compliance',
+      'Audit Defense Support',
+    ],
+  },
+  FICA_TIP_CREDIT: {
+    name: 'FICA Tip Credit',
+    price: 0, // Success-based pricing
+    description: 'FICA Tip Tax Credit for restaurants and hospitality businesses. Success-based pricing.',
+    recurring: false,
+    turnaround: '30-45 days',
+    features: [
+      'Tip Credit Calculation',
+      'Payroll Analysis',
+      'IRS Form Preparation',
+      'Multi-Year Recovery',
+    ],
+  },
+  WOTC_CREDIT: {
+    name: 'WOTC Credit',
+    price: 0, // Success-based pricing
+    description: 'Work Opportunity Tax Credit for targeted hiring. Success-based pricing.',
+    recurring: false,
+    turnaround: '30-45 days',
+    features: [
+      'Employee Screening',
+      'Certification Processing',
+      'Credit Calculation',
+      'Ongoing Compliance',
+    ],
+  },
 } as const;
 
 export type ProductKey = keyof typeof PRODUCTS;
+
+// Products that go through checkout (paid products)
+export const PAID_PRODUCT_KEYS: ProductKey[] = [
+  'FINANCIAL_MODELING',
+  'SERIES_A_STACK', 
+  'DUE_DILIGENCE',
+  'TAX_COMPLIANCE',
+  'INDIVIDUAL_TAX',
+];
+
+// Products that are lead-only (no checkout)
+export const LEAD_ONLY_PRODUCT_KEYS: ProductKey[] = [
+  'MANAGED_BACK_OFFICE',
+  'FRACTIONAL_CFO',
+  'RD_CREDIT',
+  'FICA_TIP_CREDIT',
+  'WOTC_CREDIT',
+];
+
+/**
+ * Check if a product requires checkout
+ */
+export function isProductPaid(productKey: string): boolean {
+  return PAID_PRODUCT_KEYS.includes(productKey as ProductKey);
+}
 
 /**
  * Create a Stripe Checkout Session for one-time or recurring payments

@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { PageHeader } from '@/components/page-header';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { LEAD_STATUS_COLORS, ELIGIBILITY_COLORS, ASSIGNMENT_STATUS_COLORS } from '@/lib/constants';
-import { Users, DollarSign, TrendingUp, Clock, Building2, CheckCircle } from 'lucide-react';
+import { LEAD_STATUS_COLORS, ELIGIBILITY_COLORS, ASSIGNMENT_STATUS_COLORS, PRODUCT_TYPES } from '@/lib/constants';
+import { Users, DollarSign, TrendingUp, Clock, Building2, CheckCircle, CreditCard, Star, Tag } from 'lucide-react';
 import Link from 'next/link';
 
 interface DashboardStats {
@@ -17,6 +17,11 @@ interface DashboardStats {
   partnersCount: number;
   assignmentsCount: number;
   totalEstimatedValue: number;
+  paidLeads: number;
+  leadOnlyLeads: number;
+  highPriorityLeads: number;
+  paidRevenue: number;
+  productBreakdown: Record<string, number>;
 }
 
 interface RecentLead {
@@ -26,6 +31,9 @@ interface RecentLead {
   eligibility: string;
   estimatedMax: number;
   createdAt: Date;
+  productType: string | null;
+  isPaid: boolean | null;
+  paidAmount: number | null;
 }
 
 async function getDashboardStats(userId: string, isAdmin: boolean): Promise<DashboardStats> {
@@ -34,25 +42,40 @@ async function getDashboardStats(userId: string, isAdmin: boolean): Promise<Dash
   return cache.getOrFetch(cacheKey, async () => {
     const whereClause = isAdmin ? {} : { assignedStaffId: userId };
 
-    const [totalLeads, newLeads, inProgressLeads, closedLeads, partnersCount, assignmentsCount] = await Promise.all([
+    const [totalLeads, newLeads, inProgressLeads, closedLeads, partnersCount, assignmentsCount, paidLeads, leadOnlyLeads, highPriorityLeads] = await Promise.all([
       db.lead.count({ where: whereClause }),
       db.lead.count({ where: { ...whereClause, status: 'NEW' } }),
       db.lead.count({ where: { ...whereClause, status: 'IN_PROGRESS' } }),
       db.lead.count({ where: { ...whereClause, status: 'CLOSED' } }),
       isAdmin ? db.partner.count({ where: { isActive: true } }) : 0,
       isAdmin ? db.partnerAssignment.count({ where: { status: { in: ['PENDING', 'IN_PROGRESS'] } } }) : 0,
+      db.lead.count({ where: { ...whereClause, isPaid: true } }),
+      db.lead.count({ where: { ...whereClause, isLeadOnly: true } }),
+      db.lead.count({ where: { ...whereClause, priority: { gte: 1 } } }),
     ]);
 
-    // Calculate total estimated value
+    // Calculate total estimated value and paid revenue
     const leads = await db.lead.findMany({
       where: whereClause,
-      select: { estimatedMin: true, estimatedMax: true },
+      select: { estimatedMin: true, estimatedMax: true, isPaid: true, paidAmount: true, productType: true },
     });
 
     const totalEstimatedValue = leads.reduce(
       (sum, lead) => sum + (lead.estimatedMin + lead.estimatedMax) / 2,
       0
     );
+
+    const paidRevenue = leads.reduce(
+      (sum, lead) => sum + (lead.isPaid && lead.paidAmount ? lead.paidAmount : 0),
+      0
+    ) / 100; // Convert cents to dollars
+
+    // Product type breakdown
+    const productBreakdown: Record<string, number> = {};
+    leads.forEach(lead => {
+      const type = lead.productType || 'ESTIMATOR';
+      productBreakdown[type] = (productBreakdown[type] || 0) + 1;
+    });
 
     return {
       totalLeads,
@@ -62,6 +85,11 @@ async function getDashboardStats(userId: string, isAdmin: boolean): Promise<Dash
       partnersCount,
       assignmentsCount,
       totalEstimatedValue,
+      paidLeads,
+      leadOnlyLeads,
+      highPriorityLeads,
+      paidRevenue,
+      productBreakdown,
     };
   }, cache.ttl.dashboardStats);
 }
@@ -78,7 +106,7 @@ export default async function DashboardPage() {
   const whereClause = isAdmin ? {} : { assignedStaffId: userId };
   const recentLeads = await db.lead.findMany({
     where: whereClause,
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ priority: 'desc' }, { createdAt: 'desc' }],
     take: 5,
     select: {
       id: true,
@@ -87,6 +115,9 @@ export default async function DashboardPage() {
       eligibility: true,
       estimatedMax: true,
       createdAt: true,
+      productType: true,
+      isPaid: true,
+      paidAmount: true,
     },
   }) as RecentLead[];
 
@@ -110,22 +141,24 @@ export default async function DashboardPage() {
       description: isAdmin ? 'All leads' : 'Assigned to you',
     },
     {
-      title: 'New Leads',
-      value: stats.newLeads,
-      icon: Clock,
-      description: 'Awaiting action',
+      title: 'Paid Orders',
+      value: stats.paidLeads,
+      icon: CreditCard,
+      description: 'Completed payments',
+      highlight: true,
     },
     {
-      title: 'In Progress',
-      value: stats.inProgressLeads,
-      icon: TrendingUp,
-      description: 'Being processed',
+      title: 'High Priority',
+      value: stats.highPriorityLeads,
+      icon: Star,
+      description: 'Needs attention',
     },
     {
-      title: 'Est. Pipeline Value',
-      value: formatCurrency(stats.totalEstimatedValue),
+      title: 'Paid Revenue',
+      value: formatCurrency(stats.paidRevenue),
       icon: DollarSign,
-      description: 'Average of ranges',
+      description: 'Total collected',
+      highlight: true,
     },
   ];
 
@@ -156,7 +189,7 @@ export default async function DashboardPage() {
 
       {/* Admin-only Partner Stats */}
       {isAdmin && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">
@@ -181,7 +214,46 @@ export default async function DashboardPage() {
               <p className="text-xs text-[var(--color-foreground-muted)]">Pending + In Progress</p>
             </CardContent>
           </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                Lead-Only Inquiries
+              </CardTitle>
+              <Tag className="h-4 w-4 text-[var(--color-foreground-muted)]" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-light text-[var(--color-foreground)]">{stats.leadOnlyLeads}</div>
+              <p className="text-xs text-[var(--color-foreground-muted)]">R&D, CFO, Back Office</p>
+            </CardContent>
+          </Card>
         </div>
+      )}
+
+      {/* Product Breakdown (Admin only) */}
+      {isAdmin && Object.keys(stats.productBreakdown).length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Leads by Product</CardTitle>
+            <CardDescription>Breakdown of leads by product type</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {Object.entries(stats.productBreakdown)
+                .sort(([, a], [, b]) => b - a)
+                .map(([productType, count]) => {
+                  const product = PRODUCT_TYPES[productType as keyof typeof PRODUCT_TYPES];
+                  return (
+                    <div key={productType} className="border border-[var(--color-border)] p-3">
+                      <p className="text-xs text-[var(--color-foreground-muted)] truncate">
+                        {product?.label || productType}
+                      </p>
+                      <p className="text-xl font-bold text-[var(--color-foreground)]">{count}</p>
+                    </div>
+                  );
+                })}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Recent Leads */}
@@ -211,18 +283,26 @@ export default async function DashboardPage() {
                   className="flex flex-col sm:flex-row sm:items-center justify-between border border-[var(--color-border)] p-3 sm:p-4 hover:bg-[var(--color-background-alt)] transition-colors gap-2 sm:gap-4"
                 >
                   <div className="space-y-1">
-                    <p className="font-medium text-[var(--color-foreground)] text-sm sm:text-base">{lead.companyName}</p>
+                    <div className="flex items-center gap-2">
+                      {lead.isPaid && <CreditCard className="h-4 w-4 text-green-600" />}
+                      <p className="font-medium text-[var(--color-foreground)] text-sm sm:text-base">{lead.companyName}</p>
+                    </div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <Badge variant={LEAD_STATUS_COLORS[lead.status]} className="text-xs">
                         {lead.status.replace('_', ' ')}
                       </Badge>
-                      <Badge variant={ELIGIBILITY_COLORS[lead.eligibility]} className="text-xs">
-                        {lead.eligibility}
+                      <Badge variant="secondary" className="text-xs">
+                        {PRODUCT_TYPES[lead.productType as keyof typeof PRODUCT_TYPES]?.label || 'Estimator'}
                       </Badge>
                     </div>
                   </div>
                   <div className="text-left sm:text-right flex sm:flex-col items-center sm:items-end gap-2 sm:gap-0">
-                    <p className="font-medium text-[var(--color-foreground)] text-sm sm:text-base">{formatCurrency(lead.estimatedMax)}</p>
+                    <p className="font-medium text-[var(--color-foreground)] text-sm sm:text-base">
+                      {lead.isPaid && lead.paidAmount 
+                        ? formatCurrency(lead.paidAmount / 100) 
+                        : formatCurrency(lead.estimatedMax)
+                      }
+                    </p>
                     <p className="text-xs text-[var(--color-foreground-muted)]">
                       {formatDate(lead.createdAt)}
                     </p>

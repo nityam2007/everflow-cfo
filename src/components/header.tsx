@@ -49,15 +49,15 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="ef-nav">
-            <Link href="/#capital" className="ef-nav-link">Capital Advisory</Link>
-            <Link href="/#cfo-tax" className="ef-nav-link">CFO & Tax</Link>
-            <Link href="/#programs" className="ef-nav-link">Payroll Credits</Link>
-            <Link href="/#contact" className="ef-nav-link">Contact</Link>
+            <Link href="/#capital" className="ef-nav-link">Capital</Link>
+            <Link href="/tax" className="ef-nav-link">Tax & Finance</Link>
+            <Link href="/#credits" className="ef-nav-link">Credits</Link>
+            <Link href="/#how-it-works" className="ef-nav-link">How It Works</Link>
             <Link href="/login">
               <button className="ef-btn ef-btn-secondary">Login</button>
             </Link>
-            <Link href="/estimator">
-              <button className="ef-btn ef-btn-accent">Check Eligibility</button>
+            <Link href="/tax">
+              <button className="ef-btn ef-btn-accent">Get Started</button>
             </Link>
           </nav>
 
@@ -76,23 +76,23 @@ export function Header() {
       <div className={`ef-mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
         <nav className="ef-mobile-nav">
           <Link href="/#capital" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
-            Capital Advisory
+            Capital
           </Link>
-          <Link href="/#cfo-tax" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
-            CFO & Tax
+          <Link href="/tax" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
+            Tax & Finance
           </Link>
-          <Link href="/#programs" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
-            Payroll Credits
+          <Link href="/#credits" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
+            Credits
           </Link>
-          <Link href="/#contact" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
-            Contact
+          <Link href="/#how-it-works" className="ef-mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
+            How It Works
           </Link>
           <div className="ef-mobile-nav-buttons">
             <Link href="/login" className="w-full" onClick={() => setMobileMenuOpen(false)}>
               <button className="ef-btn ef-btn-secondary w-full">Login</button>
             </Link>
-            <Link href="/estimator" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-              <button className="ef-btn ef-btn-accent w-full">Check Eligibility</button>
+            <Link href="/tax" className="w-full" onClick={() => setMobileMenuOpen(false)}>
+              <button className="ef-btn ef-btn-accent w-full">Get Started</button>
             </Link>
           </div>
         </nav>

@@ -27,13 +27,17 @@ export type AggregateLead = {
 }
 
 export type LeadAvgAggregateOutputType = {
+  paidAmount: number | null
   estimatedMin: number | null
   estimatedMax: number | null
+  priority: number | null
 }
 
 export type LeadSumAggregateOutputType = {
+  paidAmount: number | null
   estimatedMin: number | null
   estimatedMax: number | null
+  priority: number | null
 }
 
 export type LeadMinAggregateOutputType = {
@@ -43,12 +47,19 @@ export type LeadMinAggregateOutputType = {
   email: string | null
   phone: string | null
   industry: string | null
+  productType: $Enums.ProductType | null
+  leadSource: $Enums.LeadSource | null
+  isLeadOnly: boolean | null
+  isPaid: boolean | null
+  paidAmount: number | null
+  paidAt: Date | null
   estimatedMin: number | null
   estimatedMax: number | null
   eligibility: $Enums.EligibilitySignal | null
   rulesVersion: string | null
   status: $Enums.LeadStatus | null
   source: string | null
+  priority: number | null
   partnerId: string | null
   assignedStaffId: string | null
   assignedAt: Date | null
@@ -63,12 +74,19 @@ export type LeadMaxAggregateOutputType = {
   email: string | null
   phone: string | null
   industry: string | null
+  productType: $Enums.ProductType | null
+  leadSource: $Enums.LeadSource | null
+  isLeadOnly: boolean | null
+  isPaid: boolean | null
+  paidAmount: number | null
+  paidAt: Date | null
   estimatedMin: number | null
   estimatedMax: number | null
   eligibility: $Enums.EligibilitySignal | null
   rulesVersion: string | null
   status: $Enums.LeadStatus | null
   source: string | null
+  priority: number | null
   partnerId: string | null
   assignedStaffId: string | null
   assignedAt: Date | null
@@ -83,6 +101,12 @@ export type LeadCountAggregateOutputType = {
   email: number
   phone: number
   industry: number
+  productType: number
+  leadSource: number
+  isLeadOnly: number
+  isPaid: number
+  paidAmount: number
+  paidAt: number
   inputsJson: number
   estimatedMin: number
   estimatedMax: number
@@ -92,6 +116,7 @@ export type LeadCountAggregateOutputType = {
   explanations: number
   status: number
   source: number
+  priority: number
   partnerId: number
   assignedStaffId: number
   assignedAt: number
@@ -102,13 +127,17 @@ export type LeadCountAggregateOutputType = {
 
 
 export type LeadAvgAggregateInputType = {
+  paidAmount?: true
   estimatedMin?: true
   estimatedMax?: true
+  priority?: true
 }
 
 export type LeadSumAggregateInputType = {
+  paidAmount?: true
   estimatedMin?: true
   estimatedMax?: true
+  priority?: true
 }
 
 export type LeadMinAggregateInputType = {
@@ -118,12 +147,19 @@ export type LeadMinAggregateInputType = {
   email?: true
   phone?: true
   industry?: true
+  productType?: true
+  leadSource?: true
+  isLeadOnly?: true
+  isPaid?: true
+  paidAmount?: true
+  paidAt?: true
   estimatedMin?: true
   estimatedMax?: true
   eligibility?: true
   rulesVersion?: true
   status?: true
   source?: true
+  priority?: true
   partnerId?: true
   assignedStaffId?: true
   assignedAt?: true
@@ -138,12 +174,19 @@ export type LeadMaxAggregateInputType = {
   email?: true
   phone?: true
   industry?: true
+  productType?: true
+  leadSource?: true
+  isLeadOnly?: true
+  isPaid?: true
+  paidAmount?: true
+  paidAt?: true
   estimatedMin?: true
   estimatedMax?: true
   eligibility?: true
   rulesVersion?: true
   status?: true
   source?: true
+  priority?: true
   partnerId?: true
   assignedStaffId?: true
   assignedAt?: true
@@ -158,6 +201,12 @@ export type LeadCountAggregateInputType = {
   email?: true
   phone?: true
   industry?: true
+  productType?: true
+  leadSource?: true
+  isLeadOnly?: true
+  isPaid?: true
+  paidAmount?: true
+  paidAt?: true
   inputsJson?: true
   estimatedMin?: true
   estimatedMax?: true
@@ -167,6 +216,7 @@ export type LeadCountAggregateInputType = {
   explanations?: true
   status?: true
   source?: true
+  priority?: true
   partnerId?: true
   assignedStaffId?: true
   assignedAt?: true
@@ -268,6 +318,12 @@ export type LeadGroupByOutputType = {
   email: string
   phone: string | null
   industry: string | null
+  productType: $Enums.ProductType
+  leadSource: $Enums.LeadSource
+  isLeadOnly: boolean
+  isPaid: boolean
+  paidAmount: number | null
+  paidAt: Date | null
   inputsJson: runtime.JsonValue
   estimatedMin: number
   estimatedMax: number
@@ -277,6 +333,7 @@ export type LeadGroupByOutputType = {
   explanations: string[]
   status: $Enums.LeadStatus
   source: string | null
+  priority: number
   partnerId: string | null
   assignedStaffId: string | null
   assignedAt: Date | null
@@ -314,6 +371,12 @@ export type LeadWhereInput = {
   email?: Prisma.StringFilter<"Lead"> | string
   phone?: Prisma.StringNullableFilter<"Lead"> | string | null
   industry?: Prisma.StringNullableFilter<"Lead"> | string | null
+  productType?: Prisma.EnumProductTypeFilter<"Lead"> | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFilter<"Lead"> | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFilter<"Lead"> | boolean
+  isPaid?: Prisma.BoolFilter<"Lead"> | boolean
+  paidAmount?: Prisma.IntNullableFilter<"Lead"> | number | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   inputsJson?: Prisma.JsonFilter<"Lead">
   estimatedMin?: Prisma.IntFilter<"Lead"> | number
   estimatedMax?: Prisma.IntFilter<"Lead"> | number
@@ -323,6 +386,7 @@ export type LeadWhereInput = {
   explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableFilter<"Lead"> | string | null
+  priority?: Prisma.IntFilter<"Lead"> | number
   partnerId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
@@ -342,6 +406,12 @@ export type LeadOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   industry?: Prisma.SortOrderInput | Prisma.SortOrder
+  productType?: Prisma.SortOrder
+  leadSource?: Prisma.SortOrder
+  isLeadOnly?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   inputsJson?: Prisma.SortOrder
   estimatedMin?: Prisma.SortOrder
   estimatedMax?: Prisma.SortOrder
@@ -351,6 +421,7 @@ export type LeadOrderByWithRelationInput = {
   explanations?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
+  priority?: Prisma.SortOrder
   partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -374,6 +445,12 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringFilter<"Lead"> | string
   phone?: Prisma.StringNullableFilter<"Lead"> | string | null
   industry?: Prisma.StringNullableFilter<"Lead"> | string | null
+  productType?: Prisma.EnumProductTypeFilter<"Lead"> | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFilter<"Lead"> | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFilter<"Lead"> | boolean
+  isPaid?: Prisma.BoolFilter<"Lead"> | boolean
+  paidAmount?: Prisma.IntNullableFilter<"Lead"> | number | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   inputsJson?: Prisma.JsonFilter<"Lead">
   estimatedMin?: Prisma.IntFilter<"Lead"> | number
   estimatedMax?: Prisma.IntFilter<"Lead"> | number
@@ -383,6 +460,7 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableFilter<"Lead"> | string | null
+  priority?: Prisma.IntFilter<"Lead"> | number
   partnerId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
@@ -402,6 +480,12 @@ export type LeadOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   industry?: Prisma.SortOrderInput | Prisma.SortOrder
+  productType?: Prisma.SortOrder
+  leadSource?: Prisma.SortOrder
+  isLeadOnly?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrderInput | Prisma.SortOrder
+  paidAt?: Prisma.SortOrderInput | Prisma.SortOrder
   inputsJson?: Prisma.SortOrder
   estimatedMin?: Prisma.SortOrder
   estimatedMax?: Prisma.SortOrder
@@ -411,6 +495,7 @@ export type LeadOrderByWithAggregationInput = {
   explanations?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrderInput | Prisma.SortOrder
+  priority?: Prisma.SortOrder
   partnerId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrderInput | Prisma.SortOrder
   assignedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -433,6 +518,12 @@ export type LeadScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"Lead"> | string
   phone?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   industry?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
+  productType?: Prisma.EnumProductTypeWithAggregatesFilter<"Lead"> | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceWithAggregatesFilter<"Lead"> | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolWithAggregatesFilter<"Lead"> | boolean
+  isPaid?: Prisma.BoolWithAggregatesFilter<"Lead"> | boolean
+  paidAmount?: Prisma.IntNullableWithAggregatesFilter<"Lead"> | number | null
+  paidAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
   inputsJson?: Prisma.JsonWithAggregatesFilter<"Lead">
   estimatedMin?: Prisma.IntWithAggregatesFilter<"Lead"> | number
   estimatedMax?: Prisma.IntWithAggregatesFilter<"Lead"> | number
@@ -442,6 +533,7 @@ export type LeadScalarWhereWithAggregatesInput = {
   explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusWithAggregatesFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
+  priority?: Prisma.IntWithAggregatesFilter<"Lead"> | number
   partnerId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
@@ -456,15 +548,22 @@ export type LeadCreateInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -482,15 +581,22 @@ export type LeadUncheckedCreateInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   partnerId?: string | null
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
@@ -508,6 +614,12 @@ export type LeadUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -517,6 +629,7 @@ export type LeadUpdateInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -534,6 +647,12 @@ export type LeadUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -543,6 +662,7 @@ export type LeadUncheckedUpdateInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -560,15 +680,22 @@ export type LeadCreateManyInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   partnerId?: string | null
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
@@ -583,6 +710,12 @@ export type LeadUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -592,6 +725,7 @@ export type LeadUpdateManyMutationInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -604,6 +738,12 @@ export type LeadUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -613,6 +753,7 @@ export type LeadUncheckedUpdateManyInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -650,6 +791,12 @@ export type LeadCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   industry?: Prisma.SortOrder
+  productType?: Prisma.SortOrder
+  leadSource?: Prisma.SortOrder
+  isLeadOnly?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   inputsJson?: Prisma.SortOrder
   estimatedMin?: Prisma.SortOrder
   estimatedMax?: Prisma.SortOrder
@@ -659,6 +806,7 @@ export type LeadCountOrderByAggregateInput = {
   explanations?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
@@ -667,8 +815,10 @@ export type LeadCountOrderByAggregateInput = {
 }
 
 export type LeadAvgOrderByAggregateInput = {
+  paidAmount?: Prisma.SortOrder
   estimatedMin?: Prisma.SortOrder
   estimatedMax?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
 }
 
 export type LeadMaxOrderByAggregateInput = {
@@ -678,12 +828,19 @@ export type LeadMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   industry?: Prisma.SortOrder
+  productType?: Prisma.SortOrder
+  leadSource?: Prisma.SortOrder
+  isLeadOnly?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   estimatedMin?: Prisma.SortOrder
   estimatedMax?: Prisma.SortOrder
   eligibility?: Prisma.SortOrder
   rulesVersion?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
@@ -698,12 +855,19 @@ export type LeadMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   industry?: Prisma.SortOrder
+  productType?: Prisma.SortOrder
+  leadSource?: Prisma.SortOrder
+  isLeadOnly?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  paidAmount?: Prisma.SortOrder
+  paidAt?: Prisma.SortOrder
   estimatedMin?: Prisma.SortOrder
   estimatedMax?: Prisma.SortOrder
   eligibility?: Prisma.SortOrder
   rulesVersion?: Prisma.SortOrder
   status?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
   partnerId?: Prisma.SortOrder
   assignedStaffId?: Prisma.SortOrder
   assignedAt?: Prisma.SortOrder
@@ -712,8 +876,10 @@ export type LeadMinOrderByAggregateInput = {
 }
 
 export type LeadSumOrderByAggregateInput = {
+  paidAmount?: Prisma.SortOrder
   estimatedMin?: Prisma.SortOrder
   estimatedMax?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
 }
 
 export type LeadScalarRelationFilter = {
@@ -818,6 +984,14 @@ export type LeadCreateexplanationsInput = {
   set: string[]
 }
 
+export type EnumProductTypeFieldUpdateOperationsInput = {
+  set?: $Enums.ProductType
+}
+
+export type EnumLeadSourceFieldUpdateOperationsInput = {
+  set?: $Enums.LeadSource
+}
+
 export type LeadUpdatecreditFlagsInput = {
   set?: string[]
   push?: string | string[]
@@ -887,15 +1061,22 @@ export type LeadCreateWithoutAssignedStaffInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -912,15 +1093,22 @@ export type LeadUncheckedCreateWithoutAssignedStaffInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   partnerId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
@@ -966,6 +1154,12 @@ export type LeadScalarWhereInput = {
   email?: Prisma.StringFilter<"Lead"> | string
   phone?: Prisma.StringNullableFilter<"Lead"> | string | null
   industry?: Prisma.StringNullableFilter<"Lead"> | string | null
+  productType?: Prisma.EnumProductTypeFilter<"Lead"> | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFilter<"Lead"> | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFilter<"Lead"> | boolean
+  isPaid?: Prisma.BoolFilter<"Lead"> | boolean
+  paidAmount?: Prisma.IntNullableFilter<"Lead"> | number | null
+  paidAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
   inputsJson?: Prisma.JsonFilter<"Lead">
   estimatedMin?: Prisma.IntFilter<"Lead"> | number
   estimatedMax?: Prisma.IntFilter<"Lead"> | number
@@ -975,6 +1169,7 @@ export type LeadScalarWhereInput = {
   explanations?: Prisma.StringNullableListFilter<"Lead">
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   source?: Prisma.StringNullableFilter<"Lead"> | string | null
+  priority?: Prisma.IntFilter<"Lead"> | number
   partnerId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedStaffId?: Prisma.StringNullableFilter<"Lead"> | string | null
   assignedAt?: Prisma.DateTimeNullableFilter<"Lead"> | Date | string | null
@@ -989,15 +1184,22 @@ export type LeadCreateWithoutPartnerInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1014,15 +1216,22 @@ export type LeadUncheckedCreateWithoutPartnerInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
@@ -1065,15 +1274,22 @@ export type LeadCreateWithoutNotesInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1090,15 +1306,22 @@ export type LeadUncheckedCreateWithoutNotesInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   partnerId?: string | null
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
@@ -1131,6 +1354,12 @@ export type LeadUpdateWithoutNotesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1140,6 +1369,7 @@ export type LeadUpdateWithoutNotesInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1156,6 +1386,12 @@ export type LeadUncheckedUpdateWithoutNotesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1165,6 +1401,7 @@ export type LeadUncheckedUpdateWithoutNotesInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1181,15 +1418,22 @@ export type LeadCreateWithoutPartnerAssignmentsInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1206,15 +1450,22 @@ export type LeadUncheckedCreateWithoutPartnerAssignmentsInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   partnerId?: string | null
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
@@ -1247,6 +1498,12 @@ export type LeadUpdateWithoutPartnerAssignmentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1256,6 +1513,7 @@ export type LeadUpdateWithoutPartnerAssignmentsInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1272,6 +1530,12 @@ export type LeadUncheckedUpdateWithoutPartnerAssignmentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1281,6 +1545,7 @@ export type LeadUncheckedUpdateWithoutPartnerAssignmentsInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1297,15 +1562,22 @@ export type LeadCreateWithoutAuditLogsInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   assignedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1322,15 +1594,22 @@ export type LeadUncheckedCreateWithoutAuditLogsInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   partnerId?: string | null
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
@@ -1363,6 +1642,12 @@ export type LeadUpdateWithoutAuditLogsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1372,6 +1657,7 @@ export type LeadUpdateWithoutAuditLogsInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1388,6 +1674,12 @@ export type LeadUncheckedUpdateWithoutAuditLogsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1397,6 +1689,7 @@ export type LeadUncheckedUpdateWithoutAuditLogsInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1413,15 +1706,22 @@ export type LeadCreateManyAssignedStaffInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   partnerId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
@@ -1435,6 +1735,12 @@ export type LeadUpdateWithoutAssignedStaffInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1444,6 +1750,7 @@ export type LeadUpdateWithoutAssignedStaffInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1460,6 +1767,12 @@ export type LeadUncheckedUpdateWithoutAssignedStaffInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1469,6 +1782,7 @@ export type LeadUncheckedUpdateWithoutAssignedStaffInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1485,6 +1799,12 @@ export type LeadUncheckedUpdateManyWithoutAssignedStaffInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1494,6 +1814,7 @@ export type LeadUncheckedUpdateManyWithoutAssignedStaffInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   partnerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1507,15 +1828,22 @@ export type LeadCreateManyPartnerInput = {
   email: string
   phone?: string | null
   industry?: string | null
+  productType?: $Enums.ProductType
+  leadSource?: $Enums.LeadSource
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: number | null
+  paidAt?: Date | string | null
   inputsJson: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  estimatedMin: number
-  estimatedMax: number
+  estimatedMin?: number
+  estimatedMax?: number
   creditFlags?: Prisma.LeadCreatecreditFlagsInput | string[]
   eligibility?: $Enums.EligibilitySignal
   rulesVersion?: string
   explanations?: Prisma.LeadCreateexplanationsInput | string[]
   status?: $Enums.LeadStatus
   source?: string | null
+  priority?: number
   assignedStaffId?: string | null
   assignedAt?: Date | string | null
   createdAt?: Date | string
@@ -1529,6 +1857,12 @@ export type LeadUpdateWithoutPartnerInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1538,6 +1872,7 @@ export type LeadUpdateWithoutPartnerInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1554,6 +1889,12 @@ export type LeadUncheckedUpdateWithoutPartnerInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1563,6 +1904,7 @@ export type LeadUncheckedUpdateWithoutPartnerInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1579,6 +1921,12 @@ export type LeadUncheckedUpdateManyWithoutPartnerInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   industry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  productType?: Prisma.EnumProductTypeFieldUpdateOperationsInput | $Enums.ProductType
+  leadSource?: Prisma.EnumLeadSourceFieldUpdateOperationsInput | $Enums.LeadSource
+  isLeadOnly?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paidAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inputsJson?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   estimatedMin?: Prisma.IntFieldUpdateOperationsInput | number
   estimatedMax?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1588,6 +1936,7 @@ export type LeadUncheckedUpdateManyWithoutPartnerInput = {
   explanations?: Prisma.LeadUpdateexplanationsInput | string[]
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
   assignedStaffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   assignedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1650,6 +1999,12 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   email?: boolean
   phone?: boolean
   industry?: boolean
+  productType?: boolean
+  leadSource?: boolean
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: boolean
+  paidAt?: boolean
   inputsJson?: boolean
   estimatedMin?: boolean
   estimatedMax?: boolean
@@ -1659,6 +2014,7 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   explanations?: boolean
   status?: boolean
   source?: boolean
+  priority?: boolean
   partnerId?: boolean
   assignedStaffId?: boolean
   assignedAt?: boolean
@@ -1679,6 +2035,12 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   phone?: boolean
   industry?: boolean
+  productType?: boolean
+  leadSource?: boolean
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: boolean
+  paidAt?: boolean
   inputsJson?: boolean
   estimatedMin?: boolean
   estimatedMax?: boolean
@@ -1688,6 +2050,7 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   explanations?: boolean
   status?: boolean
   source?: boolean
+  priority?: boolean
   partnerId?: boolean
   assignedStaffId?: boolean
   assignedAt?: boolean
@@ -1704,6 +2067,12 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   phone?: boolean
   industry?: boolean
+  productType?: boolean
+  leadSource?: boolean
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: boolean
+  paidAt?: boolean
   inputsJson?: boolean
   estimatedMin?: boolean
   estimatedMax?: boolean
@@ -1713,6 +2082,7 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   explanations?: boolean
   status?: boolean
   source?: boolean
+  priority?: boolean
   partnerId?: boolean
   assignedStaffId?: boolean
   assignedAt?: boolean
@@ -1729,6 +2099,12 @@ export type LeadSelectScalar = {
   email?: boolean
   phone?: boolean
   industry?: boolean
+  productType?: boolean
+  leadSource?: boolean
+  isLeadOnly?: boolean
+  isPaid?: boolean
+  paidAmount?: boolean
+  paidAt?: boolean
   inputsJson?: boolean
   estimatedMin?: boolean
   estimatedMax?: boolean
@@ -1738,6 +2114,7 @@ export type LeadSelectScalar = {
   explanations?: boolean
   status?: boolean
   source?: boolean
+  priority?: boolean
   partnerId?: boolean
   assignedStaffId?: boolean
   assignedAt?: boolean
@@ -1745,7 +2122,7 @@ export type LeadSelectScalar = {
   updatedAt?: boolean
 }
 
-export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "contactName" | "email" | "phone" | "industry" | "inputsJson" | "estimatedMin" | "estimatedMax" | "creditFlags" | "eligibility" | "rulesVersion" | "explanations" | "status" | "source" | "partnerId" | "assignedStaffId" | "assignedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
+export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "contactName" | "email" | "phone" | "industry" | "productType" | "leadSource" | "isLeadOnly" | "isPaid" | "paidAmount" | "paidAt" | "inputsJson" | "estimatedMin" | "estimatedMax" | "creditFlags" | "eligibility" | "rulesVersion" | "explanations" | "status" | "source" | "priority" | "partnerId" | "assignedStaffId" | "assignedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
 export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   partner?: boolean | Prisma.Lead$partnerArgs<ExtArgs>
   assignedStaff?: boolean | Prisma.Lead$assignedStaffArgs<ExtArgs>
@@ -1779,6 +2156,12 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     email: string
     phone: string | null
     industry: string | null
+    productType: $Enums.ProductType
+    leadSource: $Enums.LeadSource
+    isLeadOnly: boolean
+    isPaid: boolean
+    paidAmount: number | null
+    paidAt: Date | null
     inputsJson: runtime.JsonValue
     estimatedMin: number
     estimatedMax: number
@@ -1788,6 +2171,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     explanations: string[]
     status: $Enums.LeadStatus
     source: string | null
+    priority: number
     partnerId: string | null
     assignedStaffId: string | null
     assignedAt: Date | null
@@ -2227,6 +2611,12 @@ export interface LeadFieldRefs {
   readonly email: Prisma.FieldRef<"Lead", 'String'>
   readonly phone: Prisma.FieldRef<"Lead", 'String'>
   readonly industry: Prisma.FieldRef<"Lead", 'String'>
+  readonly productType: Prisma.FieldRef<"Lead", 'ProductType'>
+  readonly leadSource: Prisma.FieldRef<"Lead", 'LeadSource'>
+  readonly isLeadOnly: Prisma.FieldRef<"Lead", 'Boolean'>
+  readonly isPaid: Prisma.FieldRef<"Lead", 'Boolean'>
+  readonly paidAmount: Prisma.FieldRef<"Lead", 'Int'>
+  readonly paidAt: Prisma.FieldRef<"Lead", 'DateTime'>
   readonly inputsJson: Prisma.FieldRef<"Lead", 'Json'>
   readonly estimatedMin: Prisma.FieldRef<"Lead", 'Int'>
   readonly estimatedMax: Prisma.FieldRef<"Lead", 'Int'>
@@ -2236,6 +2626,7 @@ export interface LeadFieldRefs {
   readonly explanations: Prisma.FieldRef<"Lead", 'String[]'>
   readonly status: Prisma.FieldRef<"Lead", 'LeadStatus'>
   readonly source: Prisma.FieldRef<"Lead", 'String'>
+  readonly priority: Prisma.FieldRef<"Lead", 'Int'>
   readonly partnerId: Prisma.FieldRef<"Lead", 'String'>
   readonly assignedStaffId: Prisma.FieldRef<"Lead", 'String'>
   readonly assignedAt: Prisma.FieldRef<"Lead", 'DateTime'>

@@ -1,39 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { sanitizeHtml, sanitizeEmail, sanitizePhone } from '@/lib/security';
+import { cache } from '@/lib/redis';
+import { sanitizeHtml, sanitizeEmail, sanitizePhone, getClientIP, secureJsonResponse, secureErrorResponse, rateLimits, hashForLogging } from '@/lib/security';
+import { PAID_PRODUCT_KEYS, isProductPaid } from '@/lib/stripe';
 
-// Simple in-memory rate limiting for checkout (10 requests per IP per hour)
-const checkoutRateLimit = new Map<string, { count: number; resetAt: number }>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const record = checkoutRateLimit.get(ip);
-  
-  if (!record || now > record.resetAt) {
-    checkoutRateLimit.set(ip, { count: 1, resetAt: now + 3600000 }); // 1 hour
-    return false;
-  }
-  
-  if (record.count >= 10) {
-    return true;
-  }
-  
-  record.count++;
-  return false;
+// Redis-based rate limiting for checkout
+async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }> {
+  const key = `rate:checkout:${ip}`;
+  return cache.rateLimit(key, rateLimits.checkout.maxRequests, Math.floor(rateLimits.checkout.windowMs / 1000));
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
-               request.headers.get('x-real-ip') || 
-               'unknown';
+    // Rate limiting with Redis
+    const ip = getClientIP(request);
+    const ipHash = hashForLogging(ip);
+    const { allowed, remaining } = await checkRateLimit(ip);
     
-    if (isRateLimited(ip)) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
-        { status: 429 }
-      );
+    if (!allowed) {
+      console.warn(`[SECURITY] Rate limit exceeded for checkout: ${ipHash}`);
+      const response = secureErrorResponse('Too many requests. Please try again later.', 429);
+      response.headers.set('X-RateLimit-Remaining', remaining.toString());
+      response.headers.set('Retry-After', Math.floor(rateLimits.checkout.windowMs / 1000).toString());
+      return response;
     }
 
     const body = await request.json();
@@ -49,40 +38,42 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!name || !email || !phone) {
-      return NextResponse.json(
-        { error: 'Name, email, and phone are required' },
-        { status: 400 }
-      );
+      return secureErrorResponse('Name, email, and phone are required', 400);
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
+      return secureErrorResponse('Invalid email format', 400);
     }
 
-    // Validate productKey against allowed products
-    const validProductKeys = [
-      'FINANCIAL_MODELING', 'SERIES_A_STACK', 'DUE_DILIGENCE',
-      'TAX_COMPLIANCE', 'MANAGED_BACK_OFFICE', 'FRACTIONAL_CFO'
-    ];
-    if (!validProductKeys.includes(productKey)) {
-      return NextResponse.json(
-        { error: 'Invalid product' },
-        { status: 400 }
-      );
+    // Validate productKey against allowed PAID products (v5.0.1)
+    if (!PAID_PRODUCT_KEYS.includes(productKey)) {
+      console.warn(`[SECURITY] Invalid product key attempted: ${productKey} from ${ipHash}`);
+      return secureErrorResponse('Invalid product', 400);
     }
 
-    // Validate required fields
-    if (!name || !email || !phone) {
-      return NextResponse.json(
-        { error: 'Name, email, and phone are required' },
-        { status: 400 }
-      );
-    }
+    // Determine product type for database
+    const productTypeMapping: Record<string, string> = {
+      'FINANCIAL_MODELING': 'FINANCIAL_MODELING',
+      'SERIES_A_STACK': 'SERIES_A_STACK',
+      'DUE_DILIGENCE': 'DUE_DILIGENCE',
+      'TAX_COMPLIANCE': 'TAX_COMPLIANCE',
+      'INDIVIDUAL_TAX': 'INDIVIDUAL_TAX',
+    };
+    
+    const productType = productTypeMapping[productKey] || 'OTHER';
+    
+    // Determine lead source from product
+    const leadSourceMapping: Record<string, string> = {
+      'FINANCIAL_MODELING': 'CAPITAL',
+      'SERIES_A_STACK': 'CAPITAL',
+      'DUE_DILIGENCE': 'CAPITAL',
+      'TAX_COMPLIANCE': 'TAX_BUSINESS',
+      'INDIVIDUAL_TAX': 'TAX_INDIVIDUAL',
+    };
+    
+    const leadSource = leadSourceMapping[productKey] || 'DIRECT';
 
     // Check for existing partner with this email
     let partner = await db.partner.findUnique({
@@ -138,6 +129,11 @@ export async function POST(request: NextRequest) {
           status: 'NEW',
           source: `Checkout - ${productName}`,
           partnerId: partner.id,
+          productType: productType as 'FINANCIAL_MODELING' | 'SERIES_A_STACK' | 'DUE_DILIGENCE' | 'TAX_COMPLIANCE' | 'INDIVIDUAL_TAX' | 'MANAGED_BACK_OFFICE' | 'FRACTIONAL_CFO' | 'RD_CREDIT' | 'FICA_TIP_CREDIT' | 'WOTC_CREDIT' | 'ESTIMATOR' | 'OTHER',
+          leadSource: leadSource as 'DIRECT' | 'ESTIMATOR' | 'TAX_BUSINESS' | 'TAX_INDIVIDUAL' | 'CREDITS_RD' | 'CREDITS_FICA' | 'CREDITS_WOTC' | 'CAPITAL' | 'REFERRAL' | 'OTHER',
+          isLeadOnly: false,
+          isPaid: false, // Will be set to true after successful payment
+          paidAmount: Math.round(amount * 100),
           inputsJson: {
             productKey,
             productName,
@@ -146,6 +142,7 @@ export async function POST(request: NextRequest) {
           },
           creditFlags: [productKey],
           explanations: [`Purchase intent: ${productName}`],
+          priority: getPriorityFromProduct(productKey),
         },
       });
     } else {
@@ -159,6 +156,11 @@ export async function POST(request: NextRequest) {
           status: 'NEW',
           source: `Checkout - ${productName}`,
           partnerId: partner.id,
+          productType: productType as 'FINANCIAL_MODELING' | 'SERIES_A_STACK' | 'DUE_DILIGENCE' | 'TAX_COMPLIANCE' | 'INDIVIDUAL_TAX' | 'MANAGED_BACK_OFFICE' | 'FRACTIONAL_CFO' | 'RD_CREDIT' | 'FICA_TIP_CREDIT' | 'WOTC_CREDIT' | 'ESTIMATOR' | 'OTHER',
+          leadSource: leadSource as 'DIRECT' | 'ESTIMATOR' | 'TAX_BUSINESS' | 'TAX_INDIVIDUAL' | 'CREDITS_RD' | 'CREDITS_FICA' | 'CREDITS_WOTC' | 'CAPITAL' | 'REFERRAL' | 'OTHER',
+          isLeadOnly: false,
+          isPaid: false,
+          paidAmount: Math.round(amount * 100),
           inputsJson: {
             productKey,
             productName,
@@ -171,23 +173,58 @@ export async function POST(request: NextRequest) {
           eligibility: 'MODERATE',
           rulesVersion: '1.0.0',
           explanations: [`Purchase intent: ${productName}`],
+          priority: getPriorityFromProduct(productKey),
         },
       });
     }
 
-    return NextResponse.json({
+    // Create audit log
+    await db.auditLog.create({
+      data: {
+        action: 'CHECKOUT_STARTED',
+        entityType: 'lead',
+        entityId: lead.id,
+        leadId: lead.id,
+        newValues: { 
+          productKey, 
+          productName, 
+          amount, 
+          ipHash,
+          productType,
+          leadSource,
+        },
+      },
+    });
+
+    // Invalidate caches
+    await Promise.all([
+      cache.invalidateDashboard(),
+      cache.invalidatePartner(partner.id),
+    ]);
+
+    return secureJsonResponse({
       success: true,
       leadId: lead.id,
       partnerId: partner.id,
       customerName: name,
       customerEmail: email,
       customerPhone: phone,
+      productType,
     });
   } catch (error) {
     console.error('Error creating checkout lead:', error);
-    return NextResponse.json(
-      { error: 'Failed to create lead' },
-      { status: 500 }
-    );
+    return secureErrorResponse('Failed to create lead', 500);
   }
+}
+
+/**
+ * Helper: Get priority from product type (paid products = higher priority)
+ */
+function getPriorityFromProduct(productKey: string): number {
+  const highPriority = ['SERIES_A_STACK', 'TAX_COMPLIANCE', 'INDIVIDUAL_TAX'];
+  const urgentPriority = ['DUE_DILIGENCE'];
+  
+  if (urgentPriority.includes(productKey)) return 2;
+  if (highPriority.includes(productKey)) return 1;
+  return 0;
 }

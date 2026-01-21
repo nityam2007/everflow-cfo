@@ -17,6 +17,40 @@ export const UserRole = {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
+export const ProductType = {
+  FINANCIAL_MODELING: 'FINANCIAL_MODELING',
+  SERIES_A_STACK: 'SERIES_A_STACK',
+  DUE_DILIGENCE: 'DUE_DILIGENCE',
+  TAX_COMPLIANCE: 'TAX_COMPLIANCE',
+  INDIVIDUAL_TAX: 'INDIVIDUAL_TAX',
+  MANAGED_BACK_OFFICE: 'MANAGED_BACK_OFFICE',
+  FRACTIONAL_CFO: 'FRACTIONAL_CFO',
+  RD_CREDIT: 'RD_CREDIT',
+  FICA_TIP_CREDIT: 'FICA_TIP_CREDIT',
+  WOTC_CREDIT: 'WOTC_CREDIT',
+  ESTIMATOR: 'ESTIMATOR',
+  OTHER: 'OTHER'
+} as const
+
+export type ProductType = (typeof ProductType)[keyof typeof ProductType]
+
+
+export const LeadSource = {
+  DIRECT: 'DIRECT',
+  ESTIMATOR: 'ESTIMATOR',
+  TAX_BUSINESS: 'TAX_BUSINESS',
+  TAX_INDIVIDUAL: 'TAX_INDIVIDUAL',
+  CREDITS_RD: 'CREDITS_RD',
+  CREDITS_FICA: 'CREDITS_FICA',
+  CREDITS_WOTC: 'CREDITS_WOTC',
+  CAPITAL: 'CAPITAL',
+  REFERRAL: 'REFERRAL',
+  OTHER: 'OTHER'
+} as const
+
+export type LeadSource = (typeof LeadSource)[keyof typeof LeadSource]
+
+
 export const LeadStatus = {
   NEW: 'NEW',
   ASSIGNED: 'ASSIGNED',

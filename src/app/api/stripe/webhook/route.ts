@@ -127,6 +127,9 @@ export async function POST(request: NextRequest) {
               data: {
                 status: 'IN_PROGRESS',
                 partnerId: partner.id,
+                isPaid: true,
+                paidAt: new Date(),
+                paidAmount: session.amount_total,
                 inputsJson: {
                   ...((await db.lead.findUnique({ where: { id: leadId } }))?.inputsJson as object || {}),
                   paymentStatus: 'paid',
@@ -136,7 +139,24 @@ export async function POST(request: NextRequest) {
                 },
               },
             });
-            console.log(`Updated lead ${leadId} to IN_PROGRESS after payment`);
+            
+            // Create audit log for payment
+            await db.auditLog.create({
+              data: {
+                action: 'PAYMENT_COMPLETED',
+                entityType: 'lead',
+                entityId: leadId,
+                leadId: leadId,
+                newValues: {
+                  stripeSessionId: session.id,
+                  amount: session.amount_total,
+                  productKey,
+                  isPaid: true,
+                },
+              },
+            });
+            
+            console.log(`Updated lead ${leadId} to IN_PROGRESS after payment (isPaid: true)`);
           }
           
           console.log(`Created/updated partner ${partner.id} for ${customerEmail}`);

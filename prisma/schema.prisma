@@ -16,6 +16,41 @@ enum UserRole {
   STAFF
 }
 
+// Product categories for tracking
+enum ProductType {
+  // Capital Advisory
+  FINANCIAL_MODELING
+  SERIES_A_STACK
+  DUE_DILIGENCE
+  // Tax & Finance - Paid
+  TAX_COMPLIANCE
+  INDIVIDUAL_TAX
+  // Tax & Finance - Lead Only
+  MANAGED_BACK_OFFICE
+  FRACTIONAL_CFO
+  // Credits - Lead Only
+  RD_CREDIT
+  FICA_TIP_CREDIT
+  WOTC_CREDIT
+  // Legacy/Other
+  ESTIMATOR
+  OTHER
+}
+
+// Lead source tracking
+enum LeadSource {
+  DIRECT
+  ESTIMATOR
+  TAX_BUSINESS
+  TAX_INDIVIDUAL
+  CREDITS_RD
+  CREDITS_FICA
+  CREDITS_WOTC
+  CAPITAL
+  REFERRAL
+  OTHER
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -156,13 +191,21 @@ model Lead {
   phone         String?
   industry      String?
   
+  // Product/Service Information
+  productType   ProductType       @default(ESTIMATOR) @map("product_type")
+  leadSource    LeadSource        @default(DIRECT) @map("lead_source")
+  isLeadOnly    Boolean           @default(false) @map("is_lead_only") // No checkout flow
+  isPaid        Boolean           @default(false) @map("is_paid") // Has paid
+  paidAmount    Int?              @map("paid_amount") // Amount in cents
+  paidAt        DateTime?         @map("paid_at")
+  
   // Estimator inputs stored as JSON
   inputsJson    Json              @map("inputs_json")
   
-  // Estimation results
-  estimatedMin  Int               @map("estimated_min")
-  estimatedMax  Int               @map("estimated_max")
-  creditFlags   String[]          @map("credit_flags") // ERC, TIP, WOTC
+  // Estimation results (optional for non-estimator leads)
+  estimatedMin  Int               @default(0) @map("estimated_min")
+  estimatedMax  Int               @default(0) @map("estimated_max")
+  creditFlags   String[]          @map("credit_flags") // RD, TIP, WOTC
   eligibility   EligibilitySignal @default(MODERATE)
   
   // Rules versioning for auditability
@@ -171,7 +214,10 @@ model Lead {
   
   // Lead management
   status        LeadStatus        @default(NEW)
-  source        String?           // Campaign/source tracking
+  source        String?           // Campaign/UTM source tracking
+  
+  // Priority flag for high-value leads
+  priority      Int               @default(0) // 0=normal, 1=high, 2=urgent
   
   // Client who submitted this lead (auto-created on form submission)
   partnerId       String?         @map("partner_id")
@@ -193,9 +239,12 @@ model Lead {
 
   @@unique([email, companyName], name: "email_companyName")
   @@index([status])
+  @@index([productType])
+  @@index([leadSource])
   @@index([assignedStaffId])
   @@index([createdAt])
   @@index([email])
+  @@index([priority])
   @@map("leads")
 }
 

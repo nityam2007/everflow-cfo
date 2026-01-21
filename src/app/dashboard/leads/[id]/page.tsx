@@ -6,9 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { LeadActions } from './lead-actions';
 import { LeadNotes } from './lead-notes';
-import { Building, Mail, Phone, Calendar, DollarSign, Users, Briefcase, ArrowLeft, FileText, MapPin, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Building, Mail, Phone, Calendar, DollarSign, Users, Briefcase, ArrowLeft, FileText, MapPin, Clock, CheckCircle, XCircle, CreditCard, Star, Tag, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { PRODUCT_TYPES, PRIORITY_COLORS } from '@/lib/constants';
 
 interface LeadDetailPageProps {
   params: Promise<{ id: string }>;
@@ -208,6 +209,89 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
             staffList={staffList}
             isAdmin={isAdmin}
           />
+
+          {/* Product & Payment Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <Tag className="h-5 w-5" />
+                Product Info
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              {/* Product Type */}
+              <div className="flex items-center gap-3">
+                <TrendingUp className="h-4 w-4 text-[var(--color-foreground-muted)]" />
+                <div>
+                  <p className="text-[var(--color-foreground-muted)]">Product Type</p>
+                  <Badge variant="secondary">
+                    {lead.productType 
+                      ? (PRODUCT_TYPES[lead.productType as keyof typeof PRODUCT_TYPES]?.label || lead.productType)
+                      : 'Estimator'
+                    }
+                  </Badge>
+                </div>
+              </div>
+
+              {/* Lead Source */}
+              {lead.leadSource && (
+                <div>
+                  <p className="text-[var(--color-foreground-muted)]">Lead Source</p>
+                  <p className="capitalize">{lead.leadSource.replace(/_/g, ' ').toLowerCase()}</p>
+                </div>
+              )}
+
+              {/* Priority */}
+              {lead.priority !== null && lead.priority > 0 && (
+                <div className="flex items-center gap-3">
+                  <Star className={`h-4 w-4 ${
+                    lead.priority === 2 ? 'text-red-600 fill-red-600' : 
+                    lead.priority === 1 ? 'text-orange-500 fill-orange-500' : 
+                    'text-gray-400'
+                  }`} />
+                  <div>
+                    <p className="text-[var(--color-foreground-muted)]">Priority</p>
+                    <p className="font-medium">
+                      {lead.priority === 2 ? 'Urgent' : lead.priority === 1 ? 'High' : 'Normal'}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Lead Type */}
+              <div>
+                <p className="text-[var(--color-foreground-muted)]">Lead Type</p>
+                <Badge variant={lead.isLeadOnly ? 'outline' : 'default'}>
+                  {lead.isLeadOnly ? 'Lead Only' : 'Paid Product'}
+                </Badge>
+              </div>
+
+              {/* Payment Status */}
+              {!lead.isLeadOnly && (
+                <div className="flex items-center gap-3">
+                  <CreditCard className={`h-4 w-4 ${lead.isPaid ? 'text-green-600' : 'text-orange-500'}`} />
+                  <div>
+                    <p className="text-[var(--color-foreground-muted)]">Payment</p>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={lead.isPaid ? 'success' : 'warning'}>
+                        {lead.isPaid ? 'Paid' : 'Pending'}
+                      </Badge>
+                      {lead.paidAmount && (
+                        <span className="font-medium">
+                          {formatCurrency(lead.paidAmount / 100)}
+                        </span>
+                      )}
+                    </div>
+                    {lead.paidAt && (
+                      <p className="text-xs text-[var(--color-foreground-subtle)] mt-1">
+                        Paid on {formatDate(lead.paidAt)}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Meta info */}
           <Card>
