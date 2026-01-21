@@ -10,10 +10,13 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Save, Loader2, AlertCircle, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
+// Setting value type
+type SettingValue = string | number | boolean | Record<string, unknown> | unknown[] | null;
+
 interface Setting {
   id: string;
   key: string;
-  value: any;
+  value: SettingValue;
   description: string | null;
   category: string;
   createdAt: string;
@@ -48,10 +51,6 @@ export default function EditSettingPage({ params }: { params: Promise<{ id: stri
     category: 'general'
   });
 
-  useEffect(() => {
-    fetchSetting();
-  }, [resolvedParams.id]);
-
   const fetchSetting = async () => {
     try {
       const response = await fetch('/api/settings');
@@ -75,6 +74,11 @@ export default function EditSettingPage({ params }: { params: Promise<{ id: stri
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchSetting();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedParams.id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

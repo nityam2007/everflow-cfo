@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth-utils';
 import { isValidId, sanitizeString, secureJsonResponse, secureErrorResponse } from '@/lib/security';

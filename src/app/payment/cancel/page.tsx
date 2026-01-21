@@ -18,7 +18,7 @@ export default function PaymentCancelPage() {
         {/* Description */}
         <p className="text-[var(--color-foreground-muted)] mb-8">
           Your payment was cancelled. No charges have been made to your account.
-          If you have any questions, please don't hesitate to contact us.
+          If you have any questions, please don&apos;t hesitate to contact us.
         </p>
 
         {/* Actions */}

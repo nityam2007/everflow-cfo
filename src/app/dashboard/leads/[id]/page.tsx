@@ -6,10 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { LeadActions } from './lead-actions';
 import { LeadNotes } from './lead-notes';
-import { Building, Mail, Phone, Calendar, DollarSign, Users, Briefcase, ArrowLeft, FileText, MapPin, Clock, CheckCircle, XCircle, CreditCard, Star, Tag, TrendingUp } from 'lucide-react';
+import { Building, Mail, Phone, Calendar, DollarSign, Users, ArrowLeft, FileText, CheckCircle, XCircle, CreditCard, Star, Tag, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { PRODUCT_TYPES, PRIORITY_COLORS } from '@/lib/constants';
+import { PRODUCT_TYPES } from '@/lib/constants';
 
 interface LeadDetailPageProps {
   params: Promise<{ id: string }>;

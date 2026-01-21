@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { PageHeader } from '@/components/page-header';
 import { formatCurrency, formatDate } from '@/lib/utils';
-import { LEAD_STATUS_COLORS, ELIGIBILITY_COLORS, ASSIGNMENT_STATUS_COLORS, PRODUCT_TYPES } from '@/lib/constants';
-import { Users, DollarSign, TrendingUp, Clock, Building2, CheckCircle, CreditCard, Star, Tag } from 'lucide-react';
+import { LEAD_STATUS_COLORS, ASSIGNMENT_STATUS_COLORS, PRODUCT_TYPES } from '@/lib/constants';
+import { Users, DollarSign, Building2, CheckCircle, CreditCard, Star, Tag } from 'lucide-react';
 import Link from 'next/link';
 
 interface DashboardStats {

@@ -20,7 +20,7 @@ const sendOtpSchema = z.object({
 
 // Constants for OTP security
 const OTP_EXPIRY_SECONDS = 600; // 10 minutes
-const MAX_OTP_ATTEMPTS = 3;
+// MAX_OTP_ATTEMPTS is used in auth.ts for verification attempts
 
 export async function POST(request: NextRequest) {
   try {

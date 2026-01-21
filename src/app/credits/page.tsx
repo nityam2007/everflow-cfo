@@ -22,7 +22,7 @@ export default function CreditsPage() {
                 Non-Dilutive Capital Recovery
               </h1>
               <p className="ef-section-subtitle max-w-2xl mx-auto">
-                We help you claim tax credits you're entitled to. R&D is our flagship program.
+                We help you claim tax credits you&apos;re entitled to. R&amp;D is our flagship program.
               </p>
             </div>
 

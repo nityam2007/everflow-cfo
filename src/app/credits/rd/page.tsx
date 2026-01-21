@@ -96,7 +96,7 @@ export default function RDCreditPage() {
             
             <h1 className="text-3xl font-bold mb-4">Thank You!</h1>
             <p className="text-lg text-[var(--color-foreground-muted)] mb-8">
-              We've received your R&D credit eligibility request. Our team will review 
+              We&apos;ve received your R&amp;D credit eligibility request. Our team will review 
               your information and connect you with a trusted partner shortly.
             </p>
 
@@ -153,7 +153,7 @@ export default function RDCreditPage() {
               <p className="ef-section-label">R&D Tax Credit</p>
               <h1 className="text-2xl font-bold">Short Eligibility Form</h1>
               <p className="text-[var(--color-foreground-muted)] mt-2">
-                We'll assess your eligibility and connect you with a trusted partner.
+                We&apos;ll assess your eligibility and connect you with a trusted partner.
               </p>
             </div>
 

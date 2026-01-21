@@ -227,7 +227,7 @@ export default function LoginPage() {
                     className="ef-input"
                   />
                   <p className="text-[var(--text-xs)] text-[var(--color-foreground-muted)] mt-2">
-                    We'll send a verification code to your email
+                    We&apos;ll send a verification code to your email
                   </p>
                 </div>
 

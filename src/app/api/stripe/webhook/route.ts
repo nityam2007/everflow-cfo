@@ -56,7 +56,6 @@ export async function POST(request: NextRequest) {
         const companyName = session.metadata?.companyName || customerName;
         const billingAddress = session.customer_details?.address;
         const productKey = session.metadata?.productKey || 'UNKNOWN';
-        const leadId = session.metadata?.leadId;
         const customerId = typeof session.customer === 'string' ? session.customer : session.customer?.id || null;
         
         if (customerEmail) {

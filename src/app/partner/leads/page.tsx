@@ -2,11 +2,11 @@ import { redirect } from 'next/navigation';
 import { getSession } from '@/lib/auth-utils';
 import { db } from '@/lib/db';
 import { PageHeader } from '@/components/page-header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LEAD_STATUS_COLORS, PRODUCT_TYPES } from '@/lib/constants';
 import Link from 'next/link';
-import { FileText, Building, Calendar, DollarSign, ArrowRight, Search, CreditCard, Tag } from 'lucide-react';
+import { FileText, DollarSign, ArrowRight, CreditCard, Tag } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
 async function getPartnerLeads(partnerId: string) {

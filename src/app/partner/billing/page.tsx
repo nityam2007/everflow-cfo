@@ -4,7 +4,6 @@ import { db } from '@/lib/db';
 import { stripe, PRODUCTS } from '@/lib/stripe';
 import { PageHeader } from '@/components/page-header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { CreditCard, DollarSign, Calendar, CheckCircle, Clock, FileText } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
@@ -138,7 +137,9 @@ export default async function PartnerBillingPage() {
     redirect('/login');
   }
 
-  const [payments, partner] = await Promise.all([
+  // Note: partner info fetched for potential future use (e.g., billing tier display)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [payments, _partner] = await Promise.all([
     getPartnerPayments(session.user.id, session.user.email),
     getPartnerInfo(session.user.id),
   ]);

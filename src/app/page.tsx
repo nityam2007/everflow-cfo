@@ -4,7 +4,6 @@ import {
   Check, 
   Shield, 
   TrendingUp, 
-  Building2, 
   Utensils, 
   HardHat, 
   HeartPulse,
@@ -15,12 +14,10 @@ import {
   Sparkles,
   BadgeCheck,
   Landmark,
-  ChevronRight,
   Star,
   Zap,
   Lock,
   Award,
-  Quote,
   Wrench,
   Hotel,
   ShoppingBag,
@@ -28,8 +25,7 @@ import {
   Briefcase,
   Heart,
   AlertTriangle,
-  CheckCircle2,
-  TrendingUp as TrendUp
+  CheckCircle2
 } from 'lucide-react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -114,6 +110,7 @@ export default function HomePage() {
                   {/* iPhone Screen with wallpaper */}
                   <div className="ef-iphone-screen">
                     {/* iOS-style wallpaper image */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
                       src="/images/iphone-wallpaper.png" 
                       alt="" 
@@ -180,7 +177,7 @@ export default function HomePage() {
 
             <div className="max-w-4xl mx-auto mb-12 animate-on-scroll">
               <p className="text-lg text-center text-gray-700 leading-relaxed mb-8">
-                Founders fail because their narrative doesn't match their numbers. We fix that. Our team
+                Founders fail because their narrative doesn&apos;t match their numbers. We fix that. Our team
                 of Investment Banking Analysts builds the Financial Model, Valuation, and Pitch Deck you
                 need to close your Series A/B round.
               </p>
@@ -370,7 +367,7 @@ export default function HomePage() {
 
             <div className="max-w-4xl mx-auto mb-12 animate-on-scroll">
               <p className="text-lg text-center text-gray-700 leading-relaxed mb-8">
-                Your back-office shouldn't be a liability. We provide full-stack accounting, from daily
+                Your back-office shouldn&apos;t be a liability. We provide full-stack accounting, from daily
                 bookkeeping cleanup to payroll management and tax filings.
               </p>
               
@@ -474,7 +471,7 @@ export default function HomePage() {
                 Non-Dilutive Capital Recovery
               </h2>
               <p className="ef-section-subtitle">
-                We help you claim R&D credits and other tax incentives you're entitled to.
+                We help you claim R&amp;D credits and other tax incentives you&apos;re entitled to.
               </p>
             </div>
 
@@ -585,7 +582,7 @@ export default function HomePage() {
             <div className="grid md:grid-cols-3 gap-6">
               {/* Testimonial 1 - Restaurant */}
               <div className="ef-testimonial animate-on-scroll">
-                <span className="ef-testimonial-quote-bg">"</span>
+                <span className="ef-testimonial-quote-bg">&quot;</span>
                 <div className="ef-testimonial-header">
                   <div className="ef-testimonial-stars">
                     {[...Array(5)].map((_, i) => (
@@ -597,12 +594,13 @@ export default function HomePage() {
                   </span>
                 </div>
                 <p className="ef-testimonial-text">
-                  "EverflowCFO helped our restaurant group recover $127,000 in FICA Tip Credits we didn't even know we qualified for. <strong>The process was seamless.</strong>"
+                  &quot;EverflowCFO helped our restaurant group recover $127,000 in FICA Tip Credits we didn&apos;t even know we qualified for. <strong>The process was seamless.</strong>&quot;
                 </p>
                 <div className="ef-testimonial-divider"></div>
                 <div className="ef-testimonial-footer">
                   <div className="ef-testimonial-author">
                     <div className="ef-testimonial-avatar">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop&crop=face" alt="Marco Rodriguez" />
                     </div>
                     <div className="ef-testimonial-info">
@@ -622,7 +620,7 @@ export default function HomePage() {
 
               {/* Testimonial 2 - Healthcare */}
               <div className="ef-testimonial animate-on-scroll animation-delay-100">
-                <span className="ef-testimonial-quote-bg">"</span>
+                <span className="ef-testimonial-quote-bg">&quot;</span>
                 <div className="ef-testimonial-header">
                   <div className="ef-testimonial-stars">
                     {[...Array(5)].map((_, i) => (
@@ -634,12 +632,13 @@ export default function HomePage() {
                   </span>
                 </div>
                 <p className="ef-testimonial-text">
-                  "We were skeptical at first, but EverflowCFO delivered. $86,000 in WOTC credits deposited within 8 weeks. <strong>No upfront cost made it a no-brainer.</strong>"
+                  &quot;We were skeptical at first, but EverflowCFO delivered. $86,000 in WOTC credits deposited within 8 weeks. <strong>No upfront cost made it a no-brainer.</strong>&quot;
                 </p>
                 <div className="ef-testimonial-divider"></div>
                 <div className="ef-testimonial-footer">
                   <div className="ef-testimonial-author">
                     <div className="ef-testimonial-avatar">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop&crop=face" alt="Sarah Johnson" />
                     </div>
                     <div className="ef-testimonial-info">
@@ -659,7 +658,7 @@ export default function HomePage() {
 
               {/* Testimonial 3 - Construction */}
               <div className="ef-testimonial animate-on-scroll animation-delay-200">
-                <span className="ef-testimonial-quote-bg">"</span>
+                <span className="ef-testimonial-quote-bg">&quot;</span>
                 <div className="ef-testimonial-header">
                   <div className="ef-testimonial-stars">
                     {[...Array(5)].map((_, i) => (
@@ -671,12 +670,13 @@ export default function HomePage() {
                   </span>
                 </div>
                 <p className="ef-testimonial-text">
-                  "Their conservative approach gave us confidence. <strong>Every claim was documented and IRS-ready.</strong> We received $215,000 in R&D tax credits."
+                  &quot;Their conservative approach gave us confidence. <strong>Every claim was documented and IRS-ready.</strong> We received $215,000 in R&amp;D tax credits.&quot;
                 </p>
                 <div className="ef-testimonial-divider"></div>
                 <div className="ef-testimonial-footer">
                   <div className="ef-testimonial-author">
                     <div className="ef-testimonial-avatar">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=96&h=96&fit=crop&crop=face" alt="David Kim" />
                     </div>
                     <div className="ef-testimonial-info">
@@ -783,7 +783,7 @@ export default function HomePage() {
               </h2>
               <p className="ef-section-subtitle mx-auto text-center">
                 From restaurants to construction to healthcare—federal payroll credits are designed for businesses like yours.
-                Most employers don't know they qualify.
+                Most employers don&apos;t know they qualify.
               </p>
 
               {/* Single Stats Container with Dividers */}
@@ -825,7 +825,7 @@ export default function HomePage() {
               </h2>
               
               <p className="ef-vision-subtext">
-                These aren't just tax refunds—they're capital for your next expansion,
+                These aren&apos;t just tax refunds—they&apos;re capital for your next expansion,
                 new equipment, or additional hires. Real money back in your business.
               </p>
 

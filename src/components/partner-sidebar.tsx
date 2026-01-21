@@ -8,7 +8,6 @@ import {
   FileText, 
   CreditCard, 
   User, 
-  Settings,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';

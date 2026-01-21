@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Lightbulb, Clock, Phone, Users } from 'lucide-react';
+import { CheckCircle, Lightbulb, Clock, Phone } from 'lucide-react';
 import { Suspense } from 'react';
 
 function ConfirmationContent() {
@@ -47,7 +47,7 @@ function ConfirmationContent() {
               {credit.name} Inquiry Submitted
             </CardTitle>
             <CardDescription className="text-lg">
-              We've received your information and will be in touch shortly
+              We&apos;ve received your information and will be in touch shortly
             </CardDescription>
           </CardHeader>
           
@@ -97,7 +97,7 @@ function ConfirmationContent() {
                   <div>
                     <p className="font-medium text-[var(--color-foreground)]">Eligibility Assessment</p>
                     <p className="text-sm text-[var(--color-foreground-muted)]">
-                      We'll review your qualifying activities and estimate potential credit value
+                      We&apos;ll review your qualifying activities and estimate potential credit value
                     </p>
                   </div>
                 </div>

@@ -138,7 +138,8 @@ export const cache = {
   },
 
   // Invalidation helpers
-  invalidateDashboard: async (userId?: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  invalidateDashboard: async (_userId?: string) => {
     await cache.delPattern('dashboard:stats:*');
   },
 

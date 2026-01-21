@@ -1,4 +1,4 @@
-import { Loader2 } from 'lucide-react';
+// Loading skeleton for dashboard - uses CSS animations instead of icons
 
 export default function DashboardLoading() {
   return (

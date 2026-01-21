@@ -230,7 +230,7 @@ export async function getRulesAsync(version?: string): Promise<EstimatorRulesCon
     
     if (dbRules && dbRules.rulesConfig) {
       // Parse the DB JSON into our config format
-      const config = dbRules.rulesConfig as any;
+      const config = dbRules.rulesConfig as Partial<EstimatorRulesConfig>;
       return {
         version: dbRules.version,
         effectiveDate: dbRules.effectiveDate.toISOString().split('T')[0],

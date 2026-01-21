@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/auth-utils';
 import { rulesV1_0_0 } from '@/lib/rules/estimator-rules';
@@ -123,7 +123,8 @@ export async function POST(request: NextRequest) {
 }
 
 // Helper function to seed default rules if none exist
-// Not exported - used internally or from seed script
+// This function should be called from seed scripts, not exported from route
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function seedDefaultRules() {
   const existingRules = await db.estimatorRules.findFirst();
   

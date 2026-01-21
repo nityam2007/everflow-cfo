@@ -44,7 +44,7 @@ function PaymentSuccessContent() {
           </h1>
           
           <p className="text-lg text-gray-600 mb-8">
-            Thank you for your purchase. We've received your payment and will get started on your project right away.
+            Thank you for your purchase. We&apos;ve received your payment and will get started on your project right away.
           </p>
 
           <div className="bg-gray-50 p-6 mb-8 text-left">
@@ -52,7 +52,7 @@ function PaymentSuccessContent() {
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
-                <span>You'll receive a confirmation email within the next few minutes</span>
+                <span>You&apos;ll receive a confirmation email within the next few minutes</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
@@ -60,7 +60,7 @@ function PaymentSuccessContent() {
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
-                <span>You'll get access to your dedicated project dashboard</span>
+                <span>You&apos;ll get access to your dedicated project dashboard</span>
               </li>
             </ul>
           </div>

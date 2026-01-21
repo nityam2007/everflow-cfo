@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/redis';
-import { timingSafeEqual, maskEmail, hashForLogging } from '@/lib/security';
+import { timingSafeEqual, maskEmail } from '@/lib/security';
 
 const loginSchema = z.object({
   email: z.string().email(),

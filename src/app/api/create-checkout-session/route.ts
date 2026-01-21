@@ -36,21 +36,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let { 
-      productKey, 
-      customerEmail, 
-      customerName,
-      customerPhone,
-      leadId,
-      metadata = {}
-    } = await request.json();
+    const body = await request.json();
+    const { metadata = {} } = body;
 
     // Sanitize inputs
-    productKey = sanitizeHtml(productKey || '');
-    customerEmail = sanitizeEmail(customerEmail || '');
-    customerName = sanitizeHtml(customerName || '');
-    customerPhone = sanitizePhone(customerPhone || '');
-    leadId = sanitizeHtml(leadId || '');
+    const productKey = sanitizeHtml(body.productKey || '');
+    const customerEmail = sanitizeEmail(body.customerEmail || '');
+    const customerName = sanitizeHtml(body.customerName || '');
+    const customerPhone = sanitizePhone(body.customerPhone || '');
+    const leadId = sanitizeHtml(body.leadId || '');
 
     if (!productKey) {
       return NextResponse.json(

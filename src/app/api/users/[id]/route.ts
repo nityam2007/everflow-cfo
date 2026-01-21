@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+// NextResponse not needed - using secure helpers
 import bcrypt from 'bcryptjs';
 import { requireAdmin, getSession } from '@/lib/auth-utils';
 import { db } from '@/lib/db';

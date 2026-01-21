@@ -10,13 +10,16 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Save, Loader2, AlertCircle, Trash2, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
+// Rules config type
+type RulesConfigValue = Record<string, unknown>;
+
 interface RulesData {
   id: string;
   version: string;
   effectiveDate: string;
   description: string | null;
   isActive: boolean;
-  rulesConfig: any;
+  rulesConfig: RulesConfigValue;
   createdAt: string;
   updatedAt: string;
   createdBy?: {
@@ -44,10 +47,6 @@ export default function EditRulesPage({ params }: { params: Promise<{ id: string
     rulesConfig: ''
   });
 
-  useEffect(() => {
-    fetchRules();
-  }, [resolvedParams.id]);
-
   const fetchRules = async () => {
     try {
       const response = await fetch(`/api/rules/${resolvedParams.id}`);
@@ -69,6 +68,11 @@ export default function EditRulesPage({ params }: { params: Promise<{ id: string
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchRules();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedParams.id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

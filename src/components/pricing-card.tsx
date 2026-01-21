@@ -14,7 +14,7 @@ interface PricingCardProps {
   description: string;
   features: string[];
   ctaText: string;
-  recurring?: boolean;
+  recurring?: boolean; // Reserved for future subscription features
   pricePrefix?: string;
   priceSuffix?: string;
   turnaround?: string;
@@ -40,6 +40,7 @@ export function PricingCard({
   description,
   features,
   ctaText,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   recurring = false,
   pricePrefix,
   priceSuffix,
@@ -275,7 +276,7 @@ export function PricingCard({
               </div>
 
               <p className="text-xs text-center text-gray-500 mt-4">
-                🔒 Your information is secure. We'll redirect you to Stripe for payment.
+                🔒 Your information is secure. We&apos;ll redirect you to Stripe for payment.
               </p>
             </form>
           </div>

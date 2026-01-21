@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/utils';
-import { Activity, User, Building2, FileText, Clock, Settings2, Shield, ArrowLeft, Filter } from 'lucide-react';
+import { Activity, User, Building2, FileText, Clock, Settings2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function AuditLogPage() {

@@ -57,7 +57,7 @@ export default function PartnerProfilePage() {
         phone: data.phone || '',
         companyName: data.companyName || '',
       });
-    } catch (err) {
+    } catch {
       setError('Failed to load profile');
     } finally {
       setLoading(false);

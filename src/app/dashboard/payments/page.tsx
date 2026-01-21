@@ -12,7 +12,6 @@ import {
   Loader2,
   RefreshCw,
   Search,
-  Download,
   Filter
 } from 'lucide-react';
 import { PageHeader } from '@/components/page-header';
@@ -133,7 +132,7 @@ export default function AdminPaymentsPage() {
         setPayments(data.payments || []);
         setSubscriptions(data.subscriptions || []);
       }
-    } catch (err) {
+    } catch {
       setError('Failed to load payment data');
     } finally {
       setLoading(false);

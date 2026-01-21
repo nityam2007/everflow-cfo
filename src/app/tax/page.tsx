@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Building2, User, FileCheck, Clock, Zap, Check } from 'lucide-react';
+import { ArrowRight, Building2, User, FileCheck, Clock, Zap } from 'lucide-react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ScrollAnimations } from '@/components/scroll-animations';

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, FileText, Clock, Phone, Calendar } from 'lucide-react';
+import { CheckCircle, Clock, Phone } from 'lucide-react';
 import { Suspense } from 'react';
 
 function ConfirmationContent() {
@@ -68,7 +68,7 @@ function ConfirmationContent() {
                   <div>
                     <p className="font-medium text-[var(--color-foreground)]">Complete Payment</p>
                     <p className="text-sm text-[var(--color-foreground-muted)]">
-                      You'll be redirected to secure payment checkout
+                      You&apos;ll be redirected to secure payment checkout
                     </p>
                   </div>
                 </div>

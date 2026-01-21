@@ -5,7 +5,6 @@ import { formatDate } from '@/lib/utils';
 import { cache } from '@/lib/redis';
 import { 
   sanitizeString, 
-  getClientIP, 
   rateLimits, 
   secureErrorResponse,
   addSecurityHeaders 
@@ -20,7 +19,6 @@ export async function GET(request: NextRequest) {
   }
 
   // Rate limit exports (resource-intensive operation)
-  const ip = getClientIP(request);
   const rateKey = `rate:export:${session.user.id}`;
   const { allowed, remaining } = await cache.rateLimit(
     rateKey,

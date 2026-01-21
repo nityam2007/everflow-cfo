@@ -2,6 +2,41 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe, PRODUCTS } from '@/lib/stripe';
 import { db } from '@/lib/db';
 import { auth } from '@/lib/auth';
+import Stripe from 'stripe';
+
+// Payment record shape from our processing
+interface PaymentRecord {
+  id: string;
+  stripeSessionId?: string;
+  amount: number;
+  currency: string;
+  status: string;
+  created: number;
+  paidAt?: number | null;
+  description: string | null;
+  productKey?: string | null;
+  customer: string | null;
+  receipt_email: string | null | undefined;
+  customerName?: string | null | undefined;
+  customerPhone?: string | null | undefined;
+  billingAddress?: {
+    city?: string | null;
+    country?: string | null;
+    line1?: string | null;
+    line2?: string | null;
+    postal_code?: string | null;
+    state?: string | null;
+  } | null;
+  partner?: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string | null;
+    companyName: string;
+  } | null;
+  metadata?: Record<string, string> | null;
+  source: 'database' | 'stripe';
+}
 
 // Helper to get product name from product key
 function getProductName(productKey: string): string {
@@ -30,9 +65,9 @@ export async function GET(request: NextRequest) {
       // In production, verify the customer belongs to this user
     }
 
-    let payments: any[] = [];
-    let subscriptions: any[] = [];
-    let dbPayments: any[] = [];
+    let payments: PaymentRecord[] = [];
+    let subscriptions: Stripe.Subscription[] = [];
+    let dbPayments: PaymentRecord[] = [];
 
     // Always fetch from database first (our records)
     try {
@@ -76,7 +111,7 @@ export async function GET(request: NextRequest) {
           state: p.billingState,
         },
         partner: p.partner,
-        metadata: p.metadata,
+        metadata: p.metadata as Record<string, string> | null,
         source: 'database',
       }));
     } catch (dbError) {

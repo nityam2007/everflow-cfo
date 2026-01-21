@@ -315,7 +315,7 @@ export default function IndividualTaxPage() {
         <section className="ef-section ef-section-alt">
           <div className="ef-container">
             <div className="text-center mb-12">
-              <h2 className="ef-section-title">What's Included</h2>
+              <h2 className="ef-section-title">What&apos;s Included</h2>
               <p className="ef-section-subtitle">Comprehensive personal tax filing for freelancers and individuals</p>
             </div>
 

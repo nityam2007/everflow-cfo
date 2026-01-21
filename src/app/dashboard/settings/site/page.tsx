@@ -7,10 +7,13 @@ import { formatDate } from '@/lib/utils';
 import { Settings2, ArrowLeft, Plus, Database, Edit2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 
+// JSON value type for settings
+type SettingValue = string | number | boolean | Record<string, unknown> | unknown[] | null;
+
 interface SiteSetting {
   id: string;
   key: string;
-  value: any;
+  value: SettingValue;
   description: string | null;
   category: string;
   createdAt: Date;
@@ -34,7 +37,7 @@ export default async function SiteSettingsPage() {
         updatedBy: { select: { id: true, name: true } }
       }
     });
-  } catch (e) {
+  } catch {
     error = 'SiteSetting table not found. Please run: npx prisma migrate dev';
   }
 

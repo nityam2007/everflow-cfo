@@ -106,7 +106,7 @@ export default function BillingPage() {
         setPayments(data.payments || []);
         setSubscriptions(data.subscriptions || []);
       }
-    } catch (err) {
+    } catch {
       setError('Failed to load billing data');
     } finally {
       setLoading(false);

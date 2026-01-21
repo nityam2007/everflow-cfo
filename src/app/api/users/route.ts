@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { db } from '@/lib/db';
 import { getServerSession } from '@/lib/auth-utils';
 import bcrypt from 'bcryptjs';
@@ -9,7 +9,6 @@ import {
   sanitizeString,
   secureJsonResponse,
   secureErrorResponse,
-  addSecurityHeaders,
 } from '@/lib/security';
 
 const createUserSchema = z.object({

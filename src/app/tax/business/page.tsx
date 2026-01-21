@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, ArrowLeft, Check, FileCheck, Clock, Zap, Building2, Loader2 } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Check, Clock, Zap, Building2, Loader2 } from 'lucide-react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ScrollAnimations } from '@/components/scroll-animations';

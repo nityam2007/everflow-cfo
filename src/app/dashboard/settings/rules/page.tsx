@@ -4,8 +4,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/utils';
-import { FileCode, Plus, CheckCircle2, Clock, Trash2, AlertCircle, ArrowLeft } from 'lucide-react';
+import { FileCode, Plus, CheckCircle2, Clock, AlertCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+
+// Rules config type for better type safety
+interface RulesConfig {
+  credits?: {
+    erc?: { enabled?: boolean };
+    tip?: { enabled?: boolean };
+    wotc?: { enabled?: boolean };
+    [key: string]: { enabled?: boolean } | undefined;
+  };
+  [key: string]: unknown;
+}
 
 interface EstimatorRule {
   id: string;
@@ -13,7 +24,7 @@ interface EstimatorRule {
   effectiveDate: Date;
   description: string | null;
   isActive: boolean;
-  rulesConfig: any;
+  rulesConfig: RulesConfig | null;
   createdAt: Date;
   updatedAt: Date;
   createdBy?: {
@@ -35,8 +46,8 @@ export default async function RulesPage() {
       include: {
         createdBy: { select: { id: true, name: true, email: true } }
       }
-    });
-  } catch (e) {
+    }) as unknown as EstimatorRule[];
+  } catch {
     error = 'EstimatorRules table not found. Please run: npx prisma migrate dev';
   }
 
@@ -184,19 +195,19 @@ export default async function RulesPage() {
                     <div>
                       <p className="text-[var(--color-foreground-muted)]">ERC</p>
                       <p className="font-medium">
-                        {(rule.rulesConfig as any)?.credits?.erc?.enabled ? 'Enabled' : 'Disabled'}
+                        {(rule.rulesConfig as RulesConfig)?.credits?.erc?.enabled ? 'Enabled' : 'Disabled'}
                       </p>
                     </div>
                     <div>
                       <p className="text-[var(--color-foreground-muted)]">TIP Credit</p>
                       <p className="font-medium">
-                        {(rule.rulesConfig as any)?.credits?.tip?.enabled ? 'Enabled' : 'Disabled'}
+                        {(rule.rulesConfig as RulesConfig)?.credits?.tip?.enabled ? 'Enabled' : 'Disabled'}
                       </p>
                     </div>
                     <div>
                       <p className="text-[var(--color-foreground-muted)]">WOTC</p>
                       <p className="font-medium">
-                        {(rule.rulesConfig as any)?.credits?.wotc?.enabled ? 'Enabled' : 'Disabled'}
+                        {(rule.rulesConfig as RulesConfig)?.credits?.wotc?.enabled ? 'Enabled' : 'Disabled'}
                       </p>
                     </div>
                   </div>

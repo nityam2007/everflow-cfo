@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { db } from '@/lib/db';
 import { cache } from '@/lib/redis';
 import { sanitizeHtml, sanitizeEmail, sanitizePhone, getClientIP, secureJsonResponse, secureErrorResponse, rateLimits, hashForLogging } from '@/lib/security';
-import { PAID_PRODUCT_KEYS, isProductPaid } from '@/lib/stripe';
+import { PAID_PRODUCT_KEYS } from '@/lib/stripe';
 
 // Redis-based rate limiting for checkout
 async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }> {
@@ -26,15 +26,15 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    let { name, email, phone, companyName, productKey, productName, amount } = body;
-
+    const { amount } = body;
+    
     // Sanitize all inputs
-    name = sanitizeHtml(name || '');
-    email = sanitizeEmail(email || '');
-    phone = sanitizePhone(phone || '');
-    companyName = sanitizeHtml(companyName || '');
-    productKey = sanitizeHtml(productKey || '');
-    productName = sanitizeHtml(productName || '');
+    const name = sanitizeHtml(body.name || '');
+    const email = sanitizeEmail(body.email || '');
+    const phone = sanitizePhone(body.phone || '');
+    const companyName = sanitizeHtml(body.companyName || '');
+    const productKey = sanitizeHtml(body.productKey || '');
+    const productName = sanitizeHtml(body.productName || '');
 
     // Validate required fields
     if (!name || !email || !phone) {
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate productKey against allowed PAID products (v5.0.1)
-    if (!PAID_PRODUCT_KEYS.includes(productKey)) {
+    if (!(PAID_PRODUCT_KEYS as readonly string[]).includes(productKey)) {
       console.warn(`[SECURITY] Invalid product key attempted: ${productKey} from ${ipHash}`);
       return secureErrorResponse('Invalid product', 400);
     }

@@ -155,7 +155,7 @@ export default function NewSettingPage() {
                 required
               />
               <p className="text-xs text-[var(--color-foreground-muted)]">
-                Must be valid JSON. Examples: "string value", 123, true, {"{}"}
+                Must be valid JSON. Examples: &quot;string value&quot;, 123, true, {"{}"}
               </p>
             </div>
           </CardContent>
