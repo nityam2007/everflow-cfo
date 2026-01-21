@@ -83,9 +83,9 @@ function ConfirmationContent() {
                     1
                   </div>
                   <div>
-                    <p className="font-medium text-[var(--color-foreground)]">Initial Consultation</p>
+                    <p className="font-medium text-[var(--color-foreground)]">Initial Review</p>
                     <p className="text-sm text-[var(--color-foreground-muted)]">
-                      Our tax credit specialist will reach out within 24-48 hours to schedule a call
+                      Our tax credit specialist will reach out within 24-48 hours via email with next steps
                     </p>
                   </div>
                 </div>

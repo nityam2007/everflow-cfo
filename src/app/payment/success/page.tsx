@@ -56,7 +56,7 @@ function PaymentSuccessContent() {
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
-                <span>Our team will reach out within 24 hours to schedule your onboarding call</span>
+                <span>Our team will reach out within 24 hours with your intake form and next steps</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="h-5 w-5 text-[var(--brand-success)] flex-shrink-0 mt-0.5" />
