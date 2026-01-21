@@ -12,7 +12,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: 'EverflowCFO | Recover the Payroll Credits You\'re Owed',
   description: 'Restaurants, hotels, and small businesses—federal programs return billions annually. Take our 2-minute quiz to find your potential refund.',
-  keywords: ['payroll credits', 'ERC', 'employee retention credit', 'WOTC', 'FICA tip credit', 'tax credits', 'IRS refund'],
+  keywords: ['payroll credits', 'R&D tax credit', 'WOTC', 'FICA tip credit', 'tax credits', 'IRS refund'],
   authors: [{ name: 'EverflowCFO' }],
   icons: {
     icon: '/favicon.svg',

@@ -25,7 +25,7 @@ export function Footer() {
               <div className="ef-footer-links">
                 <Link href="/#programs" className="ef-footer-link-light text-xs sm:text-sm">FICA Tip</Link>
                 <Link href="/#programs" className="ef-footer-link-light text-xs sm:text-sm">WOTC</Link>
-                <Link href="/#programs" className="ef-footer-link-light text-xs sm:text-sm">ERC</Link>
+                <Link href="/credits/rd" className="ef-footer-link-light text-xs sm:text-sm">R&D</Link>
               </div>
             </div>
 

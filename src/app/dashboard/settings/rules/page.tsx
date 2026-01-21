@@ -191,13 +191,7 @@ export default async function RulesPage() {
                   </div>
                   
                   {/* Rules Summary */}
-                  <div className="mt-4 pt-4 border-t border-[var(--color-border)] grid grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <p className="text-[var(--color-foreground-muted)]">ERC</p>
-                      <p className="font-medium">
-                        {(rule.rulesConfig as RulesConfig)?.credits?.erc?.enabled ? 'Enabled' : 'Disabled'}
-                      </p>
-                    </div>
+                  <div className="mt-4 pt-4 border-t border-[var(--color-border)] grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <p className="text-[var(--color-foreground-muted)]">TIP Credit</p>
                       <p className="font-medium">

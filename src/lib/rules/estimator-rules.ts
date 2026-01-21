@@ -8,31 +8,11 @@ export interface EstimatorRulesConfig {
   effectiveDate: string;
   description: string;
   credits: {
-    erc: ERCRules;
     tip: TIPRules;
     wotc: WOTCRules;
   };
   employeeRanges: Record<string, number>;
   payrollRanges: Record<string, number>;
-}
-
-interface ERCRules {
-  enabled: boolean;
-  maxPerEmployee: number;
-  qualifiers: {
-    operationalDisruption: boolean;
-    governmentMandates: boolean;
-  };
-  factors: {
-    conservativeMin: number;
-    conservativeMax: number;
-    bothQualifiersMin: number;
-    bothQualifiersMax: number;
-  };
-  explanations: {
-    eligible: string[];
-    notEligible: string[];
-  };
 }
 
 interface TIPRules {
@@ -99,36 +79,6 @@ export const rulesV1_0_0: EstimatorRulesConfig = {
   },
 
   credits: {
-    // ERC: Employee Retention Credit
-    // Gated - requires specific 2020-2021 eligibility
-    erc: {
-      enabled: true,
-      maxPerEmployee: 26000, // $5,000 (2020) + $21,000 (2021 Q1-Q3)
-      qualifiers: {
-        operationalDisruption: true,
-        governmentMandates: true,
-      },
-      factors: {
-        // Conservative factors when only one qualifier is met
-        conservativeMin: 0.25,
-        conservativeMax: 0.45,
-        // Slightly higher when both qualifiers are met
-        bothQualifiersMin: 0.35,
-        bothQualifiersMax: 0.55,
-      },
-      explanations: {
-        eligible: [
-          'Based on reported 2020-2021 operational disruption',
-          'Subject to IRS verification of qualifying periods',
-          'Conservative pre-assessment pending documentation review',
-        ],
-        notEligible: [
-          'No qualifying disruption or mandate impact reported',
-          'ERC requires specific 2020-2021 eligibility criteria',
-        ],
-      },
-    },
-
     // TIP: FICA Tip Credit (Section 45B)
     // Hero credit for restaurants/hospitality
     tip: {

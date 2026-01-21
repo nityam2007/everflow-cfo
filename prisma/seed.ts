@@ -133,7 +133,7 @@ async function main() {
       },
       estimatedMin: 125000,
       estimatedMax: 275000,
-      creditFlags: ['ERC', 'TIP'],
+      creditFlags: ['TIP'],
       eligibility: 'STRONG' as const,
       source: 'website',
       status: 'IN_PROGRESS' as const,
@@ -160,7 +160,7 @@ async function main() {
       },
       estimatedMin: 350000,
       estimatedMax: 650000,
-      creditFlags: ['ERC', 'TIP', 'WOTC'],
+      creditFlags: ['TIP', 'WOTC'],
       eligibility: 'STRONG' as const,
       source: 'website',
       status: 'ASSIGNED' as const,
@@ -213,7 +213,7 @@ async function main() {
       },
       estimatedMin: 180000,
       estimatedMax: 320000,
-      creditFlags: ['ERC', 'TIP', 'WOTC'],
+      creditFlags: ['TIP', 'WOTC'],
       eligibility: 'STRONG' as const,
       source: 'referral',
       status: 'CLOSED' as const,
@@ -240,7 +240,7 @@ async function main() {
       },
       estimatedMin: 75000,
       estimatedMax: 150000,
-      creditFlags: ['ERC', 'TIP'],
+      creditFlags: ['TIP'],
       eligibility: 'MODERATE' as const,
       source: 'cold-email',
       status: 'NEW' as const,
@@ -293,31 +293,6 @@ async function main() {
       '10000000+': 15000000,
     },
     credits: {
-      erc: {
-        enabled: true,
-        maxPerEmployee: 26000,
-        qualifiers: {
-          operationalDisruption: true,
-          governmentMandates: true,
-        },
-        factors: {
-          conservativeMin: 0.25,
-          conservativeMax: 0.45,
-          bothQualifiersMin: 0.35,
-          bothQualifiersMax: 0.55,
-        },
-        explanations: {
-          eligible: [
-            'Based on reported 2020-2021 operational disruption',
-            'Subject to IRS verification of qualifying periods',
-            'Conservative pre-assessment pending documentation review',
-          ],
-          notEligible: [
-            'No qualifying disruption or mandate impact reported',
-            'ERC requires specific 2020-2021 eligibility criteria',
-          ],
-        },
-      },
       tip: {
         enabled: true,
         ficaRate: 0.0765,

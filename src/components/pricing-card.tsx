@@ -8,9 +8,9 @@ interface PricingCardProps {
   title: string;
   price: number | string;
   badge?: string;
-  badgeColor?: 'tip' | 'wotc' | 'erc';
+  badgeColor?: 'tip' | 'wotc' | 'rd';
   icon: React.ReactNode;
-  iconColor?: 'tip' | 'wotc' | 'erc';
+  iconColor?: 'tip' | 'wotc' | 'rd';
   description: string;
   features: string[];
   ctaText: string;
@@ -132,7 +132,7 @@ export function PricingCard({
     }
   };
 
-  const cardClass = highlighted ? 'ef-program-card-erc' : `ef-program-card-${badgeColor}`;
+  const cardClass = highlighted ? 'ef-program-card-rd' : `ef-program-card-${badgeColor}`;
   const iconClass = `ef-program-icon-${iconColor}`;
   const badgeClass = `ef-program-badge-${badgeColor}`;
 

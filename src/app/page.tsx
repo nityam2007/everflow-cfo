@@ -225,9 +225,9 @@ export default function HomePage() {
                 title="The Series A Stack"
                 price={9500}
                 badge="The Full Package"
-                badgeColor="erc"
+                badgeColor="rd"
                 icon={<Briefcase className="h-5 w-5" />}
-                iconColor="erc"
+                iconColor="rd"
                 description="Best for: Founders raising Seed/Series A who need the full narrative."
                 features={[
                   'Everything in Financial Modeling',
@@ -436,9 +436,9 @@ export default function HomePage() {
                 price={3000}
                 priceSuffix="/ Month"
                 badge="The Strategic"
-                badgeColor="erc"
+                badgeColor="rd"
                 icon={<Zap className="h-5 w-5" />}
-                iconColor="erc"
+                iconColor="rd"
                 description="Best for: Funded startups needing burn management and board reporting."
                 features={[
                   'Everything in Managed Back-Office',
@@ -477,12 +477,12 @@ export default function HomePage() {
 
             <div className="ef-program-grid">
               {/* R&D Tax Credit - Flagship */}
-              <div className="ef-program-card ef-program-card-erc group animate-on-scroll">
+              <div className="ef-program-card ef-program-card-rd group animate-on-scroll">
                 <div className="ef-program-header">
-                  <div className="ef-program-icon ef-program-icon-erc">
+                  <div className="ef-program-icon ef-program-icon-rd">
                     <Sparkles className="h-5 w-5" />
                   </div>
-                  <span className="ef-program-badge ef-program-badge-erc">Flagship Program</span>
+                  <span className="ef-program-badge ef-program-badge-rd">Flagship Program</span>
                 </div>
                 <h3 className="ef-program-title">R&D Tax Credit</h3>
                 <div className="ef-program-amount-hero">
@@ -541,29 +541,6 @@ export default function HomePage() {
                   Check Eligibility <ArrowRight className="h-4 w-4" />
                 </a>
               </div>
-
-              {/* ERC - REMOVED per planv5: ERC should not exist on the site at all
-              <div className="ef-program-card ef-program-card-erc group animate-on-scroll animation-delay-200">
-                <div className="ef-program-header">
-                  <div className="ef-program-icon ef-program-icon-erc">
-                    <Building2 className="h-5 w-5" />
-                  </div>
-                  <span className="ef-program-badge ef-program-badge-erc">Retention Focus</span>
-                </div>
-                <h3 className="ef-program-title">ERC</h3>
-                <div className="ef-program-amount-hero">
-                  <span className="ef-program-amount-prefix">Up to</span>
-                  <span className="ef-program-amount-value">$26,000</span>
-                </div>
-                <p className="ef-program-desc">
-                  Employee Retention Credit for 2020–2021 disruptions.
-                  Per employee. Subject to IRS verification.
-                </p>
-                <a href="/estimator" className="ef-program-link">
-                  Check Eligibility <ArrowRight className="h-4 w-4" />
-                </a>
-              </div>
-              */}
             </div>
           </div>
         </section>

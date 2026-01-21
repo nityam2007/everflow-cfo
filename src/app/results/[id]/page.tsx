@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Header } from '@/components/header';
-import { ArrowRight, CheckCircle, Info, AlertCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle, Info } from 'lucide-react';
 
 type EligibilityType = 'LOW' | 'MODERATE' | 'STRONG';
 
@@ -52,11 +52,6 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
   };
 
   const creditInfo = {
-    ERC: {
-      name: 'Employee Retention Credit',
-      description: 'Requires verification of 2020-2021 qualifying periods. Subject to IRS review.',
-      icon: AlertCircle,
-    },
     TIP: {
       name: 'FICA Tip Credit (Section 45B)',
       description: 'Ongoing annual credit for FICA taxes on employee tips above minimum wage.',
@@ -75,7 +70,6 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
     `Based on reported payroll scale`,
     lead.creditFlags.includes('TIP') && 'Tipped workforce in qualifying industry increases credit exposure',
     lead.creditFlags.includes('WOTC') && 'Targeted hiring signals indicate WOTC opportunity',
-    lead.creditFlags.includes('ERC') && 'ERC eligibility requires detailed verification of 2020-2021 qualifying periods',
     'Final credit amounts subject to payroll documentation review',
   ].filter(Boolean) as string[];
 
@@ -157,16 +151,11 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
                       className="flex items-start gap-3 md:gap-4 p-3 md:p-4 border border-[var(--color-border)] bg-[var(--color-background-pure)]"
                     >
                       <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-                        <Icon className={`h-5 w-5 ${flag === 'ERC' ? 'text-[var(--color-foreground-muted)]' : 'text-[var(--brand-primary)]'}`} />
+                        <Icon className="h-5 w-5 text-[var(--brand-primary)]" />
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-medium text-[var(--color-foreground-muted)] uppercase">{flag}</span>
-                          {flag === 'ERC' && (
-                            <span className="text-xs px-2 py-0.5 bg-[var(--color-background-alt)] rounded text-[var(--color-foreground-muted)]">
-                              Requires Verification
-                            </span>
-                          )}
                           {flag === 'TIP' && (
                             <span className="text-xs px-2 py-0.5 bg-[var(--brand-primary)]/10 rounded text-[var(--brand-primary)]">
                               Ongoing Annual

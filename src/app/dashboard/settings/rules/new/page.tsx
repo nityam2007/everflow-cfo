@@ -12,18 +12,6 @@ import Link from 'next/link';
 // Default rules template - matches existing estimator-rules.ts structure
 const defaultRulesTemplate = {
   credits: {
-    erc: {
-      enabled: true,
-      creditPerEmployee2020: 5000,
-      creditPerEmployee2021: 7000,
-      maxQualifiedWages2020: 10000,
-      maxQualifiedWages2021: 10000,
-      eligibilityYears: [2020, 2021],
-      thresholds: {
-        revenueDeclineQ1Q22020: 0.50,
-        revenueDeclineQ1Q32021: 0.20
-      }
-    },
     tip: {
       enabled: true,
       basePercentage: 0.075,

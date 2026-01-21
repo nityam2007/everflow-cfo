@@ -184,9 +184,9 @@ Every status transition is timestamped and auditable.
 
 The credit estimation engine uses rule-based logic with:
 
-- **ERC:** Employee Retention Credit (COVID-19 related)
 - **TIP:** FICA Tip Credit (restaurants/hospitality)
 - **WOTC:** Work Opportunity Tax Credit
+- **R&D:** Research & Development Tax Credit
 
 All estimates are conservative and statutory-capped.
 

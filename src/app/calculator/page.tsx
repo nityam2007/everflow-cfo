@@ -3,13 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/header';
-import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowRight } from 'lucide-react';
 
 const FICA_RATE = 0.0765;
 
 interface Results {
-  erc: { credit: number; breakdown: string };
   tip: { credit: number; breakdown: string };
   wotc: { credit: number; breakdown: string };
   total: number;
@@ -18,13 +16,6 @@ interface Results {
 export default function CalculatorPage() {
   const [results, setResults] = useState<Results | null>(null);
   const [form, setForm] = useState({
-    employeeCount2020: '',
-    employeeCount2021: '',
-    averageWages2020: '',
-    averageWages2021: '',
-    hadDisruption2020: false,
-    revenueDecline2020: false,
-    revenueDecline2021: false,
     tippedEmployees: '',
     avgTipsPerEmployee: '',
     veteranHires: '',
@@ -39,7 +30,6 @@ export default function CalculatorPage() {
 
   function calculate() {
     const res: Results = {
-      erc: { credit: 0, breakdown: '' },
       tip: { credit: 0, breakdown: '' },
       wotc: { credit: 0, breakdown: '' },
       total: 0,
@@ -87,31 +77,7 @@ export default function CalculatorPage() {
 
     res.wotc = { credit: Math.round(wotcCredit), breakdown: wotcParts.join(' | ') || 'Enter data above' };
 
-    // ERC
-    const emp2020 = parseInt(form.employeeCount2020) || 0;
-    const emp2021 = parseInt(form.employeeCount2021) || 0;
-    const wages2020 = parseInt(form.averageWages2020) || 0;
-    const wages2021 = parseInt(form.averageWages2021) || 0;
-
-    let ercCredit = 0;
-    const ercParts: string[] = [];
-
-    if ((form.hadDisruption2020 || form.revenueDecline2020) && emp2020 > 0 && wages2020 > 0) {
-      const qual = Math.min(wages2020, 10000);
-      const credit = emp2020 * qual * 0.5;
-      ercCredit += credit;
-      ercParts.push(`2020: ${emp2020} × $${qual.toLocaleString()} × 50% = $${credit.toLocaleString()}`);
-    }
-
-    if (form.revenueDecline2021 && emp2021 > 0 && wages2021 > 0) {
-      const qual = Math.min(wages2021 / 4, 10000);
-      const credit = emp2021 * qual * 0.7 * 3;
-      ercCredit += credit;
-      ercParts.push(`2021: ${emp2021} × $${qual.toLocaleString()}/Q × 70% × 3Q = $${credit.toLocaleString()}`);
-    }
-
-    res.erc = { credit: Math.round(ercCredit), breakdown: ercParts.join(' | ') || 'Enter data above' };
-    res.total = res.erc.credit + res.tip.credit + res.wotc.credit;
+    res.total = res.tip.credit + res.wotc.credit;
 
     setResults(res);
   }
@@ -217,95 +183,6 @@ export default function CalculatorPage() {
                 </div>
               </div>
 
-              {/* ERC */}
-              <div className="ef-card">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-                  <p className="ef-feature-title" style={{ color: 'var(--color-foreground-muted)' }}>Employee Retention Credit</p>
-                  <span className="ef-badge ef-badge-erc w-fit">May Apply</span>
-                </div>
-                <div className="ef-alert ef-alert-warning mb-4">
-                  ERC eligibility requires specific 2020–2021 qualifying criteria and is subject to IRS verification.
-                </div>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="ef-label">Employees (2020)</label>
-                      <input
-                        type="number"
-                        placeholder="50"
-                        value={form.employeeCount2020}
-                        onChange={(e) => updateForm('employeeCount2020', e.target.value)}
-                        className="ef-input"
-                      />
-                    </div>
-                    <div>
-                      <label className="ef-label">Avg Wages (2020)</label>
-                      <input
-                        type="number"
-                        placeholder="40000"
-                        value={form.averageWages2020}
-                        onChange={(e) => updateForm('averageWages2020', e.target.value)}
-                        className="ef-input"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="ef-label">Employees (2021)</label>
-                      <input
-                        type="number"
-                        placeholder="50"
-                        value={form.employeeCount2021}
-                        onChange={(e) => updateForm('employeeCount2021', e.target.value)}
-                        className="ef-input"
-                      />
-                    </div>
-                    <div>
-                      <label className="ef-label">Avg Wages (2021)</label>
-                      <input
-                        type="number"
-                        placeholder="42000"
-                        value={form.averageWages2021}
-                        onChange={(e) => updateForm('averageWages2021', e.target.value)}
-                        className="ef-input"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="disruption"
-                        checked={form.hadDisruption2020}
-                        onCheckedChange={(c) => updateForm('hadDisruption2020', !!c)}
-                      />
-                      <label htmlFor="disruption" className="text-[var(--text-xs)] text-[var(--color-foreground-muted)]">
-                        Operations suspended in 2020
-                      </label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="rev2020"
-                        checked={form.revenueDecline2020}
-                        onCheckedChange={(c) => updateForm('revenueDecline2020', !!c)}
-                      />
-                      <label htmlFor="rev2020" className="text-[var(--text-xs)] text-[var(--color-foreground-muted)]">
-                        50%+ revenue decline (2020)
-                      </label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Checkbox
-                        id="rev2021"
-                        checked={form.revenueDecline2021}
-                        onCheckedChange={(c) => updateForm('revenueDecline2021', !!c)}
-                      />
-                      <label htmlFor="rev2021" className="text-[var(--text-xs)] text-[var(--color-foreground-muted)]">
-                        20%+ revenue decline (2021)
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <button onClick={calculate} className="ef-btn ef-btn-primary ef-btn-lg w-full">
                 Calculate Credits
               </button>
@@ -346,18 +223,6 @@ export default function CalculatorPage() {
                             <span className="font-semibold">${results.wotc.credit.toLocaleString()}</span>
                           </div>
                           <p className="text-[var(--text-xs)] text-[var(--color-foreground-muted)]">{results.wotc.breakdown}</p>
-                        </div>
-
-                        {/* ERC */}
-                        <div className="ef-result-item ef-result-erc">
-                          <div className="flex justify-between items-center mb-1">
-                            <div className="flex items-center gap-2">
-                              <span className="text-[var(--text-xs)] font-medium text-[var(--color-erc)]">ERC</span>
-                              <span className="ef-badge ef-badge-erc">Requires Verification</span>
-                            </div>
-                            <span className="font-semibold text-[var(--color-foreground-muted)]">${results.erc.credit.toLocaleString()}</span>
-                          </div>
-                          <p className="text-[var(--text-xs)] text-[var(--color-foreground-subtle)]">{results.erc.breakdown}</p>
                         </div>
                       </div>
 

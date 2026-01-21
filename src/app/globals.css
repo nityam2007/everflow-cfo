@@ -42,9 +42,9 @@
   --color-wotc: #0666EB;
   --color-wotc-bg: #E8F2FF;
   --color-wotc-border: #BFDBFE;
-  --color-erc: #8B5CF6;
-  --color-erc-bg: #F3E8FF;
-  --color-erc-border: #DDD6FE;
+  --color-rd: #8B5CF6;
+  --color-rd-bg: #F3E8FF;
+  --color-rd-border: #DDD6FE;
 
   /* ===== STATUS ===== */
   --color-success: #00D4AA;
@@ -1832,7 +1832,7 @@ h6 {
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--color-erc);
+  background: var(--color-rd);
   color: white;
   padding: 4px 16px;
   font-size: 11px;
@@ -1892,8 +1892,8 @@ h6 {
   --card-accent: var(--color-wotc);
 }
 
-.ef-program-card-erc {
-  --card-accent: var(--color-erc);
+.ef-program-card-rd {
+  --card-accent: var(--color-rd);
 }
 
 /* Program Card Header */
@@ -1927,9 +1927,9 @@ h6 {
   color: var(--color-wotc);
 }
 
-.ef-program-icon-erc {
-  background: var(--color-erc-bg);
-  color: var(--color-erc);
+.ef-program-icon-rd {
+  background: var(--color-rd-bg);
+  color: var(--color-rd);
 }
 
 .ef-program-card:hover .ef-program-icon {
@@ -1950,7 +1950,7 @@ h6 {
 
 .ef-program-badge-tip,
 .ef-program-badge-wotc,
-.ef-program-badge-erc {
+.ef-program-badge-rd {
   background: #f3f4f6;
   color: #4b5563;
 }
@@ -2067,11 +2067,11 @@ h6 {
   border: 2px solid var(--color-border);
 }
 
-.ef-credit-erc {
+.ef-credit-rd {
   background: var(--color-background-alt);
 }
 
-.ef-credit-erc .ef-credit-title {
+.ef-credit-rd .ef-credit-title {
   color: var(--color-foreground-muted);
 }
 
@@ -4053,9 +4053,9 @@ h6 {
   color: var(--color-wotc);
 }
 
-.ef-badge-erc {
-  background: var(--color-erc-bg);
-  color: var(--color-erc);
+.ef-badge-rd {
+  background: var(--color-rd-bg);
+  color: var(--color-rd);
 }
 
 .ef-badge-warning {
@@ -4280,8 +4280,8 @@ h6 {
   background: var(--color-wotc-bg);
 }
 
-.ef-result-erc {
-  background: var(--color-erc-bg);
+.ef-result-rd {
+  background: var(--color-rd-bg);
 }
 
 /* =============================================
@@ -4299,8 +4299,8 @@ h6 {
   border-radius: 0;
 }
 
-.ef-card-erc {
-  background: var(--color-erc-bg);
+.ef-card-rd {
+  background: var(--color-rd-bg);
   border: none;
   border-radius: 0;
 }
